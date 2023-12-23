@@ -2,9 +2,6 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import * as API from './api/exports';
-import { apiMethod } from './source/utility';
-import { Server } from 'socket.io';
-import http from 'http';
 import { io, io_server } from './api/game/websocket';
 
 const app = express();
@@ -13,10 +10,10 @@ app.use(cors());
 app.set('view engine', 'ejs');
 const urlencodedParser = bodyParser.urlencoded({ extended: false});
 const port:number = 8080;
-app.listen(port, () => console.info(`Az app fut ezen a porton: ${ port }\nhttp://localhost:${ port }/`));
+app.listen(port, () => console.info(`Az app fut ezen a porton: ${ port }\nhttp://13.53.185.194:${ port }/`));
 app.use(express.static(__dirname + '/public'));
 
-io_server.server.listen(io_server.websocket_port, () => console.info(`A websocket szerver ezen a porton fut: ${ io_server.websocket_port }\nhttp://localhost:${ io_server.websocket_port }/`));
+io_server.server.listen(io_server.websocket_port, () => console.info(`A websocket szerver ezen a porton fut: ${ io_server.websocket_port }\nhttp://13.53.185.194:${ io_server.websocket_port }/`));
 
 // open express connection
 // app.get(API.default.get_tasks.path, (req:any, res:any) => API.default.get_tasks.handler(req, res));

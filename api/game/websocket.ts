@@ -10,7 +10,7 @@ const websocket_port:number = 8081;
 const server = createServer(app);
 const io = new Server(server, {
   cors: { 
-    origin: ["https://admin.socket.io", "http://localhost:8080", "http://localhost:8081", 'null'],
+    origin: ["https://admin.socket.io", "http://13.53.185.194:8080", "http://13.53.185.194:8081", 'null'],
     credentials: true,
   },
 });

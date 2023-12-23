@@ -48,7 +48,7 @@
 
         
     </script>
-    <script src="http://localhost:8081/socket.io/socket.io.js"></script>
+    <script src="http://13.53.185.194:8081/socket.io/socket.io.js"></script>
     <style>
         li{
             border: 1px solid black;
@@ -61,7 +61,7 @@
     <button>Host</button><button>Join</button>
     <script defer>
         // import { io } from "https://cdn.socket.io/4.7.2/socket.io.esm.min.js";
-        const socket = io("http://localhost:8081");
+        const socket = io("http://13.53.185.194:8081");
         socket.emit("hello", "asd");
         socket.on("connect", () => {
             console.log(socket.id); // x8WIv7-mJelg7on_ALbx
