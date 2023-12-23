@@ -1,0 +1,74 @@
+import { RequestHandlerParams, ParamsDictionary } from 'express-serve-static-core';
+import { ParsedQs } from 'qs';
+
+interface apiMethod {
+    method: string,
+    path: string,
+    handler: any,
+}
+
+interface Geo_pos {
+    latitude: number,
+    longitude: number
+}
+
+interface Game {
+    id: number, //game id (6 digit number)
+    task_number: number, //number of tasks
+    task_visible: boolean, //whether the tasks that done are visible to the players or not
+    vote_time: number, //seconds
+    anonymus_vote: boolean, //whether the votes are anonymus or not
+    kill_cooldown: number, //seconds
+    impostor_max: number, //max number of impostors
+    emergencies: number, //number of emergencies can used by players
+    status: number, //game status, 0: waiting for players, 1: game started, 2: voting, 3: game ended
+    map: string, //map name
+}
+
+interface Player {
+    id: number, //player id, autoincrement
+    game_id: number, //game id (6 digit number)
+    socket_id: string, //socket id
+    name: string, //player name
+    color: number, //player color (decimal, need to convert to hex)
+    emergency: number, //number of emergencies used by player
+    tasks: number[], //all tasks that player has (task ids)
+    task_done: number[], //all tasks that player has done (task ids)
+    team: boolean, //false: crewmate, true: impostor
+    geo_pos: Geo_pos, //player location [latitude, longitude]
+    dead: boolean //whether the player is dead or not
+    host: boolean //whether the player is host or not
+    votes: number //number of votes for this player
+    voted: boolean //whether the player voted or not
+}
+
+interface Task {
+    id: number, //task id, autoincrement
+    name: string, //task name
+    geo_pos: [string, number], //task location [latitude, longitude]
+    map: string //map name
+}
+
+const COLORS: number[] = [10027008 /*red*/, 327777 /*blue*/, 24861 /*green*/, 16776960 /*yellow*/, 16711680 /*pink*/, 16711935 /*orange*/, 65280 /*lime*/, 65535 /*cyan*/, 16777215 /*white*/, 0 /*black*/, /*brown*/ 6724095, /*purple*/ 10079232, /*light green*/ 65280, /*dark blue*/ 255, /*light blue*/ 65535, /*dark red*/ 128, /*light red*/ 16711680, /*dark pink*/ 8388736, /*light pink*/ 16711935, /*dark orange*/ 10027008, /*light orange*/ 16737792, /*dark yellow*/ 8421504, /*light yellow*/ 16776960, /*dark brown*/ 32896, /*light brown*/ 6724095, /*dark purple*/ 8388736, /*light purple*/ 10079232, /*dark cyan*/ 32896, /*light cyan*/ 65535, /*dark lime*/ 32768, /*light lime*/ 65280, /*dark white*/ 8421504, /*light white*/ 16777215, /*dark black*/ 128, /*light black*/ 0];
+
+function isEmpty(str: string): boolean {
+    str = str.replace(/ /g, "");
+    if (str.length == 0) {
+        return true;
+    }
+    return false;
+}
+
+function randomNum(min: number, max: number): number {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+export {
+    isEmpty,
+    apiMethod,
+    Game,
+    Player,
+    Task,
+    COLORS,
+    randomNum
+};

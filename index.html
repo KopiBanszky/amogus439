@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        // if (navigator.geolocation) {
+        //     navigator.geolocation.getCurrentPosition(showPosition);
+        // } else {
+        //     console.log("Geolocation is not supported by this browser.");
+        // }
+
+        // This function will be called with the user's position
+
+        // function showPosition(position) {
+        //     console.log("Latitude: " + position.coords.latitude);
+        //     console.log("Longitude: " + position.coords.longitude);
+        //     fetch("http://localhost:8080/api/manager/task_upload", {
+        //         method: "POST",
+        //         mode: "cors",
+        //         cache: "no-cache",
+        //         body: JSON.stringify({
+        //             "task_name": "task1",
+        //             "geo_pos": {lat: position.coords.latitude, lon: position.coords.longitude},
+        //             "map": "TestMap1"
+        //         }),
+        //         headers: {
+        //             "Content-type": "application/json; charset=UTF-8"
+        //         }
+        //     }).then(response => response.json()).then(data => {
+        //         console.log(data);
+            
+        //     })
+        // }
+
+        // fetch("http://localhost:8080/api/manager/delete_task", {
+        //     method: "DELETE",
+        //     mode: "cors",
+        //     cache: "no-cache",
+        //     body: JSON.stringify({
+        //         "task_id": 2
+        //     }),
+        //     headers: {
+        //         "Content-type": "application/json; charset=UTF-8"
+        //     }
+        // }).then(response => response.json())
+
+        
+    </script>
+    <script src="http://localhost:8081/socket.io/socket.io.js"></script>
+    <style>
+        li{
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <input type="text" placeholder="name" id="username">
+    <input type="number" placeholder="gameID" id="gameID"><br>
+    <button>Host</button><button>Join</button>
+    <script defer>
+        // import { io } from "https://cdn.socket.io/4.7.2/socket.io.esm.min.js";
+        const socket = io("http://localhost:8081");
+        socket.emit("hello", "asd");
+        socket.on("connect", () => {
+            console.log(socket.id); // x8WIv7-mJelg7on_ALbx
+        });
+
+        socket.on("message", (data) => {
+            alert(data);
+        });
+
+        const btns = document.querySelectorAll("button");
+
+        btns[0].addEventListener("click", host);
+        btns[1].addEventListener("click", join);
+
+        let gameID;
+
+        function host(){
+            fetch("http://localhost:8080/api/game/host/create_game", {
+                method: "POST",
+                mode: "cors",
+                cache: "no-cache",
+                body: JSON.stringify({
+                    username: document.getElementById("username").value
+                }),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            }).then(response => response.json()).then(data => {
+                if(data.game_id > 99999){
+                    socket.emit("create_game", {
+                        game_id: data.game_id,
+                        username: document.getElementById("username").value
+                    })
+                    socket.on("create_game", data =>{
+                        const res = data.data
+                        const host = document.createElement("div");
+                        host.id = "host";
+                        host.innerHTML = JSON.stringify(res.game).replace(/{/g, "{<br>").replace(/}/g, "<br>}").replace(/,/g, ",<br>").replace(/"/g, "").replace(/:/g, ": ");
+                        document.body.appendChild(host);
+                        gameID = res.game.id;
+
+                        const players = document.createElement("ul");
+                        players.id = "players";
+                        const player = document.createElement("li");
+                        player.innerHTML = res.player.name;
+                        player.id = res.player.id;
+                        players.appendChild(player);
+                        document.body.appendChild(players);
+                    })
+                }
+            })
+        }
+        function join(){
+            fetch("http://localhost:8080/api/game/join/join_game", {
+                method: "POST",
+                mode: "cors",
+                cache: "no-cache",
+                body: JSON.stringify({
+                    username: document.getElementById("username").value,
+                    game_id: document.getElementById("gameID").value
+                }),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            }).then(response => response.json()).then(data => {
+                if(data.ok){
+                    socket.emit("join_game", {
+                        game_id: document.getElementById("gameID").value,
+                        name: document.getElementById("username").value
+                    })
+                    socket.on('join_game', data => {
+                        const players = document.createElement("ul");
+                        players.id = "players";
+
+                        data.players.forEach(player => {
+                            const playerLi = document.createElement("li");
+                            playerLi.innerHTML = player.name;
+                            console.log(player);
+                            playerLi.style.color = "#" + decToHex(player.color);
+                            playerLi.id = player.id;
+                            players.appendChild(playerLi);
+                        });
+
+                        document.body.appendChild(players);
+                    })
+                }
+            })
+        }
+
+        function decToHex(dec) {
+            return dec.toString(16).padStart(2, "0");
+        }
+
+        socket.on("update_players", data => {
+            const  res = data
+            const players = document.getElementById("players");
+            const player = document.createElement("li");
+            player.innerHTML = res.username;
+            console.log(res);
+            player.id = res.id;
+            player.style.color = "#" + decToHex(res.color);
+            players.appendChild(player);
+        })
+
+        socket.on("player_disconnected", data => {
+            document.getElementById(data.id).remove();
+        })
+
+        function settingsUpdate(){
+            fetch("http://localhost:8080/api/game/host/settings/update", {
+                method: "PUT",
+                mode: "cors",
+                cache: "no-cache",
+                body: JSON.stringify({
+                    game_id: gameID,
+                    task_num: 123,
+                    task_visibility: true,
+                    vote_time: undefined,
+                    anonymus_vote: false,
+                    kill_cooldown: undefined,
+                    impostor_max: 23,
+                    emergencies: undefined,
+                    map: "TestMap1"
+                }),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            }).then(response => response.json()).then(data => {
+                console.log(data);
+            })
+        }
+    </script>
+</body>
+</html>
