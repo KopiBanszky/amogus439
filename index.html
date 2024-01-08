@@ -48,10 +48,14 @@
 
         
     </script>
-    <script src="http://13.53.185.194:8081/socket.io/socket.io.js"></script>
+    <!-- <script src="https://13.53.185.194:443/socket.io/socket.io.js"></script> -->
+    <script src="https://cdn.socket.io/4.3.1/socket.io.min.js"></script>
     <style>
         li{
             border: 1px solid black;
+        }
+        .updated{
+            background-color: rgba(0, 128, 0, 0.082);
         }
     </style>
 </head>
@@ -60,8 +64,13 @@
     <input type="number" placeholder="gameID" id="gameID"><br>
     <button>Host</button><button>Join</button>
     <script defer>
+        const ip = "localhost";//13.53.185.194
+        const port_api = "";//":8080";
+        const port_ws = "";//":8081";
+        const type = "http";
+
         // import { io } from "https://cdn.socket.io/4.7.2/socket.io.esm.min.js";
-        const socket = io("http://13.53.185.194:8081");
+        const socket = io(`${type}://${ip}${port_ws}`);
         socket.emit("hello", "asd");
         socket.on("connect", () => {
             console.log(socket.id); // x8WIv7-mJelg7on_ALbx
@@ -77,9 +86,10 @@
         btns[1].addEventListener("click", join);
 
         let gameID;
+        let user_id;
 
         function host(){
-            fetch("http://localhost:8080/api/game/host/create_game", {
+            fetch(`${type}://${ip}${port_api}/api/game/host/create_game`, {
                 method: "POST",
                 mode: "cors",
                 cache: "no-cache",
@@ -99,9 +109,35 @@
                         const res = data.data
                         const host = document.createElement("div");
                         host.id = "host";
-                        host.innerHTML = JSON.stringify(res.game).replace(/{/g, "{<br>").replace(/}/g, "<br>}").replace(/,/g, ",<br>").replace(/"/g, "").replace(/:/g, ": ");
+                        // host.innerHTML = JSON.stringify(res.game).replace(/{/g, "{<br>").replace(/}/g, "<br>}").replace(/,/g, ",<br>").replace(/"/g, "").
+                        // replace(/:/g, ": ");
+
+                        for(let key of Object.keys(res.game)){
+                            const label = document.createElement("label");
+                            label.innerHTML = key;
+                            label.for = key;
+                            const input = document.createElement("input");
+                            input.type = "number";
+                            input.min = 0;
+                            if(key == "task_visibility" || key == "anonymus_vote") input.type = "checkbox";
+                            if(key == "map") input.type = "text";
+                            input.placeholder = key;
+                            input.id = key;
+                            input.value = res.game[key];
+                            if(key == "id") input.disabled = true;
+                            if(key == "status") input.disabled = true;
+                            host.appendChild(label);
+                            host.appendChild(input);
+                            host.appendChild(document.createElement("br"));
+                        }
+                        const btn = document.createElement("button");
+                        btn.innerHTML = "Update";
+                        btn.addEventListener("click", settingsUpdate);
+                        host.appendChild(btn);
+
                         document.body.appendChild(host);
                         gameID = res.game.id;
+                        user_id = res.player.id;
 
                         const players = document.createElement("ul");
                         players.id = "players";
@@ -110,12 +146,18 @@
                         player.id = res.player.id;
                         players.appendChild(player);
                         document.body.appendChild(players);
+
+                        const startBtn = document.createElement("button");
+                        startBtn.innerHTML = "Start";
+                        startBtn.id = "startBtn";
+                        startBtn.addEventListener("click", startGame);
+                        document.body.appendChild(startBtn);
                     })
                 }
             })
         }
         function join(){
-            fetch("http://localhost:8080/api/game/join/join_game", {
+            fetch(`${type}://${ip}${port_api}/api/game/join/join_game`, {
                 method: "POST",
                 mode: "cors",
                 cache: "no-cache",
@@ -171,28 +213,113 @@
         })
 
         function settingsUpdate(){
-            fetch("http://localhost:8080/api/game/host/settings/update", {
+            fetch(`${type}://${ip}${port_api}/api/game/host/settings/update`, {
                 method: "PUT",
                 mode: "cors",
                 cache: "no-cache",
                 body: JSON.stringify({
+                    user_id: user_id,
                     game_id: gameID,
-                    task_num: 123,
-                    task_visibility: true,
-                    vote_time: undefined,
-                    anonymus_vote: false,
-                    kill_cooldown: undefined,
-                    impostor_max: 23,
-                    emergencies: undefined,
-                    map: "TestMap1"
+                    task_num: document.getElementById("task_num").value,
+                    task_visibility: document.getElementById("task_visibility").checked,
+                    vote_time:  document.getElementById("vote_time").value,
+                    anonymus_vote: document.getElementById("anonymus_vote").checked,
+                    kill_cooldown:  document.getElementById("kill_cooldown").value,
+                    impostor_max: document.getElementById("impostor_max").value,
+                    emergencies: document.getElementById("emergencies").value,
+                    map: document.getElementById("map").value,
                 }),
                 headers: {
                     "Content-type": "application/json; charset=UTF-8"
                 }
-            }).then(response => response.json()).then(data => {
-                console.log(data);
+            }).then(response => {
+                if(response.ok){
+                    alert("Settings updated");
+                }
+                return response.json();
+            }).then(data => {
+                if(data.updatedKeys){
+                    data.updatedKeys.forEach(key => {
+                        document.getElementById(key).classList.add("updated");
+                    })
+                }
             })
         }
+
+        function startGame(){
+            socket.emit("start_game", {
+                game_id: gameID,
+                user_id: user_id
+            })
+            socket.on("start_game", data => {
+                console.log(data);
+            });
+        }
+        socket.on("game_started", data => {
+            console.log(data);
+            if(data.code == 200){
+                document.querySelectorAll("button").forEach(btn => {
+                    btn.remove();
+                });
+                document.querySelectorAll("input").forEach(input => {
+                    input.remove();
+                });
+                document.querySelector("br").remove();
+                if(document.getElementById("host")) document.getElementById("host").remove();
+                if(document.getElementById("players")) document.getElementById("players").remove();
+
+            }
+        });
+
+        socket.on("role_update", data => {
+            const span = document.createElement("span");
+            span.innerHTML = data.impostors ? "Impostor" : "Crewmate";
+            document.body.appendChild(span);
+            console.log(data);
+            if(data.impostors){
+                const ul = document.createElement("ul");
+                const li = document.createElement("li");
+                data.impostors.forEach(impostor => {
+                    fetch(`${type}://${ip}${port_api}/api/game/ingame/getPlayer?user_id=${impostor}`, {
+                        method: "GET",
+                        mode: "cors",
+                        cache: "no-cache",
+                        headers: {
+                            "Content-type": "application/json; charset=UTF-8"
+                        }
+                    }).then(response => response.json()).then(data => {
+                        console.log(data);
+                        li.innerHTML = data.player.name;
+                        ul.appendChild(li);
+                    })	
+                });
+                document.body.appendChild(ul);
+            }
+
+            const tasks = document.createElement("ul");
+            tasks.id = "tasks";
+            fetch(`${type}://${ip}${port_api}/api/manager/get_tasks`, {
+                method: "GET",
+                mode: "cors",
+                cache: "no-cache",
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            }).then(response => response.json()).then(tasks_All => {
+                
+                data.player.tasks.forEach(task => {
+                    const taskname = tasks_All.message.find(req_t => req_t.id == task).name;
+                    const taskLi = document.createElement("li");
+                    taskLi.innerHTML = taskname;
+
+                    tasks.appendChild(taskLi);
+                });
+            })
+            document.body.appendChild(tasks);
+
+            document.body.style.backgroundColor = "#" + decToHex(data.player.color);
+        });
+
     </script>
 </body>
 </html>

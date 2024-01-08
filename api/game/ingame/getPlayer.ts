@@ -7,14 +7,16 @@ export default <apiMethod> {
     handler: function (req:any, res:any) {
         const { socket_id, user_id } = req.query;
 
-        if(isEmpty(socket_id) && (user_id == undefined || user_id == null)){
+        if(isEmpty(socket_id || "") && (user_id == undefined || user_id == null)){
             res.status(400).send({
                 message: 'Values cannot be empty'
             });
             return 400;
         }
 
-        const sql = `SELECT * FROM Players WHERE socket_id = ${socket_id} AND user_id = ${user_id}`;
+        console.log(socket_id, user_id);
+        const numID:number = user_id;
+        const sql = `SELECT * FROM Players WHERE ${isEmpty(socket_id || "") ? "" :  `socket_id = ${socket_id}`}${!isEmpty(socket_id || "") && !(user_id == undefined || user_id == null) ? " OR " : ""}${(user_id == undefined || user_id == null) ? "" : `id = ${numID}`}`;
         db.query(sql, (err, result) => {
             if(err){
                 console.error(err);

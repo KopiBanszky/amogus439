@@ -14,7 +14,7 @@ interface Geo_pos {
 
 interface Game {
     id: number, //game id (6 digit number)
-    task_number: number, //number of tasks
+    task_num: number, //number of tasks
     task_visible: boolean, //whether the tasks that done are visible to the players or not
     vote_time: number, //seconds
     anonymus_vote: boolean, //whether the votes are anonymus or not
@@ -49,7 +49,7 @@ interface Task {
     map: string //map name
 }
 
-const COLORS: number[] = [10027008 /*red*/, 327777 /*blue*/, 24861 /*green*/, 16776960 /*yellow*/, 16711680 /*pink*/, 16711935 /*orange*/, 65280 /*lime*/, 65535 /*cyan*/, 16777215 /*white*/, 0 /*black*/, /*brown*/ 6724095, /*purple*/ 10079232, /*light green*/ 65280, /*dark blue*/ 255, /*light blue*/ 65535, /*dark red*/ 128, /*light red*/ 16711680, /*dark pink*/ 8388736, /*light pink*/ 16711935, /*dark orange*/ 10027008, /*light orange*/ 16737792, /*dark yellow*/ 8421504, /*light yellow*/ 16776960, /*dark brown*/ 32896, /*light brown*/ 6724095, /*dark purple*/ 8388736, /*light purple*/ 10079232, /*dark cyan*/ 32896, /*light cyan*/ 65535, /*dark lime*/ 32768, /*light lime*/ 65280, /*dark white*/ 8421504, /*light white*/ 16777215, /*dark black*/ 128, /*light black*/ 0];
+const COLORS: number[] = [10027008 /*red*/, 327777 /*blue*/, 24861 /*green*/, 16776960 /*yellow*/, 16711680 /*pink*/, 16711935 /*orange*/, /*brown*/ 6724095, /*purple*/ 10079232, /*dark blue*/ 255, /*dark red*/ 128, /*light red*/ 16711680, /*dark pink*/ 8388736, /*light pink*/ 16711935, /*dark orange*/ 10027008, /*light orange*/ 16737792, /*dark yellow*/ 8421504, /*light yellow*/ 16776960, /*light brown*/ 6724095, /*dark purple*/ 8388736, /*light purple*/ 10079232, /*dark white*/ 8421504];
 
 function isEmpty(str: string): boolean {
     str = str.replace(/ /g, "");

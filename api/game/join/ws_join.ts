@@ -46,11 +46,15 @@ const create_new_player = {
             }
     
             let color:number = COLORS[randomNum(0, COLORS.length - 1)];
-            players_res.map((player:Player) => {
-                if(player.color == color){
-                    color = COLORS[randomNum(0, COLORS.length - 1)];
-                }
-            });
+            // players_res.map((player:Player) => {
+            //     if(player.color == color){
+            //         color = COLORS[randomNum(0, COLORS.length - 1)];
+            //     }
+            // });
+
+            while(players_res.find((player:Player) => player.color == color) || color == 0){
+                color = COLORS[randomNum(0, COLORS.length - 1)];
+            }
     
             db.query(`INSERT INTO Players (game_id, socket_id, name, color) VALUES (${game_id}, '${socket.id}', '${name}', ${color})`, (err, result) => {
                 if(err){

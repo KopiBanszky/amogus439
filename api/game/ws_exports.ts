@@ -7,6 +7,7 @@ import emergency from "./ingame/emergency";
 import task_done from "./ingame/task_done";
 import kill from "./ingame/kill";
 import report from "./ingame/report";
+import start from "./host/start";
 
 
 
@@ -19,5 +20,6 @@ export default {
     emergency,
     task_done,
     kill,
-    report
+    report,
+    start
 };

@@ -23,7 +23,7 @@ const start = {
 
             //check if map is selected
             const game:Game = game_res[0];
-            if(isEmpty(game.map)){
+            if(isEmpty(game.map || "")){
                 socket.emit('start_game', {code: 500, message: 'Map not selected'});
                 return;
             }
@@ -52,11 +52,14 @@ const start = {
                         rand = Math.floor(Math.random() * players.length);
                     }
                     impostors_ids.push(players[rand].id);
+                    players[rand].team = true;
                 }
 
                 //get tasks
                 db.query(`SELECT * FROM Tasks WHERE map = '${game.map}'`, (err, tasks_res) => {
                     const Tasks:Task[] = tasks_res;
+
+                    console.log(tasks_res)
 
                     //set tasks to players
                     players.map((player:Player) => {
@@ -64,16 +67,19 @@ const start = {
                         player.task_done = [];
 
                         //add tasks to player. max task count is setted in game settings or tasks.length
-                        for(let i = 0; i < (Tasks.length < game.task_number ? Tasks.length : game.task_number); i++){
+                        console.log(Tasks.length, game.task_num, (Tasks.length < game.task_num ? Tasks.length : game.task_num));
+                        for(let i = 0; i < (Tasks.length < game.task_num ? Tasks.length : game.task_num); i++){
                             let rand = Math.floor(Math.random() * Tasks.length);
+                            console.log(rand);
                             while(player.tasks.includes(Tasks[rand].id)){
                                 rand = Math.floor(Math.random() * Tasks.length);
                             }
                             player.tasks.push(Tasks[rand].id);
                         }
 
+                        console.log(player.tasks)
                         //update players
-                        db.query(`UPDATE Players SET tasks = '${JSON.stringify(player.tasks)}', task_done = '${JSON.stringify(player.task_done)}', team = ${impostors_ids.includes(player.id)} WHERE id = ${player.id}`, (err, result) => {
+                        db.query(`UPDATE Players SET tasks = '${JSON.stringify(player.tasks)}', tasks_done = '${JSON.stringify(player.task_done)}', team = ${impostors_ids.includes(player.id)} WHERE id = ${player.id}`, (err, result) => {
                             if(err){
                                 console.error(err);
                                 return;
@@ -96,3 +102,5 @@ const start = {
         });
     }
 }
+
+export default start;
