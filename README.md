@@ -559,11 +559,13 @@ The host player has to trigger the `start_vote` event.
     - player can see other players for 5sec and others can see that someone is on cams
     - cooldown: 2min
 
-1. visual task?
-    - idk how to create them
+1. task
+    - visula tasks? idk how to create them
+    - Available to make doual task, like download/upload
 
 1. color settings for players
     - preloaded colors
+
 
 
 ---
