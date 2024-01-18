@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../utility/types.dart';
 
 class LobbyPage extends StatefulWidget {
   const LobbyPage({super.key});
@@ -9,9 +10,12 @@ class LobbyPage extends StatefulWidget {
 }
 
 class _LobbyPageState extends State<LobbyPage> {
-  dynamic arguments;
+  late dynamic arguments;
+  late List<Player> players;
+  
+  if(arguments["host"]){
 
-
+  }
 
   @override
   Widget build(BuildContext context) {
