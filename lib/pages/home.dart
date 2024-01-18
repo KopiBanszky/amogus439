@@ -8,6 +8,7 @@ import 'package:socket_io_client/socket_io_client.dart';
 
 import '../connections/socketio.dart';
 import '../utility/alert.dart';
+import '../utility/types.dart';
 
 enum BtnTap {join, create}
 
@@ -47,164 +48,166 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[900],
-      body: Column(
-        children: [
-          Image.asset("assets/background.jpg"),
-
-          //if network or server not available, show it
-          if(!connectionAvailable) Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                const Text("Nem sikerült kapcsolódni az szerverhez...",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: IconButton(
-                    onPressed: () {
-                      initState();
-                    },
-                    icon: const Icon(Icons.refresh,
-                      color: Colors.blue,
-                      size: 100,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Image.asset("assets/background.jpg"),
+        
+            //if network or server not available, show it
+            if(!connectionAvailable) Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  const Text("Nem sikerült kapcsolódni az szerverhez...",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
                     ),
+                    textAlign: TextAlign.center,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: IconButton(
+                      onPressed: () {
+                        initState();
+                      },
+                      icon: const Icon(Icons.refresh,
+                        color: Colors.blue,
+                        size: 100,
+                      ),
+                    )
                   )
-                )
-              ],
+                ],
+              ),
             ),
-          ),
-
-          const SizedBox(height: 20,),
-
-          //if connection available, show text inputs and btns
-          //first two element in the column are text and number inputs (name, roomid)
-
-          if(connectionAvailable)  Padding(
-            padding: const EdgeInsets.fromLTRB(8.0, 0, 8.0, 0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                TextField(
-                  controller: nameController,
-                  decoration: const InputDecoration(
-                    hintText: "Név",
-                    hintStyle: TextStyle(
+        
+            const SizedBox(height: 20,),
+        
+            //if connection available, show text inputs and btns
+            //first two element in the column are text and number inputs (name, roomid)
+        
+            if(connectionAvailable)  Padding(
+              padding: const EdgeInsets.fromLTRB(8.0, 0, 8.0, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  TextField(
+                    controller: nameController,
+                    decoration: const InputDecoration(
+                      hintText: "Név",
+                      hintStyle: TextStyle(
+                        color: Colors.white,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.white,
+                          width: 2,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.white,
+                          width: 2,
+                        ),
+                      ),
+                    ),
+                    style: const TextStyle(
                       color: Colors.white,
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.white,
-                        width: 2,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.white,
-                        width: 2,
-                      ),
+                      fontSize: 20,
                     ),
                   ),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                  ),
-                ),
-
-                const SizedBox(height: 18,),
-
-                TextField(
-                  keyboardType: TextInputType.number,
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.digitsOnly
-                  ], // Only numbers can be entered
-                  controller: roomController,
-                  decoration: const InputDecoration(
-                    hintText: "Szoba kód",
-                    hintStyle: TextStyle(
+        
+                  const SizedBox(height: 18,),
+        
+                  TextField(
+                    keyboardType: TextInputType.number,
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.digitsOnly
+                    ], // Only numbers can be entered
+                    controller: roomController,
+                    decoration: const InputDecoration(
+                      hintText: "Szoba kód",
+                      hintStyle: TextStyle(
+                        color: Colors.white,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.white,
+                          width: 2,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.white,
+                          width: 2,
+                        ),
+                      ),
+                    ),
+                    style: const TextStyle(
                       color: Colors.white,
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.white,
-                        width: 2,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.white,
-                        width: 2,
-                      ),
+                      fontSize: 20,
                     ),
                   ),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                  ),
-                ),
-
-                const SizedBox(height: 18,),
-
-                //btns to join or host game
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () => validateBtn(BtnTap.join),
-                      style: ElevatedButton.styleFrom(
-                        disabledBackgroundColor: Colors.grey,
-                        backgroundColor: Colors.green,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(7),
+        
+                  const SizedBox(height: 18,),
+        
+                  //btns to join or host game
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () => validateBtn(BtnTap.join),
+                        style: ElevatedButton.styleFrom(
+                          disabledBackgroundColor: Colors.grey,
+                          backgroundColor: Colors.green,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(7),
+                          ),
+                          padding: const EdgeInsets.fromLTRB(25, 15, 25, 15),
+                          side: const BorderSide(
+                            color: Colors.white,
+                            width: 1.5,
+                          ),
+                          textStyle: const TextStyle(
+                            fontSize: 20,
+                          ),
                         ),
-                        padding: const EdgeInsets.fromLTRB(25, 15, 25, 15),
-                        side: const BorderSide(
-                          color: Colors.white,
-                          width: 1.5,
-                        ),
-                        textStyle: const TextStyle(
-                          fontSize: 20,
-                        ),
-                      ),
-                      child: const Text("Csatlakozás",
-                        style: TextStyle(
-                          color: Colors.white,
-                        )
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () => validateBtn(BtnTap.create),
-                      style: ElevatedButton.styleFrom(
-                        disabledBackgroundColor: Colors.grey,
-                        backgroundColor: Colors.blue,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(7),
-                        ),
-                        padding: const EdgeInsets.fromLTRB(25, 15, 25, 15),
-                        side: const BorderSide(
-                          color: Colors.white,
-                          width: 1.5,
-                        ),
-                        textStyle: const TextStyle(
-                          fontSize: 20,
+                        child: const Text("Csatlakozás",
+                          style: TextStyle(
+                            color: Colors.white,
+                          )
                         ),
                       ),
-                      child: const Text("Létrehozás",
-                        style: TextStyle(
-                          color: Colors.white,
-                        )
+                      ElevatedButton(
+                        onPressed: () => validateBtn(BtnTap.create),
+                        style: ElevatedButton.styleFrom(
+                          disabledBackgroundColor: Colors.grey,
+                          backgroundColor: Colors.blue,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(7),
+                          ),
+                          padding: const EdgeInsets.fromLTRB(25, 15, 25, 15),
+                          side: const BorderSide(
+                            color: Colors.white,
+                            width: 1.5,
+                          ),
+                          textStyle: const TextStyle(
+                            fontSize: 20,
+                          ),
+                        ),
+                        child: const Text("Létrehozás",
+                          style: TextStyle(
+                            color: Colors.white,
+                          )
+                        ),
                       ),
-                    ),
-                  ],
-                )
-              ],
-            ),
-          )
-        ],
+                    ],
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
       )
     );
   }
@@ -291,15 +294,38 @@ class _HomePageState extends State<HomePage> {
       return;
     }
 
-
     if(data["ok"]){
       Socket socket = await connectToWebsocket();
       socket.emit("join_game", {
-        "name": nameController.text,
+        "username": nameController.text,
         "game_id": roomController.text
       });
       socket.on("join_game", (msg) {
-        print(jsonDecode(msg));
+
+        print(msg);
+
+
+        if(msg["code"] != 200){
+          showAlert("Hiba", msg["message"], Colors.red, false, () {}, "", true, () {}, "Ok", context);
+          return;
+        }
+
+        List<Player> players = [];
+        for(Map<String, dynamic> player in msg["players"]){
+          player["tasks"] = [];
+          players.add(Player.fromMap(player));
+        }
+
+
+        Map<String, dynamic> usableData = {
+          "host": false,
+          "socket": socket,
+          "gameId": roomController.text,
+          "players": players,
+          "game": {},
+        };
+
+        Navigator.pushReplacementNamed(context, "/lobby", arguments: usableData);
 
       });
     }
@@ -330,13 +356,28 @@ class _HomePageState extends State<HomePage> {
 
 
     Socket socket = await connectToWebsocket();
+    print(nameController.text);
+    print(data["game_id"]);
     socket.emit("create_game", {
-      "name": nameController.text,
+      "username": nameController.text,
       "game_id": data["game_id"]
     });
     socket.on("create_game", (msg) {
-      print(jsonDecode(msg));
 
+      if(msg["code"] != 200){
+        showAlert("Hiba", msg["message"], Colors.red, false, () {}, "", true, () {}, "Ok", context);
+        return;
+      }
+
+      Map<String, dynamic> usableData = {
+        "host": true,
+        "socket": socket,
+        "gameId": data["game_id"],
+        "player": Player.fromMap(msg["data"]["player"]),
+        "game": Game.fromMap(msg["data"]["game"]),
+      };
+
+      Navigator.pushReplacementNamed(context, "/lobby", arguments: usableData);
     });
 
   }
