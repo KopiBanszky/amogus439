@@ -1,6 +1,6 @@
 # amogusvez2
 
-kurva
+439 vez prog game - because why not
 
 ## Getting Started
 

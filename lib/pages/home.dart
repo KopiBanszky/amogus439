@@ -1,10 +1,16 @@
+import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:amogusvez2/connections/http.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+import '../connections/socketio.dart';
 import '../utility/alert.dart';
 
 enum BtnTap {join, create}
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -44,6 +50,8 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         children: [
           Image.asset("assets/background.jpg"),
+
+          //if network or server not available, show it
           if(!connectionAvailable) Padding(
             padding: EdgeInsets.all(8.0),
             child: Column(
@@ -72,6 +80,9 @@ class _HomePageState extends State<HomePage> {
           ),
 
           const SizedBox(height: 20,),
+
+          //if connection available, show text inputs and btns
+          //first two element in the column are text and number inputs (name, roomid)
 
           if(connectionAvailable)  Padding(
             padding: const EdgeInsets.fromLTRB(8.0, 0, 8.0, 0),
@@ -107,6 +118,10 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(height: 18,),
 
                 TextField(
+                  keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ], // Only numbers can be entered
                   controller: roomController,
                   decoration: const InputDecoration(
                     hintText: "Szoba kód",
@@ -134,6 +149,7 @@ class _HomePageState extends State<HomePage> {
 
                 const SizedBox(height: 18,),
 
+                //btns to join or host game
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -194,7 +210,7 @@ class _HomePageState extends State<HomePage> {
   }
 
 
-
+  //pings the server, to check if its available
   Future<bool> checkConnection() async {
     try{
       RquestResult res = await http_get("/check");
@@ -210,6 +226,7 @@ class _HomePageState extends State<HomePage> {
   }
 
 
+  //checks witch btn is pressed, and if the needed values are valid
   void validateBtn(BtnTap btn) {
     if (btn == BtnTap.join) {
       if (
@@ -255,11 +272,72 @@ class _HomePageState extends State<HomePage> {
 
 
 
-  void joinRoom(){
+  void joinRoom() async {
+    RquestResult res = await http_post("api/game/join/join_game", {
+      "username": nameController.text,
+      "game_id": roomController.text
+    });
+
+    Map<String, dynamic> data = jsonDecode(res.data);
+    
+    if(!res.ok){
+      showAlert("Internal server error", "There was an error, and got no response", Colors.red, false, () {}, "", true, () {}, "Ok", context);
+      return;
+    }
+
+
+    if(data is String) {
+      showAlert("Error", "Internal Server error - 505", Colors.red, false, () {}, "", true, () {}, "Ok", context);
+      return;
+    }
+
+
+    if(data["ok"]){
+      IO.Socket socket = await connectToWebsocket();
+      socket.emit("join_game", {
+        "name": nameController.text,
+        "game_id": roomController.text
+      });
+      socket.on("join_game", (msg) {
+        print(jsonDecode(msg));
+
+      });
+    }
+    else {
+      showAlert("Hiba", data["message"], Colors.red, false, () {}, "", true, () {}, "Ok", context);
+    }
 
   }
 
-  void createRoom(){
+  void createRoom() async {
+    RquestResult res = await http_post("api/game/host/create_game", {
+      "username": nameController.text,
+    });
+
+    Map<String, dynamic> data = jsonDecode(res.data);
+
+    if(!res.ok){
+      showAlert("Internal server error", "There was an error, and got no response", Colors.red, false, () {}, "", true, () {}, "Ok", context);
+      return;
+    }
+
+
+    if(data is String) {
+      showAlert("Error", "Internal Server error - 505", Colors.red, false, () {}, "", true, () {}, "Ok", context);
+      return;
+    }
+
+
+
+    IO.Socket socket = await connectToWebsocket();
+    socket.emit("create_game", {
+      "name": nameController.text,
+      "game_id": data["game_id"]
+    });
+    socket.on("create_game", (msg) {
+      print(jsonDecode(msg));
+
+    });
 
   }
 }
