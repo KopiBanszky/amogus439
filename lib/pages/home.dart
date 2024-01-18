@@ -4,7 +4,7 @@ import 'dart:ffi';
 import 'package:amogusvez2/connections/http.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:socket_io_client/socket_io_client.dart';
 
 import '../connections/socketio.dart';
 import '../utility/alert.dart';
@@ -293,7 +293,7 @@ class _HomePageState extends State<HomePage> {
 
 
     if(data["ok"]){
-      IO.Socket socket = await connectToWebsocket();
+      Socket socket = await connectToWebsocket();
       socket.emit("join_game", {
         "name": nameController.text,
         "game_id": roomController.text
@@ -329,7 +329,7 @@ class _HomePageState extends State<HomePage> {
 
 
 
-    IO.Socket socket = await connectToWebsocket();
+    Socket socket = await connectToWebsocket();
     socket.emit("create_game", {
       "name": nameController.text,
       "game_id": data["game_id"]
