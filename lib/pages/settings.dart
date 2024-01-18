@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 
 import '../utility/types.dart';
 
+
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
 
@@ -24,12 +25,14 @@ class _SettingsPageState extends State<SettingsPage> {
   late bool host;
   late int userID;
   late String gameId;
+  late List<Map<String, String>> mapValues = [{"---": "Válassz pályát"}, {"TestMap1": "Map1"} ];
 
   final TextEditingController _taskNumberController = TextEditingController();
   final TextEditingController _voteTimeController = TextEditingController();
   final TextEditingController _killCooldownController = TextEditingController();
   final TextEditingController _impostorMaxController = TextEditingController();
   final TextEditingController _emergenciesController = TextEditingController();
+
 
 
 
@@ -285,6 +288,32 @@ class _SettingsPageState extends State<SettingsPage> {
                 const SizedBox(height: 10,),
         
                 //TODO: Map dropwdown menu
+                DropdownButton<String>(
+                  value: "Válassz pályát",
+                  icon: const Icon(Icons.map,
+                    color: Colors.grey,
+                  ),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                  ),
+                  items: mapValues.map<DropdownMenuItem<String>>((Map<String, String> map) {
+                    //TODO: errorozik
+                    return DropdownMenuItem<String>(
+                      value: map.keys.first,
+                      child: Text(map.values.first,
+                        style: const TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (String? value) {
+                    setState(() {
+
+                    });
+                  },
+                ),
         
                 const SizedBox(height: 10,),
         

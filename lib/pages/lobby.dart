@@ -1,3 +1,4 @@
+import 'package:amogusvez2/utility/alert.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart';
@@ -77,6 +78,12 @@ class _LobbyPageState extends State<LobbyPage> {
         players.removeWhere((element) => element.socketId == data["socket_id"]);
       });
     });
+
+    if(host) {
+      socket.on("start_game", (data){
+        showAlert("Hiba - ${data["code"]}", data["message"], Colors.red, true, () {}, "Ok", false, () {}, "", context);
+      });
+    }
   }
 
 
@@ -142,7 +149,10 @@ class _LobbyPageState extends State<LobbyPage> {
               children: [
                 ElevatedButton(
                   onPressed: () {
-
+                    socket.emit("start_game", {
+                      "game_id": gameId,
+                      "user_id": me.id,
+                    });
                   },
                   style: ElevatedButton.styleFrom(
                     disabledBackgroundColor: Colors.grey,
