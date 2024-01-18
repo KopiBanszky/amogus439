@@ -24,3 +24,10 @@ Future<RquestResult> http_post(String route, [dynamic data]) async{
   var result = await http.post(url, body: dataStr, headers: {"Content-type": "application/json"});
   return RquestResult(result.body, true);
 }
+Future<RquestResult> http_put(String route, [dynamic data]) async{
+
+  Uri url = Uri.parse('$PROTOCOL://$DOMAIN/$route');
+  var dataStr = jsonEncode(data);
+  var result = await http.put(url, body: dataStr, headers: {"Content-type": "application/json"});
+  return RquestResult(result.body, true);
+}

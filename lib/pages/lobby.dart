@@ -23,7 +23,7 @@ class _LobbyPageState extends State<LobbyPage> {
   late String gameId;
 
 
-
+//shows the players in a 3xX grid
   List<Row> _buildPlayers(List<Player> players){
 
     int length = players.length;
@@ -52,10 +52,12 @@ class _LobbyPageState extends State<LobbyPage> {
     return playerWidgets;
   }
 
+
+  //starts to listen to the sockets
   void startListenToSockets(socket, gameId){
-    print(gameId);
     socket.on("update_players", (data){
-      print(gameId);
+
+      //adds a new player to the list
       Player player = Player.fromMap({
         "id": data["id"],
         "game_id": gameId,
@@ -68,12 +70,21 @@ class _LobbyPageState extends State<LobbyPage> {
         players.add(player);
       });
     });
+
+    //removes a player from the list
+    socket.on("player_disconnected", (data){
+      setState(() {
+        players.removeWhere((element) => element.socketId == data["socket_id"]);
+      });
+    });
   }
 
 
 
   @override
   Widget build(BuildContext context) {
+
+    //if the page is loaded, then it will not load again
     if(!loaded) {
       arguments = ModalRoute
           .of(context)!
@@ -106,7 +117,7 @@ class _LobbyPageState extends State<LobbyPage> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-          const Text("Amogusvez",
+          const Text("Amogus-vez",
               style: TextStyle(
                 color: Colors.white,
               ),
@@ -125,12 +136,14 @@ class _LobbyPageState extends State<LobbyPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: 8.0,),
+            const SizedBox(height: 8.0,),
             if(host) Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+
+                  },
                   style: ElevatedButton.styleFrom(
                     disabledBackgroundColor: Colors.grey,
                     backgroundColor: Colors.red,
@@ -154,7 +167,17 @@ class _LobbyPageState extends State<LobbyPage> {
                   ),
                 ),
                 ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      dynamic result = await Navigator.pushNamed(context, "/settings", arguments: {
+                        "host": host,
+                        "gameId": gameId,
+                        "userID": me.id,
+                        "game": game,
+                        "player": me,
+                      });
+
+                      game = result;
+                    },
                   style: ElevatedButton.styleFrom(
                     disabledBackgroundColor: Colors.grey,
                     backgroundColor: Colors.blue,

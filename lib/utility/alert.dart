@@ -5,15 +5,17 @@ import 'package:flutter/material.dart';
 void showAlert(String title, String message, Color color, bool okBtn, Function okBtnFnc, String okBtnText, bool cancelBtn, Function cancelBtnFnc, String cancelBtnText, context){
 
   showDialog(context: context, builder: (context) => AlertDialog(
+    backgroundColor: Colors.grey[900],
     title: Text(title,
       style: TextStyle(
         color: color,
         fontWeight: FontWeight.bold,
       ),
     ),
+
     content: Text(message,
-      style: TextStyle(
-        color: Colors.grey[900],
+      style: const TextStyle(
+        color: Colors.white,
       ),
     ),
 
