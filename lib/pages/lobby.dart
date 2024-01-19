@@ -22,6 +22,7 @@ class _LobbyPageState extends State<LobbyPage> {
   late Player me;
   late String gameId;
   late List<int> impostors = [];
+  bool updatedOrStarted = false;
 
 
 //shows the players in a 3xX grid
@@ -85,10 +86,15 @@ class _LobbyPageState extends State<LobbyPage> {
       });
     }
 
-    socket.on("role_update", (data) =>{
-      print(data),
-      me = Player.fromMap(data["player"]),
-      impostors = List<int>.from(data["impostors"] ?? []),
+    socket.on("role_update", (data) {
+      me = Player.fromMap(data["player"]);
+      impostors = List<int>.from(data["impostors"] ?? []);
+      if(!updatedOrStarted) {
+        updatedOrStarted = true;
+      }
+      else {
+        startGame();
+      }
     });
 
     socket.on("game_started", (data){
@@ -96,16 +102,23 @@ class _LobbyPageState extends State<LobbyPage> {
         showAlert("Hiba - ${data["code"]}", data["message"], Colors.red, true, () {}, "Ok", false, () {}, "", context);
         return;
       }
-      print(me.team);
-      print(me.name);
-      Navigator.pushNamed(context, "/roleReveal", arguments: {
-        "host": host,
-        "gameId": gameId,
-        "player": me,
-        "impostors": impostors,
-      });
+      if(!updatedOrStarted) {
+        updatedOrStarted = true;
+      }
+      else {
+        startGame();
+      }
     });
 
+  }
+
+  void startGame(){
+    Navigator.pushNamed(context, "/roleReveal", arguments: {
+      "host": host,
+      "gameId": gameId,
+      "player": me,
+      "impostors": impostors,
+    });
   }
 
 
