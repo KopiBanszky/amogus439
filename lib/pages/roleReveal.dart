@@ -27,11 +27,11 @@ class _RoleRevealPageState extends State<RoleRevealPage> {
     for(int i = 0; i < ids.length; i++){
       int id = ids[i];
       RquestResult result = await http_get("api/game/ingame/getPlayer", {
-        "id": id,
+        "user_id": id,
       });
       print(result);
       if(result.ok){
-        dynamic data = jsonDecode(result.data);
+        dynamic data = jsonDecode(jsonDecode(result.data));
         print(data);
 
         Player plyr = Player.fromMap(data["player"]);
@@ -82,6 +82,7 @@ class _RoleRevealPageState extends State<RoleRevealPage> {
       host = arguments['host'];
       name_role = plyr.name;
 
+      getImposors(arguments['impostors']);
 
       loaded = true;
     }
