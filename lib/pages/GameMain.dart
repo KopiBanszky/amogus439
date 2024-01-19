@@ -49,7 +49,7 @@ class _GameMainPageState extends State<GameMainPage> {
       plyr = arguments['player'];
       gameId = arguments['gameId'];
       host = arguments['host'];
-      impostors = arguments['impostors'];
+      impostors = arguments['impostors'] ?? [];
       players = arguments['players'];
       game = arguments['game'];
       socket = arguments['socket'];
@@ -57,6 +57,7 @@ class _GameMainPageState extends State<GameMainPage> {
       _getTasks(plyr.tasks).then((value) => {
         setState(() {
           tasks = value;
+          print(value);
         })
       });
 
@@ -68,6 +69,7 @@ class _GameMainPageState extends State<GameMainPage> {
       appBar: AppBar(
         backgroundColor: Colors.grey[900],
         title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(plyr.name,
               style: const TextStyle(
