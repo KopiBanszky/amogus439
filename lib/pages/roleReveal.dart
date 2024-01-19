@@ -64,14 +64,17 @@ class _RoleRevealPageState extends State<RoleRevealPage> {
                   name: name_role
               ),
               SizedBox(height: MediaQuery.of(context).size.height * .05),
-              Text(!tapped ?
-                  "Kattints a képernyőre a szereped felfedéséhez!" :
-                  "Te ${plyr.team ? "imporstor" : "crewmate"} vagy! Kattints a képernyőre a folytatáshoz!",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                  ),
-                  textAlign: TextAlign.center
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(!tapped ?
+                    "Kattints a képernyőre a szereped felfedéséhez!" :
+                    "Te ${plyr.team ? "imporstor" : "crewmate"} vagy! Kattints a képernyőre a folytatáshoz!",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
+                    textAlign: TextAlign.center,
+                ),
               ),
             ],
           )
