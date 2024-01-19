@@ -87,14 +87,10 @@ class _LobbyPageState extends State<LobbyPage> {
     }
 
     socket.on("role_update", (data) {
-      me = Player.fromMap(data["player"]);
+      me.team = data["player"]["team"];
+      me.tasks = data["player"]["tasks"];
+
       impostors = List<int>.from(data["impostors"] ?? []);
-      Navigator.pushNamed(context, "/roleReveal", arguments: {
-        "host": host,
-        "gameId": gameId,
-        "player": me,
-        "impostors": impostors,
-      });
     });
 
     socket.on("game_started", (data){
@@ -103,6 +99,12 @@ class _LobbyPageState extends State<LobbyPage> {
         return;
       }
 
+      Navigator.pushNamed(context, "/roleReveal", arguments: {
+        "host": host,
+        "gameId": gameId,
+        "player": me,
+        "impostors": impostors,
+      });
     });
 
   }
