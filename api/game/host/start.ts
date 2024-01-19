@@ -56,7 +56,6 @@ const start = {
                 }
 
                 //get tasks
-                console.log(game.map)
                 db.query(`SELECT * FROM Tasks WHERE map = '${game.map}'`, (err, tasks_res) => {
                     if(err){
                         console.error(err);
@@ -65,7 +64,6 @@ const start = {
                     }
                     const Tasks:Task[] = tasks_res;
 
-                    console.log(tasks_res)
 
                     //set tasks to players
                     for (let index = 0; index < players.length; index++) {
@@ -74,7 +72,6 @@ const start = {
                         player.task_done = [];
 
                         //add tasks to player. max task count is setted in game settings or tasks.length
-                        console.log(Tasks.length, game.task_num, (Tasks.length < game.task_num ? Tasks.length : game.task_num));
                         for(let i = 0; i < (Tasks.length < game.task_num ? Tasks.length : game.task_num); i++){
                             let rand = Math.floor(Math.random() * Tasks.length);
                             console.log(rand);
@@ -84,7 +81,6 @@ const start = {
                             player.tasks.push(Tasks[rand].id);
                         }
 
-                        console.log(player.tasks)
                         //update players
                         db.query(`UPDATE Players SET tasks = '${JSON.stringify(player.tasks)}', tasks_done = '${JSON.stringify(player.task_done)}', team = ${impostors_ids.includes(player.id)} WHERE id = ${player.id}`, (err, result) => {
                             if(err){
@@ -102,7 +98,7 @@ const start = {
                                         io.in(`Game_${gameID}`).emit('start_game', {code: 502, message: 'Internal server error'});
                                         return;
                                     }
-                                    io.in(`Game_${gameID}`).emit('game_started', {code: 200, message: 'Game started successfully'});
+                                    io.in(`Game_${gameID}`).emit('game_started', {code: 200, message: 'Game started successfully', game: game});
                                 });
             
                             }
