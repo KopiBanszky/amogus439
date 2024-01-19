@@ -7,6 +7,7 @@ import update from "./game/host/settings/update";
 import maps from "./manager/maps";
 import getPlayer from "./game/ingame/getPlayer";
 import getPlayers from "./game/ingame/getPlayers";
+import getTasks from "./game/ingame/getTasks";
 
 
 export default {
@@ -18,5 +19,6 @@ export default {
     update,
     maps,
     getPlayer,
-    getPlayers
+    getPlayers,
+    getTasks
 }

@@ -45,6 +45,10 @@ const task_done = {
         }));
         if(player_promise == null) return;
         const player:Player = player_promise;
+        if(player.team){
+            socket.emit('task_done', {code: 205, message: 'You are an impostor, the task does not count'});
+            return;
+        }
 
         //check if task exists
         const task_promise:any = await new Promise((resolve, reject) => db.query(`SELECT * FROM Tasks WHERE id = ${task_id}`, (err, result) => {
