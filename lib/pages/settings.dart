@@ -354,7 +354,7 @@ class _SettingsPageState extends State<SettingsPage> {
                        "kill_cooldown": _killCooldownController.text,
                        "impostor_max": _impostorMaxController.text,
                        "emergencies": _emergenciesController.text,
-                       "map": "Not Selected",
+                       "map": game.map,
                      });
                      if(res.ok){
                         game.emergencies = int.parse(_emergenciesController.text);

@@ -29,8 +29,11 @@ class _RoleRevealPageState extends State<RoleRevealPage> {
       RquestResult result = await http_get("api/game/ingame/getPlayer", {
         "id": id,
       });
+      print(result);
       if(result.ok){
         dynamic data = jsonDecode(result.data);
+        print(data);
+
         Player plyr = Player.fromMap(data["player"]);
         setState(() {
           impostors.add(plyr);
@@ -119,11 +122,11 @@ class _RoleRevealPageState extends State<RoleRevealPage> {
                 width: MediaQuery.of(context).size.width,
                 fit: BoxFit.contain,
               ),
-              if(!plyr.team || !tapped) PlayerWidget(
+              if(!plyr.team || !tapped/* || impostors.length == 1*/) PlayerWidget(
                   color: plyr.color,
                   name: name_role
               ),
-              if(plyr.team && tapped) Column(
+              if(plyr.team && tapped/* && impostors.length > 1*/) Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: _buildPlayers(impostors),
