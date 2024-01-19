@@ -87,11 +87,14 @@ class _LobbyPageState extends State<LobbyPage> {
 
     socket.on("role_update", (data) =>{
       me = Player.fromMap(data["player"]),
-      impostors = data["impostors"],
+      impostors = List<int>.from(data["impostors"]),
     });
 
     socket.on("game_started", (data){
-      game = Game.fromMap(data["game"]);
+      if(data["code"] != 200) {
+        showAlert("Hiba - ${data["code"]}", data["message"], Colors.red, true, () {}, "Ok", false, () {}, "", context);
+        return;
+      }
       Navigator.pushNamed(context, "/roleReveal", arguments: {
         "host": host,
         "gameId": gameId,
