@@ -26,10 +26,11 @@ class _RoleRevealPageState extends State<RoleRevealPage> {
   Future<void> getImposors(List<int> ids) async {
     for(int i = 0; i < ids.length; i++){
       int id = ids[i];
+      print(id);
       RquestResult result = await http_get("api/game/ingame/getPlayer", {
         "user_id": id,
       });
-      print(result);
+      print(jsonEncode(result));
       if(result.ok){
         dynamic data = jsonDecode(jsonDecode(result.data));
         print(data);
