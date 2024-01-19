@@ -28,7 +28,7 @@ class _RoleRevealPageState extends State<RoleRevealPage> {
       int id = ids[i];
       print(id);
       RquestResult result = await http_get("api/game/ingame/getPlayer", {
-        "user_id": id,
+        "user_id": id.toString(),
       });
       if(result.ok){
         dynamic data = jsonDecode(jsonDecode(result.data));
