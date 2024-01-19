@@ -89,12 +89,12 @@ class _LobbyPageState extends State<LobbyPage> {
     socket.on("role_update", (data) {
       me = Player.fromMap(data["player"]);
       impostors = List<int>.from(data["impostors"] ?? []);
-      if(!updatedOrStarted) {
-        updatedOrStarted = true;
-      }
-      else {
-        startGame();
-      }
+      Navigator.pushNamed(context, "/roleReveal", arguments: {
+        "host": host,
+        "gameId": gameId,
+        "player": me,
+        "impostors": impostors,
+      });
     });
 
     socket.on("game_started", (data){
@@ -102,12 +102,7 @@ class _LobbyPageState extends State<LobbyPage> {
         showAlert("Hiba - ${data["code"]}", data["message"], Colors.red, true, () {}, "Ok", false, () {}, "", context);
         return;
       }
-      if(!updatedOrStarted) {
-        updatedOrStarted = true;
-      }
-      else {
-        startGame();
-      }
+
     });
 
   }
