@@ -45,7 +45,7 @@ class _LobbyPageState extends State<LobbyPage> {
         db++;
       }
       playerWidgets.add(Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: row,
       ));
       if(db >= length) break;
@@ -87,8 +87,8 @@ class _LobbyPageState extends State<LobbyPage> {
     }
 
     socket.on("role_update", (data) {
-      me.team = data["player"]["team"];
-      me.tasks = data["player"]["tasks"];
+      me.team = data["player"]["team"] ? true : false;
+      me.tasks = List<int>.from(data["player"]["tasks"] ?? []);
 
       impostors = List<int>.from(data["impostors"] ?? []);
     });
@@ -154,7 +154,7 @@ class _LobbyPageState extends State<LobbyPage> {
       appBar: AppBar(
         backgroundColor: me.color,
         title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
           const Text("Amogus-vez",
               style: TextStyle(
