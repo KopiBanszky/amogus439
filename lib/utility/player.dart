@@ -2,10 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PlayerWidget extends StatelessWidget {
-  const PlayerWidget({super.key, required this.color, required this.name});
+  const PlayerWidget({super.key, required this.color, required this.name, required this.isImpostor});
 
   final Color color;
   final String name;
+  final bool isImpostor;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,7 @@ class PlayerWidget extends StatelessWidget {
                     color,
                     BlendMode.modulate
                 ),
-                child: Image.asset("assets/player.png",
+                child: Image.asset("assets/${isImpostor ? "impostor.png" : "player.png"}",
                   width: MediaQuery.of(context).size.width * .25,
                 )
             ),
