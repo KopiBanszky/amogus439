@@ -2,7 +2,9 @@ import 'package:amogusvez2/utility/alert.dart';
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import '../utility/player.dart';
+import '../utility/taskbar.dart';
 import '../utility/types.dart';
+import 'dart:math';
 
 class LobbyPage extends StatefulWidget {
   const LobbyPage({super.key});
@@ -104,6 +106,9 @@ class _LobbyPageState extends State<LobbyPage> {
         "gameId": gameId,
         "player": me,
         "impostors": impostors,
+        "socket": socket,
+        "game": game,
+        "players": players.length,
       });
     });
 

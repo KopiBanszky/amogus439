@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:ffi';
 
 import 'package:amogusvez2/connections/http.dart';
+import 'package:amogusvez2/utility/taskbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:socket_io_client/socket_io_client.dart';
@@ -52,7 +53,7 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             Image.asset("assets/background.jpg"),
-        
+
             //if network or server not available, show it
             if(!connectionAvailable) Padding(
               padding: EdgeInsets.all(8.0),

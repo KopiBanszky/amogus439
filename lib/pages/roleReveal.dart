@@ -103,6 +103,9 @@ class _RoleRevealPageState extends State<RoleRevealPage> {
               "player": plyr,
               "gameId": gameId,
               "host": host,
+              "socket": arguments['socket'],
+              "game": arguments['game'],
+              "players": arguments['players'],
             });
           }
         },
