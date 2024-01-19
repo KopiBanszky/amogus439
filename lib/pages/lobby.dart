@@ -100,6 +100,7 @@ class _LobbyPageState extends State<LobbyPage> {
         showAlert("Hiba - ${data["code"]}", data["message"], Colors.red, true, () {}, "Ok", false, () {}, "", context);
         return;
       }
+      Game resGame= Game.fromMap(data["game"]);
 
       Navigator.pushNamed(context, "/roleReveal", arguments: {
         "host": host,
@@ -107,7 +108,7 @@ class _LobbyPageState extends State<LobbyPage> {
         "player": me,
         "impostors": impostors,
         "socket": socket,
-        "game": game,
+        "game": resGame,
         "players": players.length,
       });
     });
