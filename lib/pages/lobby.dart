@@ -89,9 +89,9 @@ class _LobbyPageState extends State<LobbyPage> {
     }
 
     socket.on("role_update", (data) {
-      print("1: ${data["players"]}");
-      me.team = data["player"]["team"] == "null" ? false : true;
+      print("1: ${data["player"]}");
       me.tasks = List<int>.from(data["player"]["tasks"] ?? []);
+      me.team = data["player"]["team"] ? true : false;
 
       impostors = List<int>.from(data["impostors"] ?? []);
     });
