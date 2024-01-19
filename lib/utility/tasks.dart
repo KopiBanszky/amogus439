@@ -80,6 +80,9 @@ class _TasksWidgetState extends State<TasksWidget> {
         )
       );
     }
+    setState(() {
+
+    });
     return taskWidgets;
   }
 
@@ -91,7 +94,7 @@ class _TasksWidgetState extends State<TasksWidget> {
       gameId = widget.gameId;
       userId = widget.userId;
 
-      print(tasks.length);
+      print("Hossz: ${tasks.length}");
 
       taskWidgets = _buildTasks(tasks, gameId, userId);
       listendToSockets(socket);
