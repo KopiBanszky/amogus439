@@ -60,7 +60,7 @@ class _RoleRevealPageState extends State<RoleRevealPage> {
       for(int j = 0; j < 3; j++) {
         if(db >= length) break;
         Player plyr = players[i * 3 + j];
-        PlayerWidget playerWidget = PlayerWidget(color: plyr.color, name: "${plyr.name} - Impostor");
+        PlayerWidget playerWidget = PlayerWidget(color: plyr.color, name: "${plyr.name} - Impostor", isImpostor: true,);
         row.add(playerWidget);
         db++;
       }
@@ -125,8 +125,9 @@ class _RoleRevealPageState extends State<RoleRevealPage> {
                 fit: BoxFit.contain,
               ),
               if(!plyr.team || !tapped/* || impostors.length == 1*/) PlayerWidget(
-                  color: plyr.color,
-                  name: name_role
+                color: plyr.color,
+                name: name_role,
+                isImpostor: false,
               ),
               if(plyr.team && tapped/* && impostors.length > 1*/) Column(
                 mainAxisAlignment: MainAxisAlignment.center,

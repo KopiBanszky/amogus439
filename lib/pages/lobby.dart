@@ -40,7 +40,7 @@ class _LobbyPageState extends State<LobbyPage> {
       for(int j = 0; j < 3; j++) {
         if(db >= length) break;
         Player plyr = players[i * 3 + j];
-        PlayerWidget playerWidget = PlayerWidget(color: plyr.color, name: plyr.name);
+        PlayerWidget playerWidget = PlayerWidget(color: plyr.color, name: plyr.name, isImpostor: false);
         row.add(playerWidget);
         db++;
       }
