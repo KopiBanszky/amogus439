@@ -28,7 +28,7 @@ class _GameMainPageState extends State<GameMainPage> {
   late List<Task> tasks = [];
 
   Future<List<Task>> _getTasks(List<int> ids) async {
-    List<Task> tasks = [];
+    List<Task> tasksInFunc = [];
     for(int i = 0; i < ids.length; i++){
       RquestResult result = await http_get("api/game/ingame/getTask", {
         "task_id": ids[i].toString(),
@@ -37,10 +37,13 @@ class _GameMainPageState extends State<GameMainPage> {
         print(result.data);
         dynamic data = jsonDecode(jsonDecode(result.data));
         Task task = Task.fromMap(data["task"]);
-        tasks.add(task);
+        tasksInFunc.add(task);
       }
     }
-    return Future.value(tasks);
+    setState(() {
+      tasks = tasksInFunc;
+    });
+    return Future.value(tasksInFunc);
   }
 
   @override
@@ -56,12 +59,7 @@ class _GameMainPageState extends State<GameMainPage> {
       socket = arguments['socket'];
 
       print(plyr.tasks);
-      _getTasks(plyr.tasks).then((value) => {
-        setState(() {
-          tasks = value;
-          print("4: $tasks");
-        })
-      });
+      _getTasks(plyr.tasks);
 
       loaded = true;
     }
