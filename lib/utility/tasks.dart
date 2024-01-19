@@ -50,6 +50,7 @@ class _TasksWidgetState extends State<TasksWidget> {
     List<Widget> taskWidgets = [];
     for(int i = 0; i < tasks.length; i++){
       Task task = tasks[i];
+      print(task.name);
       taskWidgets.add(
         Container(
           width: MediaQuery.of(context).size.width * .97,
@@ -89,6 +90,8 @@ class _TasksWidgetState extends State<TasksWidget> {
       socket = widget.socket;
       gameId = widget.gameId;
       userId = widget.userId;
+
+      print(tasks.length);
 
       taskWidgets = _buildTasks(tasks, gameId, userId);
       listendToSockets(socket);

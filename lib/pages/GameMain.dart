@@ -55,10 +55,11 @@ class _GameMainPageState extends State<GameMainPage> {
       game = arguments['game'];
       socket = arguments['socket'];
 
+      print(plyr.tasks);
       _getTasks(plyr.tasks).then((value) => {
         setState(() {
           tasks = value;
-          print(value);
+          print("4: $tasks");
         })
       });
 
