@@ -30,10 +30,10 @@ class _RoleRevealPageState extends State<RoleRevealPage> {
       RquestResult result = await http_get("api/game/ingame/getPlayer", {
         "user_id": id,
       });
-      print(jsonEncode(result));
       if(result.ok){
         dynamic data = jsonDecode(jsonDecode(result.data));
         print(data);
+
 
         Player plyr = Player.fromMap(data["player"]);
         setState(() {
