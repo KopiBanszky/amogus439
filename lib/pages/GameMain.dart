@@ -34,6 +34,7 @@ class _GameMainPageState extends State<GameMainPage> {
         "task_id": ids[i].toString(),
       });
       if(result.ok){
+        print(result.data);
         dynamic data = jsonDecode(jsonDecode(result.data));
         Task task = Task.fromMap(data["task"]);
         tasks.add(task);
