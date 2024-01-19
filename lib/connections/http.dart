@@ -8,25 +8,26 @@ class RquestResult{
 }
 
 const PROTOCOL = "http";
+const PROTOCOLL_METHOD = Uri.http;
 const DOMAIN = "192.168.1.69";
 
 Future<RquestResult> http_get(String route, [dynamic data]) async{
 
-  var dataStr = jsonEncode(data);//.replaceAll(":", "=").replaceAll(",", "&").replaceAll("{", "").replaceAll("}", "");
-  Uri url = Uri.parse('$PROTOCOL://$DOMAIN/$route?$dataStr');
+  //var dataStr = jsonEncode(data);//.replaceAll(":", "=").replaceAll(",", "&").replaceAll("{", "").replaceAll("}", "");
+  Uri url = PROTOCOLL_METHOD(DOMAIN, route, data);
   var result = await http.get(url);
   return RquestResult(jsonEncode(result.body), true);
 }
 Future<RquestResult> http_post(String route, [dynamic data]) async{
 
-  Uri url = Uri.parse('$PROTOCOL://$DOMAIN/$route');
+  Uri url = PROTOCOLL_METHOD(DOMAIN, route);
   var dataStr = jsonEncode(data);
   var result = await http.post(url, body: dataStr, headers: {"Content-type": "application/json"});
   return RquestResult(result.body, true);
 }
 Future<RquestResult> http_put(String route, [dynamic data]) async{
 
-  Uri url = Uri.parse('$PROTOCOL://$DOMAIN/$route');
+  Uri url = PROTOCOLL_METHOD(DOMAIN, route);
   var dataStr = jsonEncode(data);
   var result = await http.put(url, body: dataStr, headers: {"Content-type": "application/json"});
   return RquestResult(result.body, true);
