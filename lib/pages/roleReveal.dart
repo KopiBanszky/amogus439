@@ -31,30 +31,47 @@ class _RoleRevealPageState extends State<RoleRevealPage> {
     }
 
     return Scaffold(
+      backgroundColor: Colors.grey[900],
       body: ElevatedButton(
         onPressed: () {
           if(!tapped) {
             setState(() {
               tapped = true;
-              name_role = "${plyr.team ? "Impostor" : "Crewmate"} ${plyr.name}";
+              name_role = "${plyr.name} - ${plyr.team ? "Impostor" : "Crewmate"}";
             });
           }
         },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+          foregroundColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0),
+          ),
+          padding: EdgeInsets.zero,
+        ),
         child: Center(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset("assets/background.png"),
+              Image.asset("assets/background.jpg",
+                width: MediaQuery.of(context).size.width,
+                fit: BoxFit.contain,
+              ),
               PlayerWidget(
                   color: plyr.color,
-                  name: plyr.name
+                  name: name_role
               ),
+              SizedBox(height: MediaQuery.of(context).size.height * .05),
               Text(!tapped ?
                   "Kattints a képernyőre a szereped felfedéséhez!" :
-                  "Te $name_role vagy! Kattints a képernyőre a folytatáshoz!",
+                  "Te ${plyr.team ? "imporstor" : "crewmate"} vagy! Kattints a képernyőre a folytatáshoz!",
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 20
-                  )
+                    fontSize: 20,
+                  ),
+                  textAlign: TextAlign.center
               ),
             ],
           )
