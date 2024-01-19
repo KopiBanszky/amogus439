@@ -1,5 +1,6 @@
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 class TaskBarWidget extends StatefulWidget {
   const TaskBarWidget({Key? key, required this.socket,
@@ -33,7 +34,7 @@ class _TaskBarWidgetState extends State<TaskBarWidget> {
     socket.on("task_done_by_crew", (data){
       setState(() {
         tasksDone.add(data);
-        taskbar = tasksDone.length ~/ maxTasks;
+        taskbar = ((tasksDone.length / maxTasks)*100).floor();
       });
     });
   }
@@ -53,11 +54,11 @@ class _TaskBarWidgetState extends State<TaskBarWidget> {
       loaded = true;
     }
     return Container(
-      width: MediaQuery.of(context).size.width * .97 * taskbar,
+      width: MediaQuery.of(context).size.width * .99,
       height: 25,
       decoration: BoxDecoration(
         color: Colors.grey[700],
-        borderRadius: BorderRadius.circular(0),
+        borderRadius: BorderRadius.circular(7),
         border: Border.all(
           color: Colors.grey[900]!,
           width: 2,
@@ -66,10 +67,10 @@ class _TaskBarWidgetState extends State<TaskBarWidget> {
       child: Row(
         children: [
           Container(
-            width: MediaQuery.of(context).size.width * .955,
+            width: MediaQuery.of(context).size.width * .955 * taskbar,
             height: 20,
             decoration: BoxDecoration(
-              color: Colors.green,
+              color: Colors.blue,
               borderRadius: BorderRadius.circular(0),
               border: Border.all(
                 color: Colors.grey[900]!,
