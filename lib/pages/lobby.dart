@@ -102,7 +102,7 @@ class _LobbyPageState extends State<LobbyPage> {
       }
       Game resGame= Game.fromMap(data["game"]);
 
-      Navigator.pushNamed(context, "/roleReveal", arguments: {
+      Navigator.pushReplacementNamed(context, "/roleReveal", arguments: {
         "host": host,
         "gameId": gameId,
         "player": me,

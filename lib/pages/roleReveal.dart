@@ -99,7 +99,7 @@ class _RoleRevealPageState extends State<RoleRevealPage> {
             });
           }
           else {
-            Navigator.pushNamed(context, "/gameMain", arguments: {
+            Navigator.pushReplacementNamed(context, "/gameMain", arguments: {
               "player": plyr,
               "gameId": gameId,
               "host": host,
