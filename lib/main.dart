@@ -1,3 +1,4 @@
+import 'package:amogusvez2/pages/GameMain.dart';
 import 'package:amogusvez2/pages/lobby.dart';
 import 'package:amogusvez2/pages/roleReveal.dart';
 import 'package:amogusvez2/pages/settings.dart';
@@ -11,6 +12,7 @@ void main(){
       '/lobby': (context) => const LobbyPage(),
       '/settings': (context) => const SettingsPage(),
       '/roleReveal': (context) => const RoleRevealPage(),
+      '/gameMain': (context) => const GameMainPage(),
     },
   ));
 }
