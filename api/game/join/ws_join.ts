@@ -18,7 +18,7 @@ const create_new_player = {
     event: 'join_game',
     callback: async (args:any, socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>) => {
         const game_id:number = args.game_id;
-        const name:string = args.name;
+        const name:string = args.username;
 
         const gameStarted = new Promise((resolve, reject) => db.query(`SELECT status FROM Games WHERE id = ${game_id}`, (err, result) => {
             if(err){
@@ -39,11 +39,18 @@ const create_new_player = {
 
         if(await gameStarted) return;
 
-        db.query(`SELECT * FROM Players WHERE game_id = ${game_id}`, (err, players_res) => {
+        db.query(`SELECT * FROM Players WHERE game_id = ${game_id}`, (err:any, players_res:Player[]) => {
             if(err){
                 console.error(err);
                 return;
             }
+
+            for(let player of players_res){
+                if(player.name == name){
+                    socket.emit('join_game', {code: 401, message: 'Username already taken'});
+                    return;
+                }
+            };
     
             let color:number = COLORS[randomNum(0, COLORS.length - 1)];
             // players_res.map((player:Player) => {
@@ -56,16 +63,12 @@ const create_new_player = {
                 color = COLORS[randomNum(0, COLORS.length - 1)];
             }
     
-            db.query(`INSERT INTO Players (game_id, socket_id, name, color) VALUES (${game_id}, '${socket.id}', '${name}', ${color})`, (err, result) => {
+            db.query(`INSERT INTO Players (game_id, socket_id, name, color, tasks, tasks_done) VALUES (${game_id}, '${socket.id}', '${name}', ${color}, '[]', '[]')`, (err, result) => {
                 if(err){
                     console.error(err);
                     socket.emit('join_game', {code: 500, message: 'Internal server error'});
                     return;
                 }
-                socket.emit('join_game', {code: 200, message: 'Joined successfully', 
-                    players: players_res,
-                })
-
                 const player:Player = {
                     id: result.insertId,
                     game_id: game_id,
@@ -82,6 +85,12 @@ const create_new_player = {
                     votes: 0,
                     voted: false,
                 };
+
+                players_res.push(player);
+                socket.emit('join_game', {code: 200, message: 'Joined successfully', 
+                    players: players_res,
+                })
+
                 join_room(`Game_${game_id}`, socket);
                 update_players(game_id, player, socket.id, result.insertId);
             });

@@ -24,7 +24,7 @@ const start = {
             //check if map is selected
             const game:Game = game_res[0];
             if(isEmpty(game.map || "")){
-                socket.emit('start_game', {code: 500, message: 'Map not selected'});
+                socket.emit('start_game', {code: 401, message: 'Map not selected'});
                 return;
             }
 

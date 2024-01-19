@@ -27,9 +27,10 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: { 
-    origin: ["https://admin.socket.io", "http://13.53.185.194:8080", "http://13.53.185.194:8081", 'null'],
+    origin: ["https://admin.socket.io", "http://192.168.1.69:8081", "http://192.168.1.69:8081", "http://192.168.1.69", 'null', '*'],
     credentials: true,
   },
+  transports: ['websocket'],
 });
 
 instrument(io, {

@@ -17,6 +17,16 @@ app.use(express.static(__dirname + '/public'));
 // open express connection
 // app.get(API.default.get_tasks.path, (req:any, res:any) => API.default.get_tasks.handler(req, res));
 
+app.get("/check", (req:any, res:any) => res.json(
+    {
+        code: 200,
+        status: true,
+        message: "Server is running"
+    }
+
+));
+
+
 for (let route of Object.values(API.default)){
     // const route:apiMethod = API.default[i];
     // console.log(route.path, route.method);
