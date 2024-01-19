@@ -1,5 +1,4 @@
 import 'package:amogusvez2/utility/alert.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import '../utility/player.dart';
@@ -22,6 +21,7 @@ class _LobbyPageState extends State<LobbyPage> {
   late Socket socket;
   late Player me;
   late String gameId;
+  late List<int> impostors = [];
 
 
 //shows the players in a 3xX grid
@@ -55,7 +55,7 @@ class _LobbyPageState extends State<LobbyPage> {
 
 
   //starts to listen to the sockets
-  void startListenToSockets(socket, gameId){
+  void startListenToSockets(Socket socket, String gameId){
     socket.on("update_players", (data){
 
       //adds a new player to the list
@@ -84,6 +84,21 @@ class _LobbyPageState extends State<LobbyPage> {
         showAlert("Hiba - ${data["code"]}", data["message"], Colors.red, true, () {}, "Ok", false, () {}, "", context);
       });
     }
+
+    socket.on("role_update", (data) =>{
+      me = Player.fromMap(data["player"]),
+      impostors = data["impostors"],
+    });
+
+    socket.on("game_started", (data){
+      game = Game.fromMap(data["game"]);
+      Navigator.pushNamed(context, "/roleReveal", arguments: {
+        "host": host,
+        "gameId": gameId,
+        "player": me,
+      });
+    });
+
   }
 
 
@@ -186,7 +201,7 @@ class _LobbyPageState extends State<LobbyPage> {
                         "player": me,
                       });
 
-                      game = result;
+                      if(result != null) game = result;
                     },
                   style: ElevatedButton.styleFrom(
                     disabledBackgroundColor: Colors.grey,

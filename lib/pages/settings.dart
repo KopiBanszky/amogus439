@@ -25,7 +25,8 @@ class _SettingsPageState extends State<SettingsPage> {
   late bool host;
   late int userID;
   late String gameId;
-  late List<Map<String, String>> mapValues = [{"---": "Válassz pályát"}, {"TestMap1": "Map1"} ];
+  List<String> values = ["Válassz pályát!"];
+  String slectedMap = "Válassz pályát!";
 
   final TextEditingController _taskNumberController = TextEditingController();
   final TextEditingController _voteTimeController = TextEditingController();
@@ -33,6 +34,21 @@ class _SettingsPageState extends State<SettingsPage> {
   final TextEditingController _impostorMaxController = TextEditingController();
   final TextEditingController _emergenciesController = TextEditingController();
 
+  void getMaps() async {
+    print("getMaps");
+    print(values);
+    RquestResult res = await http_get("api/manager/maps");
+    if(res.ok){
+      dynamic data = jsonDecode(jsonDecode(res.data));
+      for(int i = 0; i < data["maps"].length; i++){
+        if(!values.contains(data["maps"][i]["map"])) values.add(data["maps"][i]["map"]);
+      }
+      setState(() {
+        values = values;
+        slectedMap = game.map == "Not Selected" ? "Válassz pályát!" : game.map;
+      });
+    }
+  }
 
 
 
@@ -57,6 +73,8 @@ class _SettingsPageState extends State<SettingsPage> {
       _impostorMaxController.text = game.impostorMax.toString();
       _emergenciesController.text = game.emergencies.toString();
 
+      print(values);
+      getMaps();
 
       loaded = true;
     }
@@ -287,32 +305,39 @@ class _SettingsPageState extends State<SettingsPage> {
         
                 const SizedBox(height: 10,),
         
-                //TODO: Map dropwdown menu
-                DropdownButton<String>(
-                  value: "Válassz pályát",
-                  icon: const Icon(Icons.map,
-                    color: Colors.grey,
-                  ),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                  ),
-                  items: mapValues.map<DropdownMenuItem<String>>((Map<String, String> map) {
-                    //TODO: errorozik
-                    return DropdownMenuItem<String>(
-                      value: map.keys.first,
-                      child: Text(map.values.first,
-                        style: const TextStyle(
-                          color: Colors.white,
+                //TODO: Map dropdown menu
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * .8,
+                  child: DropdownButton<String>(
+                    
+                    value: slectedMap == "Not Slelected" ? "Válassz pályát!" : slectedMap,
+                    icon: const Icon(Icons.map,
+                      color: Colors.grey,
+                    ),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
+                    dropdownColor: Colors.grey[900],
+                    items: values.map<DropdownMenuItem<String>>((String value) {
+                      //TODO: errorozik
+                      return DropdownMenuItem<String>(
+                  
+                        value: value,
+                        child: Text(value,
+                          style: const TextStyle(
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                    );
-                  }).toList(),
-                  onChanged: (String? value) {
-                    setState(() {
-
-                    });
-                  },
+                      );
+                    }).toList(),
+                    onChanged: (String? value) {
+                      setState(() {
+                        game.map = value!;
+                        slectedMap = value;
+                      });
+                    },
+                  ),
                 ),
         
                 const SizedBox(height: 10,),
