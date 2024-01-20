@@ -550,10 +550,10 @@ The host player has to trigger the `start_vote` event.
 ### TODOs
 
 1. sabotages
-    - communication [can't see task and map] => [reconnect to wifi with some stupid task]
-    - electrics [can't call emergency meeting] => [idk]
-    - hacks [impostor can see players on map] => [players have to solve some basic math task]
-    - something that kills players
+    - [ ] communication [can't see task and map] => [reconnect to wifi with some stupid task]
+    - [ ] electrics [can't call emergency meeting] => [idk]
+    - [ ] hacks [impostor can see players on map] => [players have to solve some basic math task]
+    - [ ] something that kills players
 
 1. cam system
     - player can see other players for 5sec and others can see that someone is on cams

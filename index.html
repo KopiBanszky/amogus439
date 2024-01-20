@@ -48,7 +48,8 @@
 
         
     </script>
-    <script src="http://13.53.185.194:8081/socket.io/socket.io.js"></script>
+    <!-- <script src="https://13.53.185.194:443/socket.io/socket.io.js"></script> -->
+    <script src="https://cdn.socket.io/4.3.1/socket.io.min.js"></script>
     <style>
         li{
             border: 1px solid black;
@@ -60,8 +61,13 @@
     <input type="number" placeholder="gameID" id="gameID"><br>
     <button>Host</button><button>Join</button>
     <script defer>
+        const ip = "amogus.439boldogasszony.hu"; //13.53.185.194
+        const port_api = "";//":8080";
+        const port_ws = "";//":8081";
+        const type = "https";
+
         // import { io } from "https://cdn.socket.io/4.7.2/socket.io.esm.min.js";
-        const socket = io("http://13.53.185.194:8081");
+        const socket = io(`${type}://${ip}${port_ws}`);
         socket.emit("hello", "asd");
         socket.on("connect", () => {
             console.log(socket.id); // x8WIv7-mJelg7on_ALbx
@@ -79,7 +85,7 @@
         let gameID;
 
         function host(){
-            fetch("http://localhost:8080/api/game/host/create_game", {
+            fetch(`${type}://${ip}${port_api}/api/game/host/create_game`, {
                 method: "POST",
                 mode: "cors",
                 cache: "no-cache",
@@ -115,7 +121,7 @@
             })
         }
         function join(){
-            fetch("http://localhost:8080/api/game/join/join_game", {
+            fetch(`${type}://${ip}${port_api}/api/game/join/join_game`, {
                 method: "POST",
                 mode: "cors",
                 cache: "no-cache",
@@ -171,7 +177,7 @@
         })
 
         function settingsUpdate(){
-            fetch("http://localhost:8080/api/game/host/settings/update", {
+            fetch(`${type}://${ip}${port_api}/api/game/host/settings/update`, {
                 method: "PUT",
                 mode: "cors",
                 cache: "no-cache",
