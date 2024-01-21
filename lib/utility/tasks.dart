@@ -80,9 +80,6 @@ class _TasksWidgetState extends State<TasksWidget> {
         )
       );
     }
-    setState(() {
-
-    });
     return taskWidgets;
   }
 
