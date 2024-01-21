@@ -161,7 +161,7 @@ class _LobbyPageState extends State<LobbyPage> {
       appBar: AppBar(
         backgroundColor: me.color,
         title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
           const Text("Amogus-vez",
               style: TextStyle(

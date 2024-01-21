@@ -43,7 +43,7 @@ class _GameMainPageState extends State<GameMainPage> {
     setState(() {
       tasks = tasksInFunc;
     });
-    return Future.value(tasksInFunc);
+    return tasksInFunc;
   }
 
   @override
