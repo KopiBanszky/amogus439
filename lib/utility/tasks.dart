@@ -1,3 +1,4 @@
+import 'package:amogusvez2/utility/alert.dart';
 import 'package:amogusvez2/utility/types.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +32,7 @@ class _TasksWidgetState extends State<TasksWidget> {
   List<int> tasksDone = [];
 
   void doTask(String gameId, int taskId, int userId){
+    print("Task done: $taskId");
     tasksDone.add(taskId);
     socket.emit("task_done", {
       "game_id": gameId,
@@ -41,7 +43,11 @@ class _TasksWidgetState extends State<TasksWidget> {
 
   void listendToSockets(Socket socket){
     socket.on("task_done", (data){
+      if(data["code"] != 200){
+        showAlert("Hiba - ${data["code"]}", data["message"], Colors.red, true, () {}, "Ok", false, () {}, "", context);
+      }
       setState(() {
+        taskWidgets = _buildTasks(tasks, gameId, userId);
       });
     });
   }
@@ -52,33 +58,45 @@ class _TasksWidgetState extends State<TasksWidget> {
       Task task = tasks[i];
       print(task.name);
       taskWidgets.add(
-        Container(
-          width: MediaQuery.of(context).size.width * .97,
-          height: MediaQuery.of(context).size.height * .05,
-          decoration: BoxDecoration(
-            color: tasksDone.contains(task.id) ? Colors.green : Colors.grey[700],
-            borderRadius: BorderRadius.circular(7),
-          ),
-          child: ElevatedButton(
-            onPressed: (){
-              doTask(gameId, task.id, userId);
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(task.name,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20
-                  ),
-                ),
-                const Icon(Icons.check),
 
-              ],
+          Container(
+            width: MediaQuery.of(context).size.width * .97,
+            height: MediaQuery.of(context).size.height * .07,
+            decoration: BoxDecoration(
+              color: tasksDone.contains(task.id) ? Colors.green : Colors.grey[800],
+              borderRadius: BorderRadius.circular(7),
             ),
-          ),
-        )
+            child: ElevatedButton(
+              onPressed: (){
+                doTask(gameId, task.id, userId);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.transparent,
+                shadowColor: Colors.transparent,
+                surfaceTintColor: Colors.transparent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(7),
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(task.name,
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20
+                    ),
+                  ),
+                  Icon(tasksDone.contains(task.id) ? Icons.check_circle : Icons.check_circle_outline,
+                    color: Colors.white,
+                  ),
+
+                ],
+              ),
+            ),
+          )
       );
+      taskWidgets.add(const SizedBox(height: 5,));
     }
     return taskWidgets;
   }
@@ -100,14 +118,17 @@ class _TasksWidgetState extends State<TasksWidget> {
     }
     return Container(
       width: MediaQuery.of(context).size.width * .97,
-      height: MediaQuery.of(context).size.height * .4,
+      height: MediaQuery.of(context).size.height * .3,
       decoration: BoxDecoration(
         color: Colors.grey[700],
         borderRadius: BorderRadius.circular(7),
       ),
-      child: SingleChildScrollView(
-        child: Column(
-          children: taskWidgets,
+      child: Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: SingleChildScrollView(
+          child: Column(
+            children: taskWidgets,
+          ),
         ),
       ),
     );

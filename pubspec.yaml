@@ -34,7 +34,9 @@ dependencies:
   socket_io_client: ^2.0.3+1
   #  flutter_local_notifications: ^16.3.0
   flutter_qr_reader: ^1.0.5
-  qr_image_generator: ^0.2.9
+  qr_code_scanner: ^1.0.1
+  qr_flutter: ^4.1.0
+  flutter_spinkit: ^5.2.0
 
 
   # The following adds the Cupertino Icons font to your application.

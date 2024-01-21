@@ -21,6 +21,8 @@ class _RoleRevealPageState extends State<RoleRevealPage> {
   late bool host;
   late String name_role;
   late List<Player> impostors = [];
+  late List<Task> tasks = [];
+  bool isTasksOk = false;
   bool tapped = false;
 
   Future<void> getImposors(List<int> ids) async {
@@ -74,6 +76,35 @@ class _RoleRevealPageState extends State<RoleRevealPage> {
     return playerWidgets;
   }
 
+  //gets the tasks from the server
+  Future<List<Task>> _getTasks(List<int> ids) async {
+    List<Task> tasksInFunc = [];
+    for(int i = 0; i < ids.length; i++){
+      RquestResult result = await http_get("api/game/ingame/getTask", {
+        "task_id": ids[i].toString(),
+      });
+      if(result.ok){
+        dynamic data = jsonDecode(jsonDecode(result.data));
+        Task task = Task.fromMap(data["task"]);
+        print(task.name);
+        tasksInFunc.add(task);
+      }
+    }
+    tasks = tasksInFunc;
+    if(isTasksOk){
+      Navigator.pushReplacementNamed(context, "/gameMain", arguments: {
+        "player": plyr,
+        "gameId": gameId,
+        "host": host,
+        "socket": arguments['socket'],
+        "game": arguments['game'],
+        "players": plyr,
+        "tasks": tasks,
+      });
+    }
+    return tasksInFunc;
+  }
+
   @override
   Widget build(BuildContext context) {
     arguments = ModalRoute.of(context)!.settings.arguments;
@@ -84,9 +115,13 @@ class _RoleRevealPageState extends State<RoleRevealPage> {
       name_role = plyr.name;
 
       getImposors(arguments['impostors']);
+      _getTasks(plyr.tasks).then((value) =>{
+        isTasksOk = true,
+      });
 
       loaded = true;
     }
+
 
     return Scaffold(
       backgroundColor: Colors.grey[900],
@@ -99,14 +134,32 @@ class _RoleRevealPageState extends State<RoleRevealPage> {
             });
           }
           else {
-            Navigator.pushReplacementNamed(context, "/gameMain", arguments: {
-              "player": plyr,
-              "gameId": gameId,
-              "host": host,
-              "socket": arguments['socket'],
-              "game": arguments['game'],
-              "players": arguments['players'],
-            });
+            if(isTasksOk) {
+              Navigator.pushReplacementNamed(context, "/gameMain", arguments: {
+                "player": plyr,
+                "gameId": gameId,
+                "host": host,
+                "socket": arguments['socket'],
+                "game": arguments['game'],
+                "players": arguments['players'],
+                "tasks": tasks,
+              });
+              isTasksOk = true;
+            }
+            else{
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text("A feladatok betöltése folyamatban van!"),
+                        SizedBox(height: 10,),
+                        CircularProgressIndicator(),
+                      ],
+                    )
+                  ),
+              );
+            }
           }
         },
         style: ElevatedButton.styleFrom(

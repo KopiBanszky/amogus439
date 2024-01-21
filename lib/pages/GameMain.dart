@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:amogusvez2/connections/http.dart';
 import 'package:amogusvez2/utility/tasks.dart';
 import 'package:flutter/material.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
 import '../utility/taskbar.dart';
@@ -26,25 +27,8 @@ class _GameMainPageState extends State<GameMainPage> {
   late Game game;
   late Socket socket;
   late List<Task> tasks = [];
+  bool alive = true;
 
-  Future<List<Task>> _getTasks(List<int> ids) async {
-    List<Task> tasksInFunc = [];
-    for(int i = 0; i < ids.length; i++){
-      RquestResult result = await http_get("api/game/ingame/getTask", {
-        "task_id": ids[i].toString(),
-      });
-      if(result.ok){
-        print(result.data);
-        dynamic data = jsonDecode(jsonDecode(result.data));
-        Task task = Task.fromMap(data["task"]);
-        tasksInFunc.add(task);
-      }
-    }
-    setState(() {
-      tasks = tasksInFunc;
-    });
-    return tasksInFunc;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,9 +41,10 @@ class _GameMainPageState extends State<GameMainPage> {
       players = arguments['players'];
       game = arguments['game'];
       socket = arguments['socket'];
+      tasks = arguments['tasks'] ?? [];
 
-      print(plyr.tasks);
-      _getTasks(plyr.tasks);
+      if(tasks.isNotEmpty) print("Elso task: ${tasks[0]}");
+
 
       loaded = true;
     }
@@ -68,6 +53,10 @@ class _GameMainPageState extends State<GameMainPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.grey[900],
+        titleTextStyle: const TextStyle(
+          color: Colors.white,
+          fontSize: 20
+        ),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -106,6 +95,75 @@ class _GameMainPageState extends State<GameMainPage> {
                 tasks: tasks,
                 gameId: gameId,
                 userId: plyr.id
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        disabledBackgroundColor: Colors.grey,
+                        backgroundColor: Colors.blue,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(7),
+                        ),
+                          padding: const EdgeInsets.fromLTRB(25, 15, 25, 15),
+                          side: const BorderSide(
+                          color: Colors.white,
+                          width: 1.5,
+                        ),
+                        textStyle: const TextStyle(
+                          fontSize: 20,
+                        ),
+                      ),
+                      child: const Text("Térkép",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      )
+                  ),
+                  ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/qrReader', arguments: {
+                          'player': plyr,
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                        disabledBackgroundColor: Colors.grey,
+                        backgroundColor: Colors.orange,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(7),
+                        ),
+                        padding: const EdgeInsets.fromLTRB(25, 15, 25, 15),
+                        side: const BorderSide(
+                          color: Colors.white,
+                          width: 1.5,
+                        ),
+                        textStyle: const TextStyle(
+                          fontSize: 20,
+                        ),
+                      ),
+                      child: const Text("Qr-kód olvasó",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      )
+                  ),
+
+                ],
+              ),
+            ),
+            //QR kód
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: QrImageView(
+                data: "${plyr.id}-${alive ? "alive" : "dead"}",
+                size: 300,
+                version: QrVersions.auto,
+                backgroundColor: Colors.white,
+              ),
             )
           ],
         ),

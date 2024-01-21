@@ -203,7 +203,17 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ],
-                  )
+                  ),
+                  /*ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/qrReader');
+                      },
+                      child: const Text("Qr-kód olvasó",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      )
+                  ),*/
                 ],
               ),
             )

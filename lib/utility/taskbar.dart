@@ -30,10 +30,12 @@ class _TaskBarWidgetState extends State<TaskBarWidget> {
   int taskbar = 0;
   List<int> tasksDone = [];
 
-  void listenToSockets(Socket socket, String gameId){
+  void listenToSockets(Socket socket){
+    print("Listening on task_done_by_crew");
     socket.on("task_done_by_crew", (data){
+      print(data);
       setState(() {
-        tasksDone.add(data);
+        tasksDone.add(data["task_id"]);
         taskbar = ((tasksDone.length / maxTasks)*100).floor();
       });
     });
@@ -50,6 +52,7 @@ class _TaskBarWidgetState extends State<TaskBarWidget> {
       impostors = widget.impostorsCount;
 
       maxTasks =  (players - ((players ~/ 3 > impostors) ? impostors : players ~/ 3)) * tasksCount;
+      listenToSockets(socket);
 
       loaded = true;
     }
@@ -66,15 +69,18 @@ class _TaskBarWidgetState extends State<TaskBarWidget> {
       ),
       child: Row(
         children: [
-          Container(
-            width: MediaQuery.of(context).size.width * .955 * taskbar,
-            height: 20,
-            decoration: BoxDecoration(
-              color: Colors.blue,
-              borderRadius: BorderRadius.circular(0),
-              border: Border.all(
-                color: Colors.grey[900]!,
-                width: 2,
+          Padding(
+            padding: const EdgeInsets.fromLTRB(2.0, 0, 0, 0),
+            child: Container(
+              width: MediaQuery.of(context).size.width * .966 * (taskbar / 100),
+              height: 18,
+              decoration: BoxDecoration(
+                color: Colors.blue,
+                borderRadius: BorderRadius.circular(0),
+                border: Border.all(
+                  color: Colors.grey[900]!,
+                  width: 2,
+                ),
               ),
             ),
           ),
