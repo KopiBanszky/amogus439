@@ -33,7 +33,6 @@ const create_new_game = {
                     return;
                 }
                 const gameType:Game = game[0];
-                console.log(gameType);
 
                 socket.emit('create_game', {
                     code: 200,

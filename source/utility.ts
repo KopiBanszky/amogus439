@@ -15,7 +15,7 @@ interface Geo_pos {
 interface Game {
     id: number, //game id (6 digit number)
     task_num: number, //number of tasks
-    task_visible: boolean, //whether the tasks that done are visible to the players or not
+    task_visibility: boolean, //whether the tasks that done are visible to the players or not
     vote_time: number, //seconds
     anonymus_vote: boolean, //whether the votes are anonymus or not
     kill_cooldown: number, //seconds
@@ -33,7 +33,7 @@ interface Player {
     color: number, //player color (decimal, need to convert to hex)
     emergency: number, //number of emergencies used by player
     tasks: number[], //all tasks that player has (task ids)
-    task_done: number[], //all tasks that player has done (task ids)
+    tasks_done: number[], //all tasks that player has done (task ids)
     team: boolean, //false: crewmate, true: impostor
     geo_pos: Geo_pos, //player location [latitude, longitude]
     dead: boolean //whether the player is dead or not

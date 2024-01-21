@@ -69,7 +69,7 @@ const start = {
                     for (let index = 0; index < players.length; index++) {
                         const player:Player = players[index];
                         player.tasks = [];
-                        player.task_done = [];
+                        player.tasks_done = [];
 
                         //add tasks to player. max task count is setted in game settings or tasks.length
                         for(let i = 0; i < (Tasks.length < game.task_num ? Tasks.length : game.task_num); i++){
@@ -82,7 +82,7 @@ const start = {
                         }
 
                         //update players
-                        db.query(`UPDATE Players SET tasks = '${JSON.stringify(player.tasks)}', tasks_done = '${JSON.stringify(player.task_done)}', team = ${impostors_ids.includes(player.id)} WHERE id = ${player.id}`, (err, result) => {
+                        db.query(`UPDATE Players SET tasks = '${JSON.stringify(player.tasks)}', tasks_done = '${JSON.stringify(player.tasks_done)}', team = ${impostors_ids.includes(player.id)} WHERE id = ${player.id}`, (err, result) => {
                             if(err){
                                 console.error(err);
                                 io.in(`Game_${gameID}`).emit('start_game', {code: 501, message: 'Internal server error'});

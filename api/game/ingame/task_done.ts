@@ -63,25 +63,28 @@ const task_done = {
             }
             resolve(result[0]);
         }));
-        if(task_promise == null) return;
-        const task:Task = task_promise;
+        if (task_promise == null) return;
+        const task: Task = task_promise;
 
+
+        player.tasks_done = JSON.parse(player.tasks_done.toString() || JSON.stringify([]));
         //check if task is already done
-        if(player.task_done.includes(task_id)){
-            socket.emit('task_done', {code: 403, message: 'Task already done'});
+        if (player.tasks_done.includes(task_id)) {
+            socket.emit('task_done', { code: 403, message: 'Task already done' });
             return;
         }
 
         //set task as done
-        player.task_done.push(task_id);
-        db.query(`UPDATE Players SET task_done = '${JSON.stringify(player.task_done)}' WHERE id = ${player.id}`, (err, result) => {
+        player.tasks_done.push(task_id);
+        db.query(`UPDATE Players SET tasks_done = '${JSON.stringify(player.tasks_done)}' WHERE id = ${player.id}`, (err, result) => {
             if(err){
                 console.error(err);
                 socket.emit('task_done', {code: 500, message: 'Internal server error'});
                 return;
             }
             socket.emit('task_done', {code: 200, message: 'Task done'});
-            if(game.task_visible) io.in(`Game_${game_id}`).emit('task_done_by_crew', {player_id: player.id, task_id: task_id});
+            console.log(game.task_visibility, game_id );
+            if(game.task_visibility) io.in(`Game_${game_id}`).emit('task_done_by_crew', {player_id: player.id, task_id: task_id});
             testIfGameEnd(game_id);
         });
     }

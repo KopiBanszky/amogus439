@@ -33,7 +33,6 @@ export default <apiMethod> {
             const task = result[0];
             task.geo_pos = JSON.parse(task.geo_pos || JSON.stringify({latitude: 0, longitude: 0}));
 
-            console.log(task);
 
             res.status(200).send({
                 message: 'Task retrieved successfully',

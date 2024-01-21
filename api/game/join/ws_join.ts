@@ -77,7 +77,7 @@ const create_new_player = {
                     color: color,
                     emergency: 0,
                     tasks: [],
-                    task_done: [],
+                    tasks_done: [],
                     team: false,
                     geo_pos: {latitude: 0, longitude: 0},
                     dead: false,
