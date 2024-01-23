@@ -10,6 +10,8 @@ export default <apiMethod> {
         const sql = "SELECT * FROM Tasks";
         db.query(sql, (err, result) => {
             if(err) throw err;
+
+            //parse geo_pos
             for(let i = 0; i < result.length; i++){
                 result[i].geo_pos = JSON.parse(result[i].geo_pos);
             }

@@ -1,4 +1,4 @@
-import { apiMethod } from "../../../../source/utility";
+import { apiMethod, isEmpty } from "../../../../source/utility";
 import db from "../../../../database/export_db_connection";
 import isHost from "../isHost";
 
@@ -20,10 +20,13 @@ export default <apiMethod> {
         
         let x = 0;
         const bodyKeys = Object.keys(req.body);
+        const updatedKeys:string[] = [];
         for(let i of bodyKeys){
             if(!options.includes(i)) continue;
+            if(isEmpty(i)) continue;
             if(i == "map") req.body[i] = `'${req.body[i]}'`;
-            sqlVariables += `${i} = ${req.body[i]}${x == bodyKeys.length-2 ? "":","} `;
+            sqlVariables += `${i} = ${req.body[i]}${x == bodyKeys.length-3 ? "":","} `;
+            updatedKeys.push(i);
             ++x;
         }
         const sql:string = `UPDATE Games SET ${sqlVariables} WHERE id = ${game_id}`;
@@ -36,7 +39,8 @@ export default <apiMethod> {
                 return 500;
             };
             res.status(200).send({
-                message: 'Game settings updated successfully'
+                message: 'Game settings updated successfully',
+                updatedKeys
             });
             return 200;
         })

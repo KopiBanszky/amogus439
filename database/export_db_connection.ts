@@ -10,4 +10,20 @@ db.connect((err) => {
    console.log('MySql Connected');
 })
 
+db.on('error', (err) => {
+   console.log(err);
+   if(err.code === 'PROTOCOL_CONNECTION_LOST') {
+       db.connect((err) => {
+           if(err) throw err;
+           console.log('MySql Connected');
+       })
+   } else {
+        console.log(err);
+        db.connect((err) => {
+            if(err) throw err;
+            console.log('MySql Connected');
+        })
+   }
+});
+
 export default db;

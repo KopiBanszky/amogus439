@@ -2,20 +2,20 @@ import db from "../../../database/export_db_connection";
 import { Player, apiMethod, isEmpty } from "../../../source/utility";
 
 export default <apiMethod> {
-    path: '/api/game/ingame/getPlayer',
+    path: '/api/game/ingame/getTask',
     method: 'GET',
     handler: function (req:any, res:any) {
-        const { socket_id, user_id } = req.query;
+        const { task_id } = req.query;
 
-        if(isEmpty(socket_id || "") && (user_id == undefined || user_id == null)){
+        if((task_id == undefined || task_id == null)){
             res.status(400).send({
                 message: 'Values cannot be empty'
             });
             return 400;
         }
 
-        const numID:number = user_id;
-        const sql = `SELECT * FROM Players WHERE ${isEmpty(socket_id || "") ? "" :  `socket_id = ${socket_id}`}${!isEmpty(socket_id || "") && !(user_id == undefined || user_id == null) ? " OR " : ""}${(user_id == undefined || user_id == null) ? "" : `id = ${numID}`}`;
+        const numID:number = task_id;
+        const sql = `SELECT * FROM Tasks WHERE id = ${numID}`;
         db.query(sql, (err, result) => {
             if(err){
                 console.error(err);
@@ -30,14 +30,14 @@ export default <apiMethod> {
                 });
                 return 404;
             }
-            const player = result[0];
-            player.tasks = JSON.parse(player.tasks);
-            player.task_done = JSON.parse(player.task_done || "[]");
-            player.geo_pos = JSON.parse(player.geo_pos || JSON.stringify({latitude: 0, longitude: 0}));
+            const task = result[0];
+            task.geo_pos = JSON.parse(task.geo_pos || JSON.stringify({latitude: 0, longitude: 0}));
+
+            console.log(task);
 
             res.status(200).send({
-                message: 'Player retrieved successfully',
-                player: player
+                message: 'Task retrieved successfully',
+                task: task
             });
             return 200;
         })
