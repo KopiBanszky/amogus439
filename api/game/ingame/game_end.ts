@@ -22,7 +22,7 @@ function testIfGameEnd(game_id:number) {
                 impostors++;
             }else{
                 crewmates++;
-                task_done += player.task_done.length;
+                task_done += player.tasks_done.length;
                 task_total += player.tasks.length;
             }
         });
