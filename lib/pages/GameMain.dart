@@ -27,7 +27,24 @@ class _GameMainPageState extends State<GameMainPage> {
   late Game game;
   late Socket socket;
   late List<Task> tasks = [];
+  late String qr_action;
   bool alive = true;
+
+  void listenOnSockets(){
+    socket.on("got_killed", (data) {
+      qr_action = "${plyr.id}-report";
+      alive = false;
+    });
+
+    socket.on("reported_player", (data) {
+      qr_action = "${plyr.id}-dead";
+    });
+
+    socket.on("emergency_called", (data) {
+      qr_action = "${plyr.id}-dead";
+    });
+
+  }
 
 
   @override
@@ -42,6 +59,8 @@ class _GameMainPageState extends State<GameMainPage> {
       game = arguments['game'];
       socket = arguments['socket'];
       tasks = arguments['tasks'] ?? [];
+      qr_action = "${plyr.id}-alive";
+
 
       if(tasks.isNotEmpty) print("Elso task: ${tasks[0]}");
 
@@ -128,6 +147,8 @@ class _GameMainPageState extends State<GameMainPage> {
                       onPressed: () {
                         Navigator.pushNamed(context, '/qrReader', arguments: {
                           'player': plyr,
+                          'socket': socket,
+                          'gameId': gameId,
                         });
                       },
                       style: ElevatedButton.styleFrom(
@@ -159,7 +180,7 @@ class _GameMainPageState extends State<GameMainPage> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: QrImageView(
-                data: "${plyr.id}-${alive ? "alive" : "dead"}",
+                data: qr_action,
                 size: 300,
                 version: QrVersions.auto,
                 backgroundColor: Colors.white,

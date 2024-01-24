@@ -1,9 +1,14 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:amogusvez2/connections/http.dart';
 import 'package:amogusvez2/utility/types.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:socket_io_client/socket_io_client.dart';
+
+import '../utility/alert.dart';
 
 class SrReaderPage extends StatefulWidget {
   const SrReaderPage({super.key});
@@ -15,6 +20,8 @@ class SrReaderPage extends StatefulWidget {
 class _SrReaderPageState extends State<SrReaderPage> {
     dynamic arguments;
     late Color color;
+    late Socket socket;
+    late String gameId;
     late Player plyr;
 
 
@@ -39,6 +46,8 @@ class _SrReaderPageState extends State<SrReaderPage> {
       arguments = ModalRoute.of(context)!.settings.arguments;
       plyr = arguments['player'];
       color = plyr.color;
+      socket = arguments['socket'];
+      gameId = arguments['gameId'];
 
 
       return Scaffold(
@@ -99,7 +108,65 @@ class _SrReaderPageState extends State<SrReaderPage> {
 
     void _onQRViewCreated(QRViewController controller) {
       this.controller = controller;
-      controller.scannedDataStream.listen((scanData) {
+      controller.scannedDataStream.listen((scanData) async {
+        List<String> data = scanData.toString().split("-");
+        int target_id = int.parse(data[0]);
+        String action = data[1];
+
+        switch(action){
+          case "kill":
+            socket.emit("kill", {
+              "game_id": gameId,
+              "user_id": plyr.id,
+              "target_id": target_id,
+            });
+
+            //get player
+            dynamic plyr_res = await http_get("api/game/ingame/getPlayer", {
+              "user_id": target_id,
+            });
+/*
+            if(plyr_res.ok) {
+              dynamic data = jsonDecode(jsonDecode(plyr_res.data));
+              Player target = Player.fromMap(data["player"]);
+              showAlert(
+                  "Sikeres gyilkolás",
+                  "${target.name} sikeresen megölted!",
+                  Colors.green,
+                  true, () {},
+                  "Ok",
+                  false, () {},
+                  "",
+                  context);
+            }*/
+            break;
+          case "report":
+            socket.emit("report", {
+              "game_id": gameId,
+              "user_id": target_id,
+            });
+            break;
+          case "alive":
+            showAlert(
+              "Megállj!",
+              "A játékos még életben van",
+              Colors.blue,
+              true,
+              () {},
+              "Ok",
+              false,
+              ()  {},
+              "",
+              context
+            );
+            break;
+          case "emergency":
+            socket.emit("emergency", {
+              "game_id": gameId,
+              "user_id": target_id,
+            });
+            break;
+        }
         setState(() {
           result = scanData;
         });
