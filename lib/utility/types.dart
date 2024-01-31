@@ -105,7 +105,7 @@ class Player {
       color: HexColor.fromHex(map['color'].toRadixString(16)),
       emergency: map['emergency'] ?? 0,
       tasks: List<int>.from(map['tasks'] ?? []),
-      taskDone: List<int>.from(map['task_done'] ?? []),
+      taskDone: List<int>.from(map['tasks_done'] ?? []),
       team: map['team'] == 1 ? true : false,
       geoPos: Map<String, double>.from(map['geo_pos']
               ?.map((key, value) => MapEntry(key, value.toDouble())) ??
