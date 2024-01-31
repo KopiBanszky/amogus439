@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 enum imgType { player, impostor, dead, emergency, report }
 
 class PlayerWidget extends StatelessWidget {
-  const PlayerWidget(
+  PlayerWidget(
       {super.key, required this.color, required this.name, required this.img});
 
   final Color color;
