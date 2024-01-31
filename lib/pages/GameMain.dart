@@ -48,6 +48,16 @@ class _GameMainPageState extends State<GameMainPage> {
       if (!alive) {
         qr_action = "${plyr.id}-dead";
       }
+      Navigator.popUntil(context, (route) => route.isCurrent);
+      Navigator.pushNamed(context, '/waitingForVote', arguments: {
+        'player': plyr,
+        'socket': socket,
+        'gameId': gameId,
+        "host": host,
+        'isEmergencyCalled': false,
+        'reporter': Player.fromMap(data["reporter"]),
+        'dead': Player.fromMap(data["dead"]),
+      });
     });
 
     socket.on("emergency_called", (data) {
@@ -79,7 +89,7 @@ class _GameMainPageState extends State<GameMainPage> {
       game = arguments['game'];
       socket = arguments['socket'];
       tasks = arguments['tasks'] ?? [];
-      qr_action = "${plyr.id}-alive";
+      qr_action = "${plyr.id}-report";
 
       listenOnSockets();
 
