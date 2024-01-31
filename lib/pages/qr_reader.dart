@@ -121,7 +121,6 @@ class _SrReaderPageState extends State<SrReaderPage> {
             showAlert(
                 "Megállj!", "A játékos még életben van", Colors.blue, true, () {
               controller.resumeCamera();
-              Navigator.pop(context);
             }, "Ok", false, () {}, "", context);
           } else {
             socket.emit("kill", {
@@ -145,7 +144,7 @@ class _SrReaderPageState extends State<SrReaderPage> {
                       "${target.name} sikeresen megölted!",
                       Colors.green,
                       true, () {
-                    Navigator.popUntil(context, (route) => route.isFirst);
+                    Navigator.pop(context);
                   }, "Ok", false, () {}, "", context);
                 }
               } else {
@@ -153,7 +152,6 @@ class _SrReaderPageState extends State<SrReaderPage> {
                     "Hiba - ${data["code"]}", data["message"], Colors.red, true,
                     () {
                   controller.resumeCamera();
-                  Navigator.pop(context);
                 }, "Ok", false, () {}, "", context);
               }
             });
