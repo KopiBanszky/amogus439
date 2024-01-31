@@ -34,6 +34,7 @@ class _GameMainPageState extends State<GameMainPage> {
   void listenOnSockets() {
     socket.on("got_killed", (data) {
       Player impo = Player.fromMap(data["player"]);
+      print("Megölt: ${impo.name}");
       qr_action = "${plyr.id}-report";
       alive = false;
       showAlert("Meghaltál", "Megölt: ${impo.name}", impo.color, true, () {},

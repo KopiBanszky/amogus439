@@ -26,51 +26,54 @@ class _RoleRevealPageState extends State<RoleRevealPage> {
   bool tapped = false;
 
   Future<void> getImposors(List<int> ids) async {
-    for(int i = 0; i < ids.length; i++){
+    for (int i = 0; i < ids.length; i++) {
       int id = ids[i];
       print(id);
       RquestResult result = await http_get("api/game/ingame/getPlayer", {
         "user_id": id.toString(),
       });
-      if(result.ok){
+      if (result.ok) {
         dynamic data = jsonDecode(jsonDecode(result.data));
         print(data);
-
 
         Player plyr = Player.fromMap(data["player"]);
         setState(() {
           impostors.add(plyr);
         });
       }
-
     }
   }
 
-
 //shows the players in a 3xX grid
-  List<Row> _buildPlayers(List<Player> players){
-
+  List<SingleChildScrollView> _buildPlayers(List<Player> players) {
     int length = players.length;
     int rows = length ~/ 3 + 1;
 
-
-    List<Row> playerWidgets = [];
+    List<SingleChildScrollView> playerWidgets = [];
     int db = 0;
 
-    for(int i = 0; i < rows; i++){
+    for (int i = 0; i < rows; i++) {
       List<PlayerWidget> row = [];
-      for(int j = 0; j < 3; j++) {
-        if(db >= length) break;
+      for (int j = 0; j < 3; j++) {
+        if (db >= length) break;
         Player plyr = players[i * 3 + j];
-        PlayerWidget playerWidget = PlayerWidget(color: plyr.color, name: "${plyr.name} - Impostor", isImpostor: true,);
+        PlayerWidget playerWidget = PlayerWidget(
+          color: plyr.color,
+          name: "${plyr.name} - Impostor",
+          isImpostor: true,
+        );
         row.add(playerWidget);
         db++;
       }
-      playerWidgets.add(Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: row,
-      ));
-      if(db >= length) break;
+      playerWidgets.add(
+        SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: row,
+            )),
+      );
+      if (db >= length) break;
     }
 
     return playerWidgets;
@@ -79,11 +82,11 @@ class _RoleRevealPageState extends State<RoleRevealPage> {
   //gets the tasks from the server
   Future<List<Task>> _getTasks(List<int> ids) async {
     List<Task> tasksInFunc = [];
-    for(int i = 0; i < ids.length; i++){
+    for (int i = 0; i < ids.length; i++) {
       RquestResult result = await http_get("api/game/ingame/getTask", {
         "task_id": ids[i].toString(),
       });
-      if(result.ok){
+      if (result.ok) {
         dynamic data = jsonDecode(jsonDecode(result.data));
         Task task = Task.fromMap(data["task"]);
         print(task.name);
@@ -91,7 +94,8 @@ class _RoleRevealPageState extends State<RoleRevealPage> {
       }
     }
     tasks = tasksInFunc;
-    if(isTasksOk){
+    if (isTasksOk) {
+      // ignore: use_build_context_synchronously
       Navigator.pushReplacementNamed(context, "/gameMain", arguments: {
         "player": plyr,
         "gameId": gameId,
@@ -108,33 +112,32 @@ class _RoleRevealPageState extends State<RoleRevealPage> {
   @override
   Widget build(BuildContext context) {
     arguments = ModalRoute.of(context)!.settings.arguments;
-    if(!loaded){
+    if (!loaded) {
       plyr = arguments['player'];
       gameId = arguments['gameId'];
       host = arguments['host'];
       name_role = plyr.name;
 
       getImposors(arguments['impostors']);
-      _getTasks(plyr.tasks).then((value) =>{
-        isTasksOk = true,
-      });
+      _getTasks(plyr.tasks).then((value) => {
+            isTasksOk = true,
+          });
 
       loaded = true;
     }
-
 
     return Scaffold(
       backgroundColor: Colors.grey[900],
       body: ElevatedButton(
         onPressed: () {
-          if(!tapped) {
+          if (!tapped) {
             setState(() {
               tapped = true;
-              name_role = "${plyr.name} - ${plyr.team ? "Impostor" : "Crewmate"}";
+              name_role =
+                  "${plyr.name} - ${plyr.team ? "Impostor" : "Crewmate"}";
             });
-          }
-          else {
-            if(isTasksOk) {
+          } else {
+            if (isTasksOk) {
               Navigator.pushReplacementNamed(context, "/gameMain", arguments: {
                 "player": plyr,
                 "gameId": gameId,
@@ -145,19 +148,19 @@ class _RoleRevealPageState extends State<RoleRevealPage> {
                 "tasks": tasks,
               });
               isTasksOk = true;
-            }
-            else{
+            } else {
               ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
+                const SnackBar(
                     content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text("A feladatok betöltése folyamatban van!"),
-                        SizedBox(height: 10,),
-                        CircularProgressIndicator(),
-                      ],
-                    )
-                  ),
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text("A feladatok betöltése folyamatban van!"),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CircularProgressIndicator(),
+                  ],
+                )),
               );
             }
           }
@@ -173,39 +176,42 @@ class _RoleRevealPageState extends State<RoleRevealPage> {
           padding: EdgeInsets.zero,
         ),
         child: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Image.asset("assets/background.jpg",
-                width: MediaQuery.of(context).size.width,
-                fit: BoxFit.contain,
-              ),
-              if(!plyr.team || !tapped/* || impostors.length == 1*/) PlayerWidget(
+            child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset(
+              "assets/background.jpg",
+              width: MediaQuery.of(context).size.width,
+              fit: BoxFit.contain,
+            ),
+            if (!plyr.team || !tapped /* || impostors.length == 1*/)
+              PlayerWidget(
                 color: plyr.color,
                 name: name_role,
                 isImpostor: false,
               ),
-              if(plyr.team && tapped/* && impostors.length > 1*/) Column(
+            if (plyr.team && tapped /* && impostors.length > 1*/)
+              Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: _buildPlayers(impostors),
               ),
-              SizedBox(height: MediaQuery.of(context).size.height * .05),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(!tapped ?
-                    "Kattints a képernyőre a szereped felfedéséhez!" :
-                    "Te ${plyr.team ? "imporstor" : "crewmate"} vagy! Kattints a képernyőre a folytatáshoz!",
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                    ),
-                    textAlign: TextAlign.center,
+            SizedBox(height: MediaQuery.of(context).size.height * .05),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                !tapped
+                    ? "Kattints a képernyőre a szereped felfedéséhez!"
+                    : "Te ${plyr.team ? "imporstor" : "crewmate"} vagy! Kattints a képernyőre a folytatáshoz!",
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
                 ),
+                textAlign: TextAlign.center,
               ),
-            ],
-          )
-        ),
+            ),
+          ],
+        )),
       ),
     );
   }
