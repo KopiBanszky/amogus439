@@ -52,6 +52,7 @@ class _SrReaderPageState extends State<SrReaderPage> {
 
       return Scaffold(
         appBar: AppBar(
+          color: Colors.white,
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -109,6 +110,7 @@ class _SrReaderPageState extends State<SrReaderPage> {
     void _onQRViewCreated(QRViewController controller) {
       this.controller = controller;
       controller.scannedDataStream.listen((scanData) async {
+        print(scanData);
         List<String> data = scanData.toString().split("-");
         int target_id = int.parse(data[0]);
         String action = data[1];
