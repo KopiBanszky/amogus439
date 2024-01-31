@@ -65,6 +65,7 @@ class _GameMainPageState extends State<GameMainPage> {
       qr_action = "${plyr.id}-alive";
 
       if (tasks.isNotEmpty) print("Elso task: ${tasks[0]}");
+      listenOnSockets();
 
       loaded = true;
     }
