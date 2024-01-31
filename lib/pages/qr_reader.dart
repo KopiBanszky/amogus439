@@ -85,15 +85,15 @@ class _SrReaderPageState extends State<SrReaderPage> {
               onQRViewCreated: _onQRViewCreated,
             ),
           ),
-          const Expanded(
-            flex: 1,
-            child: Center(
-                child: Icon(
-              Icons.qr_code_scanner,
-              color: Colors.white,
-              size: 50,
-            )),
-          ),
+          // const Expanded(
+          //   flex: 1,
+          //   child: Center(
+          //       child: Icon(
+          //     Icons.qr_code_scanner,
+          //     color: Colors.white,
+          //     size: 50,
+          //   )),
+          // ),
         ],
       ),
     );
@@ -113,7 +113,18 @@ class _SrReaderPageState extends State<SrReaderPage> {
         case "report":
           socket.emit("report", {
             "game_id": gameId,
-            "user_id": target_id,
+            "player_id": plyr.id,
+            "dead_id": target_id,
+          });
+
+          socket.on("report", (data) {
+            if (data["code"] != 200) {
+              showAlert(
+                  "Hiba - ${data["code"]}", data["message"], Colors.red, true,
+                  () {
+                controller.resumeCamera();
+              }, "Ok", false, () {}, "", context);
+            }
           });
           break;
         case "alive":
@@ -141,7 +152,7 @@ class _SrReaderPageState extends State<SrReaderPage> {
                   // ignore: use_build_context_synchronously
                   showAlert(
                       "Sikeres gyilkolás",
-                      "${target.name} sikeresen megölted!",
+                      "${target.name}-t sikeresen megölted!",
                       Colors.green,
                       true, () {
                     Navigator.pop(context);

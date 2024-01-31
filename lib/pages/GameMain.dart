@@ -36,14 +36,18 @@ class _GameMainPageState extends State<GameMainPage> {
       print(data);
       Player impo = Player.fromMap(data["player"]);
       print("Megölt: ${impo.name}");
-      qr_action = "${plyr.id}-report";
+      setState(() {
+        qr_action = "${plyr.id}-report";
+      });
       alive = false;
       showAlert("Meghaltál", "Megölt: ${impo.name}", impo.color, true, () {},
           "Ok", false, () {}, "", context);
     });
 
     socket.on("reported_player", (data) {
-      qr_action = "${plyr.id}-dead";
+      if (!alive) {
+        qr_action = "${plyr.id}-dead";
+      }
     });
 
     socket.on("emergency_called", (data) {
@@ -65,7 +69,6 @@ class _GameMainPageState extends State<GameMainPage> {
       tasks = arguments['tasks'] ?? [];
       qr_action = "${plyr.id}-alive";
 
-      if (tasks.isNotEmpty) print("Elso task: ${tasks[0]}");
       listenOnSockets();
 
       loaded = true;
