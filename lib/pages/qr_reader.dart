@@ -171,7 +171,7 @@ class _SrReaderPageState extends State<SrReaderPage> {
         case "emergency":
           socket.emit("emergency", {
             "game_id": gameId,
-            "user_id": target_id,
+            "player_id": plyr.id,
           });
           socket.on("emergency", (data) {
             if (data["code"] != 200) {
