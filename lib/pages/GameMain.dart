@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:amogusvez2/connections/http.dart';
+import 'package:amogusvez2/utility/alert.dart';
 import 'package:amogusvez2/utility/tasks.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -30,10 +31,13 @@ class _GameMainPageState extends State<GameMainPage> {
   late String qr_action;
   bool alive = true;
 
-  void listenOnSockets(){
+  void listenOnSockets() {
     socket.on("got_killed", (data) {
+      Player impo = Player.fromMap(data["player"]);
       qr_action = "${plyr.id}-report";
       alive = false;
+      showAlert("Meghaltál", "Megölt: ${impo.name}", impo.color, true, () {},
+          "Ok", false, () {}, "", context);
     });
 
     socket.on("reported_player", (data) {
@@ -43,14 +47,12 @@ class _GameMainPageState extends State<GameMainPage> {
     socket.on("emergency_called", (data) {
       qr_action = "${plyr.id}-dead";
     });
-
   }
-
 
   @override
   Widget build(BuildContext context) {
     arguments = ModalRoute.of(context)!.settings.arguments;
-    if(!loaded){
+    if (!loaded) {
       plyr = arguments['player'];
       gameId = arguments['gameId'];
       host = arguments['host'];
@@ -61,60 +63,45 @@ class _GameMainPageState extends State<GameMainPage> {
       tasks = arguments['tasks'] ?? [];
       qr_action = "${plyr.id}-alive";
 
-
-      if(tasks.isNotEmpty) print("Elso task: ${tasks[0]}");
-
+      if (tasks.isNotEmpty) print("Elso task: ${tasks[0]}");
 
       loaded = true;
     }
 
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.grey[900],
-        titleTextStyle: const TextStyle(
-          color: Colors.white,
-          fontSize: 20
-        ),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(plyr.name,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 20
-              )
+        titleTextStyle: const TextStyle(color: Colors.white, fontSize: 20),
+        title:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Text(plyr.name,
+              style: const TextStyle(color: Colors.white, fontSize: 20)),
+          ColorFiltered(
+            colorFilter: ColorFilter.mode(plyr.color, BlendMode.modulate),
+            child: Image.asset(
+              "assets/${plyr.team ? "impostor.png" : "player.png"}",
+              width: MediaQuery.of(context).size.width * .1,
             ),
-            ColorFiltered(
-              colorFilter: ColorFilter.mode(
-                  plyr.color,
-                  BlendMode.modulate
-              ),
-              child: Image.asset("assets/${plyr.team ? "impostor.png" : "player.png"}",
-                width: MediaQuery.of(context).size.width * .1,
-
-              ),
-            )
-          ]
-        ),
+          )
+        ]),
       ),
       backgroundColor: Colors.grey[900],
       body: Center(
         child: Column(
           children: [
-            if(game.taskVisible) TaskBarWidget(
-              socket: socket,
-              playersCount: players,
-              tasksCount: game.taskNumber,
-              impostorsCount: game.impostorMax,
-            ),
-            if(game.taskVisible) const SizedBox(height: 10,),
-            TasksWidget(
+            if (game.taskVisible)
+              TaskBarWidget(
                 socket: socket,
-                tasks: tasks,
-                gameId: gameId,
-                userId: plyr.id
-            ),
+                playersCount: players,
+                tasksCount: game.taskNumber,
+                impostorsCount: game.impostorMax,
+              ),
+            if (game.taskVisible)
+              const SizedBox(
+                height: 10,
+              ),
+            TasksWidget(
+                socket: socket, tasks: tasks, gameId: gameId, userId: plyr.id),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
@@ -128,8 +115,8 @@ class _GameMainPageState extends State<GameMainPage> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(7),
                         ),
-                          padding: const EdgeInsets.fromLTRB(25, 15, 25, 15),
-                          side: const BorderSide(
+                        padding: const EdgeInsets.fromLTRB(25, 15, 25, 15),
+                        side: const BorderSide(
                           color: Colors.white,
                           width: 1.5,
                         ),
@@ -137,12 +124,12 @@ class _GameMainPageState extends State<GameMainPage> {
                           fontSize: 20,
                         ),
                       ),
-                      child: const Text("Térkép",
+                      child: const Text(
+                        "Térkép",
                         style: TextStyle(
                           color: Colors.white,
                         ),
-                      )
-                  ),
+                      )),
                   ElevatedButton(
                       onPressed: () {
                         Navigator.pushNamed(context, '/qrReader', arguments: {
@@ -166,13 +153,12 @@ class _GameMainPageState extends State<GameMainPage> {
                           fontSize: 20,
                         ),
                       ),
-                      child: const Text("Qr-kód olvasó",
+                      child: const Text(
+                        "Qr-kód olvasó",
                         style: TextStyle(
                           color: Colors.white,
                         ),
-                      )
-                  ),
-
+                      )),
                 ],
               ),
             ),
@@ -188,6 +174,7 @@ class _GameMainPageState extends State<GameMainPage> {
             )
           ],
         ),
-      ),);
+      ),
+    );
   }
 }
