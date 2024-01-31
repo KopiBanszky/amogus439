@@ -32,7 +32,7 @@ class _WaitingPageState extends State<WaitingPage> {
       host = arguments['host'];
       isEmergencyCalled = arguments['isEmergencyCalled'];
       reporter = arguments['reporter'];
-      if(!isEmergencyCalled) dead = arguments!['dead'];
+      dead = arguments!['dead'];
       socket = arguments['socket'];
       loaded = true;
     }
