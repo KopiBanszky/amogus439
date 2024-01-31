@@ -59,6 +59,7 @@ class _GameMainPageState extends State<GameMainPage> {
         'player': plyr,
         'socket': socket,
         'gameId': gameId,
+        "host": host,
         'isEmergencyCalled': true,
         'reporter': Player.fromMap(data["reporter"]),
         'dead': null,
