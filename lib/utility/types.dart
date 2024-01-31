@@ -19,18 +19,19 @@ class Task {
     return Task(
       id: map['id'],
       name: map['name'],
-      geoPos: Map<String, double>.from(map['geo_pos'].map((key, value) => MapEntry(key, value.toDouble()))),
+      geoPos: Map<String, double>.from(
+          map['geo_pos'].map((key, value) => MapEntry(key, value.toDouble()))),
       map: map['map'],
     );
   }
 }
 
-
 // Dart equivalent for TypeScript interface Game
 class Game {
   final int id; // game id (6 digit number)
   int taskNumber; // number of tasks
-  bool taskVisible; // whether the tasks that done are visible to the players or not
+  bool
+      taskVisible; // whether the tasks that done are visible to the players or not
   int voteTime; // seconds
   bool anonymousVote; // whether the votes are anonymous or not
   int killCooldown; // seconds
@@ -51,7 +52,6 @@ class Game {
     required this.status,
     required this.map,
   });
-
 
   factory Game.fromMap(Map<String, dynamic> map) {
     return Game(
@@ -107,7 +107,9 @@ class Player {
       tasks: List<int>.from(map['tasks'] ?? []),
       taskDone: List<int>.from(map['task_done'] ?? []),
       team: map['team'] == 1 ? true : false,
-      geoPos: Map<String, double>.from(map['geo_pos']?.map((key, value) => MapEntry(key, value.toDouble())) ?? {"latitude": 0.0, "longitude": 0.0}),
+      geoPos: Map<String, double>.from(map['geo_pos']
+              ?.map((key, value) => MapEntry(key, value.toDouble())) ??
+          {"latitude": 0.0, "longitude": 0.0}),
     );
   }
 }
