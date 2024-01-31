@@ -23,6 +23,7 @@ class _SrReaderPageState extends State<SrReaderPage> {
   late Socket socket;
   late String gameId;
   late Player plyr;
+  bool found = false;
 
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   Barcode? result;
@@ -100,38 +101,14 @@ class _SrReaderPageState extends State<SrReaderPage> {
 
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
-    controller.scannedDataStream.listen((scanData) async {
-      print(scanData.code);
+    controller.scannedDataStream.listen((scanData) {
       List<String> data = scanData.code.toString().split("-");
       int target_id = int.parse(data[0]);
       String action = data[1];
 
+      controller.pauseCamera();
       switch (action) {
-        case "kill":
-          socket.emit("kill", {
-            "game_id": gameId,
-            "user_id": plyr.id,
-            "target_id": target_id,
-          });
-
-          //get player
-          dynamic plyr_res = await http_get("api/game/ingame/getPlayer", {
-            "user_id": target_id,
-          });
-/*
-            if(plyr_res.ok) {
-              dynamic data = jsonDecode(jsonDecode(plyr_res.data));
-              Player target = Player.fromMap(data["player"]);
-              showAlert(
-                  "Sikeres gyilkolás",
-                  "${target.name} sikeresen megölted!",
-                  Colors.green,
-                  true, () {},
-                  "Ok",
-                  false, () {},
-                  "",
-                  context);
-            }*/
+        case "dead":
           break;
         case "report":
           socket.emit("report", {
@@ -140,8 +117,47 @@ class _SrReaderPageState extends State<SrReaderPage> {
           });
           break;
         case "alive":
-          showAlert("Megállj!", "A játékos még életben van", Colors.blue, true,
-              () {}, "Ok", false, () {}, "", context);
+          if (!plyr.team) {
+            showAlert(
+                "Megállj!", "A játékos még életben van", Colors.blue, true, () {
+              controller.resumeCamera();
+              Navigator.pop(context);
+            }, "Ok", false, () {}, "", context);
+          } else {
+            socket.emit("kill", {
+              "game_id": gameId,
+              "user_id": plyr.id,
+              "target_id": target_id,
+            });
+
+            //get player
+            socket.on("kill", (data) async {
+              if (data["code"] == 200) {
+                dynamic plyr_res = await http_get("api/game/ingame/getPlayer", {
+                  "user_id": target_id,
+                });
+                if (plyr_res.ok) {
+                  dynamic data = jsonDecode(jsonDecode(plyr_res.data));
+                  Player target = Player.fromMap(data["player"]);
+                  // ignore: use_build_context_synchronously
+                  showAlert(
+                      "Sikeres gyilkolás",
+                      "${target.name} sikeresen megölted!",
+                      Colors.green,
+                      true, () {
+                    Navigator.popUntil(context, (route) => route.isFirst);
+                  }, "Ok", false, () {}, "", context);
+                }
+              } else {
+                showAlert(
+                    "Hiba - ${data["code"]}", data["message"], Colors.red, true,
+                    () {
+                  controller.resumeCamera();
+                  Navigator.pop(context);
+                }, "Ok", false, () {}, "", context);
+              }
+            });
+          }
           break;
         case "emergency":
           socket.emit("emergency", {
@@ -149,10 +165,10 @@ class _SrReaderPageState extends State<SrReaderPage> {
             "user_id": target_id,
           });
           break;
+        default:
+          controller.resumeCamera();
+          break;
       }
-      setState(() {
-        result = scanData;
-      });
     });
   }
 
