@@ -173,6 +173,15 @@ class _SrReaderPageState extends State<SrReaderPage> {
             "game_id": gameId,
             "user_id": target_id,
           });
+          socket.on("emergency", (data) {
+            if (data["code"] != 200) {
+              showAlert(
+                  "Hiba - ${data["code"]}", data["message"], Colors.red, true,
+                  () {
+                controller.resumeCamera();
+              }, "Ok", false, () {}, "", context);
+            }
+          });
           break;
         default:
           controller.resumeCamera();
