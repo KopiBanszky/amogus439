@@ -1,15 +1,37 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+enum imgType { player, impostor, dead, emergency, report }
+
 class PlayerWidget extends StatelessWidget {
-  const PlayerWidget({super.key, required this.color, required this.name, required this.isImpostor});
+  const PlayerWidget(
+      {super.key, required this.color, required this.name, required this.img});
 
   final Color color;
   final String name;
-  final bool isImpostor;
+  final imgType img;
+  late String imgPath;
 
   @override
   Widget build(BuildContext context) {
+    switch (img) {
+      case imgType.impostor:
+        imgPath = "impostor.png";
+        break;
+      case imgType.dead:
+        imgPath = "dead.png";
+        break;
+      case imgType.emergency:
+        imgPath = "caller.png";
+        break;
+      case imgType.report:
+        imgPath = "reporter.png";
+        break;
+      default:
+        imgPath = "player.png";
+        break;
+    }
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Center(
@@ -18,20 +40,13 @@ class PlayerWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ColorFiltered(
-                colorFilter: ColorFilter.mode(
-                    color,
-                    BlendMode.modulate
-                ),
-                child: Image.asset("assets/${isImpostor ? "impostor.png" : "player.png"}",
+                colorFilter: ColorFilter.mode(color, BlendMode.modulate),
+                child: Image.asset(
+                  "assets/$imgPath",
                   width: MediaQuery.of(context).size.width * .25,
-                )
-            ),
+                )),
             Text(name,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 20
-              )
-            )
+                style: const TextStyle(color: Colors.white, fontSize: 20))
           ],
         ),
       ),

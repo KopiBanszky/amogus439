@@ -60,7 +60,7 @@ class _RoleRevealPageState extends State<RoleRevealPage> {
         PlayerWidget playerWidget = PlayerWidget(
           color: plyr.color,
           name: "${plyr.name} - Impostor",
-          isImpostor: true,
+          img: imgType.impostor,
         );
         row.add(playerWidget);
         db++;
@@ -188,7 +188,7 @@ class _RoleRevealPageState extends State<RoleRevealPage> {
               PlayerWidget(
                 color: plyr.color,
                 name: name_role,
-                isImpostor: false,
+                img: imgType.player,
               ),
             if (plyr.team && tapped /* && impostors.length > 1*/)
               Column(
