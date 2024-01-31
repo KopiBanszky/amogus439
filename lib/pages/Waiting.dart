@@ -1,6 +1,7 @@
 import 'package:amogusvez2/utility/player.dart';
 import 'package:amogusvez2/utility/types.dart';
 import 'package:flutter/material.dart';
+import 'package:socket_io_client/socket_io_client.dart';
 
 class WaitingPage extends StatefulWidget {
   const WaitingPage({super.key});
@@ -20,6 +21,8 @@ class _WaitingPageState extends State<WaitingPage> {
   late Player plyr; //the player who is playing
   late String gameId; //the id of the game
   late bool host; //true if the player is the host, false if not
+  late Socket socket; //the socket of the player
+
   @override
   Widget build(BuildContext context) {
     arguments = ModalRoute.of(context)!.settings.arguments;
@@ -30,6 +33,7 @@ class _WaitingPageState extends State<WaitingPage> {
       isEmergencyCalled = arguments['isEmergencyCalled'];
       reporter = arguments['reporter'];
       dead = arguments!['dead'];
+      socket = arguments['socket'];
       loaded = true;
     }
 

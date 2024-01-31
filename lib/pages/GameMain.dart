@@ -51,7 +51,18 @@ class _GameMainPageState extends State<GameMainPage> {
     });
 
     socket.on("emergency_called", (data) {
-      qr_action = "${plyr.id}-dead";
+      if (!alive) {
+        qr_action = "${plyr.id}-dead";
+      }
+      Navigator.popUntil(context, (route) => route.isCurrent);
+      Navigator.pushNamed(context, '/waitingForVote', arguments: {
+        'player': plyr,
+        'socket': socket,
+        'gameId': gameId,
+        'isEmergencyCalled': true,
+        'reporter': Player.fromMap(data["reporter"]),
+        'dead': null,
+      });
     });
   }
 
