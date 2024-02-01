@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 
+import 'package:amogusvez2/utility/timer.dart';
 import 'package:amogusvez2/utility/types.dart';
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart';
@@ -25,15 +26,36 @@ class _VotingPageState extends State<VotingPage> {
   late Socket socket; //the socket of the player
   late List<Player> players; //the players in the game
   late int time; //the time of the voting
+  late int voted; //the player who got voted
+
+  void listenOnSockets() {
+    socket.on("vote", (data) {
+      if (data["code"] == 200) {
+        setState(() {});
+      } else {
+        voted = -1;
+      }
+    });
+  }
 
   Widget _buildPlayer(Player player) {
     return SizedBox(
-      height: MediaQuery.of(context).size.height * .1,
-      width: MediaQuery.of(context).size.width * .4,
+      height: MediaQuery.of(context).size.height * .095,
+      width: MediaQuery.of(context).size.width * .45,
       child: ElevatedButton(
-          onPressed: () {},
+          onPressed: (player.dead || voted == player.id)
+              ? null
+              : () {
+                  voted = player.id;
+                  socket.emit("vote", {
+                    "game_id": gameId,
+                    "user_id": plyr.id,
+                    "vote_id": player.id,
+                  });
+                },
           style: ElevatedButton.styleFrom(
-            disabledBackgroundColor: Colors.grey,
+            disabledBackgroundColor:
+                (voted == player.id) ? Colors.grey[700] : Colors.red[400],
             backgroundColor: Colors.grey[300],
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(7),
@@ -57,12 +79,16 @@ class _VotingPageState extends State<VotingPage> {
                   width: MediaQuery.of(context).size.width * .1,
                 ),
               ),
-              Text(player.name,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    color: Colors.black,
-                    overflow: TextOverflow.fade,
-                  )),
+              Expanded(
+                child: Text(player.name,
+                    textAlign: TextAlign.start,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      color: Colors.black,
+                      overflow: TextOverflow.ellipsis,
+                    )),
+              ),
             ],
           )),
     );
@@ -118,14 +144,52 @@ class _VotingPageState extends State<VotingPage> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            Text(isEmergencyCalled ? "Emergency meeting" : "Holttest jelentve"),
-            Text("$time"),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * .5,
+            Text(isEmergencyCalled ? "Emergency meeting" : "Holttest jelentve",
+                style: const TextStyle(color: Colors.white, fontSize: 20)),
+            const Text("Szavazásra idő: ",
+                style: const TextStyle(color: Colors.white, fontSize: 20)),
+            Timer(duration: time, textColor: Colors.white, fontSize: 20),
+            const SizedBox(
+              height: 8.0,
+            ),
+            Flexible(
+              // height: MediaQuery.of(context).size.height * .5,
+
               child: SingleChildScrollView(
                 child: _buildPlayers(players),
               ),
             ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * .095,
+              width: MediaQuery.of(context).size.width * .45,
+              child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    disabledBackgroundColor: Colors.grey,
+                    backgroundColor: Colors.grey[300],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(7),
+                    ),
+                    padding: const EdgeInsets.fromLTRB(25, 15, 25, 15),
+                    side: const BorderSide(
+                      color: Colors.black,
+                      width: 1.5,
+                    ),
+                    textStyle: const TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                  child: const Expanded(
+                    child: Text("Skip",
+                        textAlign: TextAlign.start,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.black,
+                          overflow: TextOverflow.ellipsis,
+                        )),
+                  )),
+            )
           ],
         ),
       )),
