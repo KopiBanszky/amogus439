@@ -89,7 +89,7 @@ class _GameMainPageState extends State<GameMainPage> {
       game = arguments['game'];
       socket = arguments['socket'];
       tasks = arguments['tasks'] ?? [];
-      qr_action = "${plyr.id}-report";
+      qr_action = "${plyr.id}-alive";
 
       listenOnSockets();
 
