@@ -56,7 +56,7 @@ class _TimerState extends State<Timer> {
 
     return Container(
       child: Text("${addZero(minutes)}:${addZero(seconds)}",
-          style: const TextStyle(color: textColor, fontSize: fontSize)),
+          style: TextStyle(color: textColor, fontSize: fontSize)),
     );
   }
 }
