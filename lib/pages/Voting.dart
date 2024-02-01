@@ -26,7 +26,7 @@ class _VotingPageState extends State<VotingPage> {
   late Socket socket; //the socket of the player
   late List<Player> players; //the players in the game
   late int time; //the time of the voting
-  late int voted; //the player who got voted
+  int voted = -1; //the player who got voted
 
   void listenOnSockets() {
     socket.on("vote", (data) {
@@ -147,7 +147,7 @@ class _VotingPageState extends State<VotingPage> {
             Text(isEmergencyCalled ? "Emergency meeting" : "Holttest jelentve",
                 style: const TextStyle(color: Colors.white, fontSize: 20)),
             const Text("Szavazásra idő: ",
-                style: const TextStyle(color: Colors.white, fontSize: 20)),
+                style: TextStyle(color: Colors.white, fontSize: 20)),
             Timer(duration: time, textColor: Colors.white, fontSize: 20),
             const SizedBox(
               height: 8.0,

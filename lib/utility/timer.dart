@@ -48,6 +48,7 @@ class _TimerState extends State<Timer> {
       duration = widget.duration;
       textColor = widget.textColor;
       fontSize = widget.fontSize;
+      countDown();
       loaded = true;
     }
 
