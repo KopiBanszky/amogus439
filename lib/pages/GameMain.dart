@@ -56,7 +56,7 @@ class _GameMainPageState extends State<GameMainPage> {
         "host": host,
         'isEmergencyCalled': false,
         'reporter': Player.fromMap(data["reporter"]),
-        'dead': Player.fromMap(data["dead"]),
+        'dead': Player.fromMap(data["reported"]),
       });
     });
 
