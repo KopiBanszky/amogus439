@@ -50,58 +50,63 @@ class _VotingPageState extends State<VotingPage> {
       ),
       backgroundColor: Colors.grey[900],
       body: Center(
-          child: Column(
-        children: [
-          Text(isEmergencyCalled ? "Emergency meeting" : "Holttest jelentve"),
-          Text("$time"),
-          Expanded(
-            child: SingleChildScrollView(
-              child: GridView.count(
-                  crossAxisCount: 2,
-                  children: List.from(players.map((Player player) => SizedBox(
-                        height: MediaQuery.of(context).size.height * .1,
-                        child: ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              disabledBackgroundColor: Colors.grey,
-                              backgroundColor: Colors.grey[300],
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(7),
-                              ),
-                              padding:
-                                  const EdgeInsets.fromLTRB(25, 15, 25, 15),
-                              side: const BorderSide(
-                                color: Colors.black,
-                                width: 1.5,
-                              ),
-                              textStyle: const TextStyle(
-                                fontSize: 20,
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                ColorFiltered(
-                                  colorFilter: ColorFilter.mode(
-                                      player.color, BlendMode.modulate),
-                                  child: Image.asset(
-                                    "assets/${(reporter.id == player.id) ? (isEmergencyCalled ? "caller.png" : "reporter.png") : (player.dead ? "dead.png" : "player.png")}",
-                                    width:
-                                        MediaQuery.of(context).size.width * .1,
-                                  ),
+          child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Text(isEmergencyCalled ? "Emergency meeting" : "Holttest jelentve"),
+            Text("$time"),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * .5,
+              child: SingleChildScrollView(
+                child: GridView.count(
+                    crossAxisCount: 2,
+                    children: List.from(players.map((Player player) => SizedBox(
+                          height: MediaQuery.of(context).size.height * .1,
+                          child: ElevatedButton(
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                disabledBackgroundColor: Colors.grey,
+                                backgroundColor: Colors.grey[300],
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(7),
                                 ),
-                                Text(player.name,
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.black,
-                                      overflow: TextOverflow.fade,
-                                    )),
-                              ],
-                            )),
-                      )))),
+                                padding:
+                                    const EdgeInsets.fromLTRB(25, 15, 25, 15),
+                                side: const BorderSide(
+                                  color: Colors.black,
+                                  width: 1.5,
+                                ),
+                                textStyle: const TextStyle(
+                                  fontSize: 20,
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  ColorFiltered(
+                                    colorFilter: ColorFilter.mode(
+                                        player.color, BlendMode.modulate),
+                                    child: Image.asset(
+                                      "assets/${(reporter.id == player.id) ? (isEmergencyCalled ? "caller.png" : "reporter.png") : (player.dead ? "dead.png" : "player.png")}",
+                                      width: MediaQuery.of(context).size.width *
+                                          .1,
+                                    ),
+                                  ),
+                                  Text(player.name,
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.black,
+                                        overflow: TextOverflow.fade,
+                                      )),
+                                ],
+                              )),
+                        )))),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       )),
     );
   }
