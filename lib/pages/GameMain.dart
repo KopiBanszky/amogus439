@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:amogusvez2/connections/http.dart';
 import 'package:amogusvez2/utility/alert.dart';
 import 'package:amogusvez2/utility/tasks.dart';
 import 'package:flutter/material.dart';

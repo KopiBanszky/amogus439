@@ -2,9 +2,7 @@ import 'package:amogusvez2/utility/alert.dart';
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import '../utility/player.dart';
-import '../utility/taskbar.dart';
 import '../utility/types.dart';
-import 'dart:math';
 
 class LobbyPage extends StatefulWidget {
   const LobbyPage({super.key});
@@ -85,7 +83,6 @@ class _LobbyPageState extends State<LobbyPage> {
     }
 
     socket.on("role_update", (data) {
-      print("1: ${data["player"]["team"]}");
       me.tasks = List<int>.from(data["player"]["tasks"] ?? []);
       me.team = (data["player"]["team"] == 0) ? false : true;
 

@@ -1,9 +1,10 @@
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:flutter/material.dart';
-import 'dart:math';
 
 class TaskBarWidget extends StatefulWidget {
-  const TaskBarWidget({Key? key, required this.socket,
+  const TaskBarWidget({
+    Key? key,
+    required this.socket,
     required this.playersCount,
     required this.tasksCount,
     required this.impostorsCount,
@@ -30,28 +31,26 @@ class _TaskBarWidgetState extends State<TaskBarWidget> {
   int taskbar = 0;
   List<int> tasksDone = [];
 
-  void listenToSockets(Socket socket){
-    print("Listening on task_done_by_crew");
-    socket.on("task_done_by_crew", (data){
-      print(data);
+  void listenToSockets(Socket socket) {
+    socket.on("task_done_by_crew", (data) {
       setState(() {
         tasksDone.add(data["task_id"]);
-        taskbar = ((tasksDone.length / maxTasks)*100).floor();
+        taskbar = ((tasksDone.length / maxTasks) * 100).floor();
       });
     });
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-    if(!loaded){
+    if (!loaded) {
       socket = widget.socket;
       players = widget.playersCount;
       tasksCount = widget.tasksCount;
       impostors = widget.impostorsCount;
 
-      maxTasks =  (players - ((players ~/ 3 > impostors) ? impostors : players ~/ 3)) * tasksCount;
+      maxTasks =
+          (players - ((players ~/ 3 > impostors) ? impostors : players ~/ 3)) *
+              tasksCount;
       listenToSockets(socket);
 
       loaded = true;

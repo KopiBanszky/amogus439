@@ -1,3 +1,5 @@
+// ignore_for_file: file_names, non_constant_identifier_names
+
 import 'dart:convert';
 
 import 'package:amogusvez2/connections/http.dart';
@@ -28,13 +30,11 @@ class _RoleRevealPageState extends State<RoleRevealPage> {
   Future<void> getImposors(List<int> ids) async {
     for (int i = 0; i < ids.length; i++) {
       int id = ids[i];
-      print(id);
       RquestResult result = await http_get("api/game/ingame/getPlayer", {
         "user_id": id.toString(),
       });
       if (result.ok) {
         dynamic data = jsonDecode(jsonDecode(result.data));
-        print(data);
 
         Player plyr = Player.fromMap(data["player"]);
         setState(() {
@@ -89,7 +89,6 @@ class _RoleRevealPageState extends State<RoleRevealPage> {
       if (result.ok) {
         dynamic data = jsonDecode(jsonDecode(result.data));
         Task task = Task.fromMap(data["task"]);
-        print(task.name);
         tasksInFunc.add(task);
       }
     }

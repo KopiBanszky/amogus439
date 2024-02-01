@@ -1,17 +1,15 @@
+// ignore_for_file: use_build_context_synchronously, curly_braces_in_flow_control_structures
+
 import 'dart:convert';
 
 import 'package:amogusvez2/connections/http.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../utility/types.dart';
 
-
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
-
-
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -35,13 +33,12 @@ class _SettingsPageState extends State<SettingsPage> {
   final TextEditingController _emergenciesController = TextEditingController();
 
   void getMaps() async {
-    print("getMaps");
-    print(values);
     RquestResult res = await http_get("api/manager/maps");
-    if(res.ok){
+    if (res.ok) {
       dynamic data = jsonDecode(jsonDecode(res.data));
-      for(int i = 0; i < data["maps"].length; i++){
-        if(!values.contains(data["maps"][i]["map"])) values.add(data["maps"][i]["map"]);
+      for (int i = 0; i < data["maps"].length; i++) {
+        if (!values.contains(data["maps"][i]["map"]))
+          values.add(data["maps"][i]["map"]);
       }
       setState(() {
         values = values;
@@ -50,17 +47,12 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     arguments = ModalRoute.of(context)!.settings.arguments;
     //if the page is loaded, then it will not load again
-    if(!loaded) {
-      arguments = ModalRoute
-          .of(context)!
-          .settings
-          .arguments;
+    if (!loaded) {
+      arguments = ModalRoute.of(context)!.settings.arguments;
       host = arguments["host"];
       gameId = arguments["gameId"].toString();
       userID = arguments["userID"];
@@ -73,12 +65,10 @@ class _SettingsPageState extends State<SettingsPage> {
       _impostorMaxController.text = game.impostorMax.toString();
       _emergenciesController.text = game.emergencies.toString();
 
-      print(values);
       getMaps();
 
       loaded = true;
     }
-
 
     return Scaffold(
       appBar: AppBar(
@@ -89,12 +79,14 @@ class _SettingsPageState extends State<SettingsPage> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text("Settings",
+            const Text(
+              "Settings",
               style: TextStyle(
                 color: Colors.white,
               ),
             ),
-            Text("ID: ${arguments["gameId"]}",
+            Text(
+              "ID: ${arguments["gameId"]}",
               style: const TextStyle(
                 color: Colors.white,
               ),
@@ -110,7 +102,6 @@ class _SettingsPageState extends State<SettingsPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-        
                 //Task number
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -124,7 +115,8 @@ class _SettingsPageState extends State<SettingsPage> {
                           FilteringTextInputFormatter.digitsOnly
                         ], // Only numbers can be entered
                         decoration: InputDecoration(
-                          prefixIcon: const Icon(Icons.task,
+                          prefixIcon: const Icon(
+                            Icons.task,
                             color: Colors.grey,
                           ),
                           border: const UnderlineInputBorder(),
@@ -149,23 +141,29 @@ class _SettingsPageState extends State<SettingsPage> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(7),
                           ),
-                          fixedSize: Size(MediaQuery.of(context).size.width * .2, 55),
-                          backgroundColor: game.taskVisible ? Colors.green : Colors.red,
+                          fixedSize:
+                              Size(MediaQuery.of(context).size.width * .2, 55),
+                          backgroundColor:
+                              game.taskVisible ? Colors.green : Colors.red,
                           side: const BorderSide(
                             color: Colors.white,
                             width: 1.2,
                           ),
                         ),
-                        child: Icon(game.taskVisible ? Icons.visibility : Icons.visibility_off,
+                        child: Icon(
+                          game.taskVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
                           size: 30,
                           color: Colors.white,
-                        )
-                    )
+                        ))
                   ],
                 ),
-        
-                const SizedBox(height: 10,),
-        
+
+                const SizedBox(
+                  height: 10,
+                ),
+
                 //Vote time
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -179,7 +177,8 @@ class _SettingsPageState extends State<SettingsPage> {
                           FilteringTextInputFormatter.digitsOnly
                         ], // Only numbers can be entered
                         decoration: InputDecoration(
-                          prefixIcon: const Icon(Icons.timer,
+                          prefixIcon: const Icon(
+                            Icons.timer,
                             color: Colors.grey,
                           ),
                           border: const UnderlineInputBorder(),
@@ -204,23 +203,29 @@ class _SettingsPageState extends State<SettingsPage> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(7),
                           ),
-                          fixedSize: Size(MediaQuery.of(context).size.width * .2, 55),
-                          backgroundColor: game.anonymousVote ? Colors.green : Colors.red,
+                          fixedSize:
+                              Size(MediaQuery.of(context).size.width * .2, 55),
+                          backgroundColor:
+                              game.anonymousVote ? Colors.green : Colors.red,
                           side: const BorderSide(
                             color: Colors.white,
                             width: 1.2,
                           ),
                         ),
-                        child: Icon(game.anonymousVote ? Icons.visibility : Icons.visibility_off,
+                        child: Icon(
+                          game.anonymousVote
+                              ? Icons.visibility
+                              : Icons.visibility_off,
                           size: 30,
                           color: Colors.white,
-                        )
-                    )
+                        ))
                   ],
                 ),
-        
-                const SizedBox(height: 10,),
-        
+
+                const SizedBox(
+                  height: 10,
+                ),
+
                 //Kill cooldown
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 1,
@@ -231,7 +236,8 @@ class _SettingsPageState extends State<SettingsPage> {
                       FilteringTextInputFormatter.digitsOnly
                     ], // Only numbers can be entered
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.timer,
+                      prefixIcon: const Icon(
+                        Icons.timer,
                         color: Colors.grey,
                       ),
                       border: const UnderlineInputBorder(),
@@ -246,9 +252,11 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                   ),
                 ),
-        
-                const SizedBox(height: 10,),
-        
+
+                const SizedBox(
+                  height: 10,
+                ),
+
                 //Impostor max
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 1,
@@ -259,7 +267,8 @@ class _SettingsPageState extends State<SettingsPage> {
                       FilteringTextInputFormatter.digitsOnly
                     ], // Only numbers can be entered
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person,
+                      prefixIcon: const Icon(
+                        Icons.person,
                         color: Colors.grey,
                       ),
                       border: const UnderlineInputBorder(),
@@ -274,9 +283,11 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                   ),
                 ),
-        
-                const SizedBox(height: 10,),
-        
+
+                const SizedBox(
+                  height: 10,
+                ),
+
                 //Emergencies
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 1,
@@ -287,7 +298,8 @@ class _SettingsPageState extends State<SettingsPage> {
                       FilteringTextInputFormatter.digitsOnly
                     ], // Only numbers can be entered
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.warning,
+                      prefixIcon: const Icon(
+                        Icons.warning,
                         color: Colors.grey,
                       ),
                       border: const UnderlineInputBorder(),
@@ -302,16 +314,19 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                   ),
                 ),
-        
-                const SizedBox(height: 10,),
-        
-                //TODO: Map dropdown menu
+
+                const SizedBox(
+                  height: 10,
+                ),
+
                 SizedBox(
                   width: MediaQuery.of(context).size.width * .8,
                   child: DropdownButton<String>(
-                    
-                    value: slectedMap == "Not Slelected" ? "Válassz pályát!" : slectedMap,
-                    icon: const Icon(Icons.map,
+                    value: slectedMap == "Not Slelected"
+                        ? "Válassz pályát!"
+                        : slectedMap,
+                    icon: const Icon(
+                      Icons.map,
                       color: Colors.grey,
                     ),
                     style: const TextStyle(
@@ -320,11 +335,10 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                     dropdownColor: Colors.grey[900],
                     items: values.map<DropdownMenuItem<String>>((String value) {
-                      //TODO: errorozik
                       return DropdownMenuItem<String>(
-                  
                         value: value,
-                        child: Text(value,
+                        child: Text(
+                          value,
                           style: const TextStyle(
                             color: Colors.white,
                           ),
@@ -339,50 +353,55 @@ class _SettingsPageState extends State<SettingsPage> {
                     },
                   ),
                 ),
-        
-                const SizedBox(height: 10,),
-        
-                ElevatedButton(
-                    onPressed: () async {
-                      RquestResult res = await http_put("api/game/host/settings/update", {
-                       "game_id": gameId,
-                       "user_id": userID,
-                       "task_num": _taskNumberController.text,
-                       "task_visibility": game.taskVisible ? 1 : 0,
-                       "vote_time": _voteTimeController.text,
-                       "anonymus_vote": game.anonymousVote ? 1 : 0,
-                       "kill_cooldown": _killCooldownController.text,
-                       "impostor_max": _impostorMaxController.text,
-                       "emergencies": _emergenciesController.text,
-                       "map": game.map,
-                     });
-                     if(res.ok){
-                        game.emergencies = int.parse(_emergenciesController.text);
-                        game.impostorMax = int.parse(_impostorMaxController.text);
-                        game.killCooldown = int.parse(_killCooldownController.text);
-                        game.taskNumber = int.parse(_taskNumberController.text);
-                        game.voteTime = int.parse(_voteTimeController.text);
-                     }
 
-                      Navigator.pop(context, game);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(7),
-                      ),
-                      fixedSize: Size(MediaQuery.of(context).size.width * .5, 55),
-                      backgroundColor: Colors.blue,
-                      side: const BorderSide(
-                        color: Colors.white,
-                        width: 1.2,
-                      ),
+                const SizedBox(
+                  height: 10,
+                ),
+
+                ElevatedButton(
+                  onPressed: () async {
+                    RquestResult res =
+                        await http_put("api/game/host/settings/update", {
+                      "game_id": gameId,
+                      "user_id": userID,
+                      "task_num": _taskNumberController.text,
+                      "task_visibility": game.taskVisible ? 1 : 0,
+                      "vote_time": _voteTimeController.text,
+                      "anonymus_vote": game.anonymousVote ? 1 : 0,
+                      "kill_cooldown": _killCooldownController.text,
+                      "impostor_max": _impostorMaxController.text,
+                      "emergencies": _emergenciesController.text,
+                      "map": game.map,
+                    });
+                    if (res.ok) {
+                      game.emergencies = int.parse(_emergenciesController.text);
+                      game.impostorMax = int.parse(_impostorMaxController.text);
+                      game.killCooldown =
+                          int.parse(_killCooldownController.text);
+                      game.taskNumber = int.parse(_taskNumberController.text);
+                      game.voteTime = int.parse(_voteTimeController.text);
+                    }
+
+                    Navigator.pop(context, game);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(7),
                     ),
-                    child: const Text("Mentés",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                      ),
+                    fixedSize: Size(MediaQuery.of(context).size.width * .5, 55),
+                    backgroundColor: Colors.blue,
+                    side: const BorderSide(
+                      color: Colors.white,
+                      width: 1.2,
                     ),
+                  ),
+                  child: const Text(
+                    "Mentés",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
+                  ),
                 )
               ],
             ),

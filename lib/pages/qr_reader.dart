@@ -1,9 +1,10 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:amogusvez2/connections/http.dart';
 import 'package:amogusvez2/utility/types.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:socket_io_client/socket_io_client.dart';

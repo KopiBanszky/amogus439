@@ -81,6 +81,10 @@ class Player {
   List<int> taskDone; // all tasks that player has done (task ids)
   bool team; // false: crewmate, true: impostor
   Map<String, double> geoPos; // player location [latitude, longitude]
+  bool dead; // whether the player is dead or not
+  bool host; // whether the player is the host or not
+  int votes; // number of votes for the player
+  bool voted; // whether the player voted or not
 
   Player({
     required this.id,
@@ -93,6 +97,10 @@ class Player {
     required this.taskDone,
     required this.team,
     required this.geoPos,
+    required this.dead,
+    required this.host,
+    required this.votes,
+    required this.voted,
   });
 
   // Factory method to create a Player object from a Map
@@ -110,6 +118,10 @@ class Player {
       geoPos: Map<String, double>.from(map['geo_pos']
               ?.map((key, value) => MapEntry(key, value.toDouble())) ??
           {"latitude": 0.0, "longitude": 0.0}),
+      dead: map['dead'] == 1 ? true : false,
+      host: map['host'] == 1 ? true : false,
+      votes: map['votes'] ?? 0,
+      voted: map['voted'] == 1 ? true : false,
     );
   }
 }
