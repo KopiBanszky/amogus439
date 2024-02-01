@@ -26,6 +26,69 @@ class _VotingPageState extends State<VotingPage> {
   late List<Player> players; //the players in the game
   late int time; //the time of the voting
 
+  Widget _buildPlayer(Player player) {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * .1,
+      child: ElevatedButton(
+          onPressed: () {},
+          style: ElevatedButton.styleFrom(
+            disabledBackgroundColor: Colors.grey,
+            backgroundColor: Colors.grey[300],
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(7),
+            ),
+            padding: const EdgeInsets.fromLTRB(25, 15, 25, 15),
+            side: const BorderSide(
+              color: Colors.black,
+              width: 1.5,
+            ),
+            textStyle: const TextStyle(
+              fontSize: 20,
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ColorFiltered(
+                colorFilter: ColorFilter.mode(player.color, BlendMode.modulate),
+                child: Image.asset(
+                  "assets/${(reporter.id == player.id) ? (isEmergencyCalled ? "caller.png" : "reporter.png") : (player.dead ? "dead.png" : "player.png")}",
+                  width: MediaQuery.of(context).size.width * .1,
+                ),
+              ),
+              Text(player.name,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    color: Colors.black,
+                    overflow: TextOverflow.fade,
+                  )),
+            ],
+          )),
+    );
+  }
+
+  Widget _buildPlayers(List<Player> players) {
+    List<Widget> playerWidgets = [];
+    List<Widget> row = [];
+
+    for (int i = 0; i < players.length; i++) {
+      Player plyr = players[i];
+      Widget playerWidget = _buildPlayer(plyr);
+      row.add(playerWidget);
+      if (i % 2 == 1) {
+        playerWidgets.add(Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: row,
+        ));
+        row = [];
+      }
+    }
+
+    return Column(
+      children: playerWidgets,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     arguments = ModalRoute.of(context)!.settings.arguments;
@@ -59,50 +122,7 @@ class _VotingPageState extends State<VotingPage> {
             SizedBox(
               height: MediaQuery.of(context).size.height * .5,
               child: SingleChildScrollView(
-                child: GridView.count(
-                    crossAxisCount: 2,
-                    children: List.from(players.map((Player player) => SizedBox(
-                          height: MediaQuery.of(context).size.height * .1,
-                          child: ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                disabledBackgroundColor: Colors.grey,
-                                backgroundColor: Colors.grey[300],
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(7),
-                                ),
-                                padding:
-                                    const EdgeInsets.fromLTRB(25, 15, 25, 15),
-                                side: const BorderSide(
-                                  color: Colors.black,
-                                  width: 1.5,
-                                ),
-                                textStyle: const TextStyle(
-                                  fontSize: 20,
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  ColorFiltered(
-                                    colorFilter: ColorFilter.mode(
-                                        player.color, BlendMode.modulate),
-                                    child: Image.asset(
-                                      "assets/${(reporter.id == player.id) ? (isEmergencyCalled ? "caller.png" : "reporter.png") : (player.dead ? "dead.png" : "player.png")}",
-                                      width: MediaQuery.of(context).size.width *
-                                          .1,
-                                    ),
-                                  ),
-                                  Text(player.name,
-                                      style: const TextStyle(
-                                        fontSize: 20,
-                                        color: Colors.black,
-                                        overflow: TextOverflow.fade,
-                                      )),
-                                ],
-                              )),
-                        )))),
+                child: _buildPlayers(players),
               ),
             ),
           ],
