@@ -108,6 +108,7 @@ class _WaitingPageState extends State<WaitingPage> {
               isEmergencyCalled
                   ? "Emergency összehívve ${reporter.name} által"
                   : "${dead.name} holtteste jelentve ${reporter.name} által",
+              textAlign: TextAlign.center,
               style: const TextStyle(color: Colors.white, fontSize: 20),
             ),
             const SizedBox(
@@ -136,6 +137,7 @@ class _WaitingPageState extends State<WaitingPage> {
             ),
             const Text(
               "Várakozás a szavazás indítására...",
+              textAlign: TextAlign.center,
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
             const SizedBox(
