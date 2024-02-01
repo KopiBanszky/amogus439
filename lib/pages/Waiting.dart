@@ -38,7 +38,7 @@ class _WaitingPageState extends State<WaitingPage> {
     if (result.ok) {
       dynamic data = jsonDecode(jsonDecode(result.data));
       for (int i = 0; i < data.length; i++) {
-        Player plyr = Player.fromMap(data[i]);
+        Player plyr = Player.fromMap(data["players"][i]);
         players.add(plyr);
       }
       setState(() {
