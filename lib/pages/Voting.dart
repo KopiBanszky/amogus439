@@ -29,6 +29,7 @@ class _VotingPageState extends State<VotingPage> {
   Widget _buildPlayer(Player player) {
     return SizedBox(
       height: MediaQuery.of(context).size.height * .1,
+      width: MediaQuery.of(context).size.width * .4,
       child: ElevatedButton(
           onPressed: () {},
           style: ElevatedButton.styleFrom(
