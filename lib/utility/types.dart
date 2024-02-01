@@ -112,7 +112,7 @@ class Player {
       name: map['name'],
       color: HexColor.fromHex(map['color'].toRadixString(16)),
       emergency: map['emergency'] ?? 0,
-      tasks: List<int>.from(map['tasks'] ?? []),
+      tasks: List<int>.from(jsonDecode(map['tasks'].toString()) ?? []),
       taskDone: List<int>.from(jsonDecode(map['tasks_done'].toString()) ?? []),
       team: map['team'] == 1 ? true : false,
       geoPos: Map<String, double>.from(map['geo_pos']
