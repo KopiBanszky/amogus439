@@ -28,7 +28,7 @@ class _WaitingPageState extends State<WaitingPage> {
   late String gameId; //the id of the game
   late bool host; //true if the player is the host, false if not
   late Socket socket; //the socket of the player
-  late List<Player> players; //the players in the game
+  List<Player> players = []; //the players in the game
   bool ok = false;
 
   Future<void> getPlayers() async {
