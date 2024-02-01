@@ -58,7 +58,7 @@ class _WaitingPageState extends State<WaitingPage> {
           "isEmergencyCalled": isEmergencyCalled,
           "reporter": reporter,
           "dead": dead,
-          "time": data["time"],
+          "time": data["vote_time"],
           "players": players,
         });
       else {
