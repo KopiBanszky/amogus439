@@ -55,9 +55,7 @@ class _TimerState extends State<Timer> {
     seconds = duration % 60;
     minutes = duration ~/ 60;
 
-    return Container(
-      child: Text("${addZero(minutes)}:${addZero(seconds)}",
-          style: TextStyle(color: textColor, fontSize: fontSize)),
-    );
+    return Text("${addZero(minutes)}:${addZero(seconds)}",
+        style: TextStyle(color: textColor, fontSize: fontSize));
   }
 }

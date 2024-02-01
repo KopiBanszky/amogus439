@@ -27,6 +27,8 @@ class _VotingPageState extends State<VotingPage> {
   late List<Player> players; //the players in the game
   late int time; //the time of the voting
   int voted = -1; //the player who got voted
+  List<Map<String, dynamic>> votes = []; //{player_id, voter_color || grey}
+  bool showVotes = false;
 
   void listenOnSockets() {
     socket.on("vote", (data) {
@@ -36,6 +38,47 @@ class _VotingPageState extends State<VotingPage> {
         voted = -1;
       }
     });
+
+    socket.on("vote_placed", (data) {
+      if (data["code"] == 200) {
+        Map<String, dynamic> vote = {};
+        if (data["voter"] == -1) {
+          vote["voter_color"] = Colors.grey[800];
+        } else {
+          vote["voter_color"] = data["voter"]["color"];
+        }
+
+        if (data["voted"] == -1) {
+          vote["player_id"] = -1;
+        } else {
+          vote["player_id"] = data["voted"]["id"];
+        }
+      }
+    });
+
+    socket.on("vote_result", (data) {
+      setState(() {
+        showVotes = true;
+      });
+    });
+  }
+
+  List<Widget> _buildVoters(int id) {
+    List<Widget> voterWidgets = [];
+    for (int i = 0; i < votes.length; i++) {
+      Map<String, dynamic> vote = votes[i];
+      if (vote["player_id"] == id)
+        // ignore: curly_braces_in_flow_control_structures
+        voterWidgets.add(ColorFiltered(
+          colorFilter:
+              ColorFilter.mode(vote["voter_color"], BlendMode.modulate),
+          child: Image.asset(
+            "assets/player.png",
+            // width: MediaQuery.of(context).size.width * .1,
+          ),
+        ));
+    }
+    return voterWidgets;
   }
 
   Widget _buildPlayer(Player player) {
@@ -69,25 +112,35 @@ class _VotingPageState extends State<VotingPage> {
               fontSize: 20,
             ),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Column(
             children: [
-              ColorFiltered(
-                colorFilter: ColorFilter.mode(player.color, BlendMode.modulate),
-                child: Image.asset(
-                  "assets/${(reporter.id == player.id) ? (isEmergencyCalled ? "caller.png" : "reporter.png") : (player.dead ? "dead.png" : "player.png")}",
-                  width: MediaQuery.of(context).size.width * .1,
-                ),
-              ),
-              Expanded(
-                child: Text(player.name,
-                    textAlign: TextAlign.start,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      color: Colors.black,
-                      overflow: TextOverflow.ellipsis,
-                    )),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ColorFiltered(
+                    colorFilter:
+                        ColorFilter.mode(player.color, BlendMode.modulate),
+                    child: Image.asset(
+                      "assets/${(reporter.id == player.id) ? (isEmergencyCalled ? "caller.png" : "reporter.png") : (player.dead ? "dead.png" : "player.png")}",
+                      width: MediaQuery.of(context).size.width * .1,
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(player.name,
+                        textAlign: TextAlign.start,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          color: Colors.black,
+                          overflow: TextOverflow.ellipsis,
+                        )),
+                  ),
+                  if (showVotes)
+                    SizedBox(
+                      height: 8.0,
+                      child: Row(children: _buildVoters(player.id)),
+                    )
+                ],
               ),
             ],
           )),
@@ -179,15 +232,20 @@ class _VotingPageState extends State<VotingPage> {
                       fontSize: 20,
                     ),
                   ),
-                  child: const Expanded(
-                    child: Text("Skip",
-                        textAlign: TextAlign.start,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.black,
+                  child: Column(
+                    children: [
+                      const Text("Skip",
+                          textAlign: TextAlign.start,
                           overflow: TextOverflow.ellipsis,
-                        )),
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.black,
+                            overflow: TextOverflow.ellipsis,
+                          )),
+                      Row(
+                        children: _buildVoters(-1),
+                      )
+                    ],
                   )),
             )
           ],
