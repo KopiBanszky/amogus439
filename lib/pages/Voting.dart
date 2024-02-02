@@ -26,7 +26,7 @@ class _VotingPageState extends State<VotingPage> {
   late Socket socket; //the socket of the player
   late List<Player> players; //the players in the game
   late int time; //the time of the voting
-  int voted = -1; //the player who got voted
+  int voted = 0; //the player who got voted
   List<Map<String, dynamic>> votes = []; //{player_id, voter_color || grey}
   bool showVotes = false;
 
@@ -35,7 +35,7 @@ class _VotingPageState extends State<VotingPage> {
       if (data["code"] == 200) {
         setState(() {});
       } else {
-        voted = -1;
+        voted = 0;
       }
     });
 
@@ -91,6 +91,7 @@ class _VotingPageState extends State<VotingPage> {
           onPressed: (player.dead || voted == player.id)
               ? null
               : () {
+                  if (voted != 0 || player.id == plyr.id) return;
                   voted = player.id;
                   socket.emit("vote", {
                     "game_id": gameId,
@@ -150,6 +151,7 @@ class _VotingPageState extends State<VotingPage> {
   }
 
   Widget _buildPlayers(List<Player> players) {
+    print(showVotes);
     List<Widget> playerWidgets = [];
     List<Widget> row = [];
 
@@ -220,9 +222,19 @@ class _VotingPageState extends State<VotingPage> {
               height: MediaQuery.of(context).size.height * .095,
               width: MediaQuery.of(context).size.width * .45,
               child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: voted == -1
+                      ? null
+                      : () {
+                          if (voted != 0) return;
+                          voted = -1;
+                          socket.emit("vote", {
+                            "game_id": gameId,
+                            "user_id": plyr.id,
+                            "vote_id": -1,
+                          });
+                        },
                   style: ElevatedButton.styleFrom(
-                    disabledBackgroundColor: Colors.grey,
+                    disabledBackgroundColor: Colors.grey[700],
                     backgroundColor: Colors.grey[300],
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(7),
