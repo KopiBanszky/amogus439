@@ -29,7 +29,6 @@ class _VotingPageState extends State<VotingPage> {
   int voted = 0; //the player who got voted
   List<Map<String, dynamic>> votes = []; //{player_id, voter_color || grey}
   bool showVotes = false;
-  bool stopTimer = false;
 
   void listenOnSockets() {
     socket.on("vote", (data) {
@@ -65,7 +64,6 @@ class _VotingPageState extends State<VotingPage> {
       setState(() {
         time = 6;
         showVotes = true;
-        stopTimer = true;
       });
       late Player votedOut;
       if (!data["skip"]) votedOut = Player.fromMap(data["player"]);
@@ -184,6 +182,17 @@ class _VotingPageState extends State<VotingPage> {
     );
   }
 
+  void timer() {
+    Future.delayed(const Duration(seconds: 1), () {
+      setState(() {
+        time--;
+      });
+      if (time > 0) {
+        timer();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     arguments = ModalRoute.of(context)!.settings.arguments;
@@ -225,7 +234,7 @@ class _VotingPageState extends State<VotingPage> {
                 duration: time,
                 textColor: Colors.white,
                 fontSize: 20,
-                stop: stopTimer,
+                outerTimer: true,
               ),
               const SizedBox(
                 height: 8.0,
