@@ -46,7 +46,8 @@ class _VotingPageState extends State<VotingPage> {
         if (data["voter"] == -1) {
           vote["voter_color"] = Colors.grey[800];
         } else {
-          vote["voter_color"] = data["voter"]["color"];
+          Player voter = Player.fromMap(data["voter"]);
+          vote["voter_color"] = voter.color;
         }
 
         if (data["voted"] == -1) {
