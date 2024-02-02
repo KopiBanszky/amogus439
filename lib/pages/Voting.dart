@@ -131,7 +131,7 @@ class _VotingPageState extends State<VotingPage> {
                           ColorFilter.mode(player.color, BlendMode.modulate),
                       child: Image.asset(
                         "assets/${(reporter.id == player.id) ? (isEmergencyCalled ? "caller.png" : "reporter.png") : (player.dead ? "dead.png" : "player.png")}",
-                        height: MediaQuery.of(context).size.height * .05,
+                        height: MediaQuery.of(context).size.height * .04,
                       ),
                     ),
                     Expanded(
