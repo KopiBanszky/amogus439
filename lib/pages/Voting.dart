@@ -1,7 +1,6 @@
 // ignore_for_file: file_names, curly_braces_in_flow_control_structures
 
 import 'package:amogusvez2/utility/stLessTimer.dart';
-import 'package:amogusvez2/utility/timer.dart';
 import 'package:amogusvez2/utility/types.dart';
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart';

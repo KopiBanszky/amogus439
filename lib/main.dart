@@ -20,7 +20,7 @@ void main() {
       '/qrReader': (context) => const SrReaderPage(),
       '/waitingForVote': (context) => const WaitingPage(),
       '/voting': (context) => const VotingPage(),
-      '/votingResult': (context) => const VotedOutPage()
+      '/votingResult': (context) => const VotedOutPage(),
     },
   ));
 }
