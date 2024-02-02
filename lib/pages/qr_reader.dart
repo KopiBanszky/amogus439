@@ -140,7 +140,7 @@ class _SrReaderPageState extends State<SrReaderPage> {
           } else {
             if(!killEnabled){
               showAlert(
-                  "Megállj!", "Nem vagy még képes gyilkolni", Colors.blue, true, () {
+                  "Megállj!", "Nem vagy még képes gyilkolni", Colors.red, true, () {
                 controller.resumeCamera();
               }, "Ok", false, () {}, "", context);
               return;
