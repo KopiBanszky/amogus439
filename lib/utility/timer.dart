@@ -6,11 +6,13 @@ class Timer extends StatefulWidget {
     required this.duration,
     required this.textColor,
     required this.fontSize,
+    required this.stop,
   });
 
   final int duration;
   final Color textColor;
   final double fontSize;
+  final bool stop;
 
   @override
   State<Timer> createState() => _TimerState();
@@ -23,13 +25,14 @@ class _TimerState extends State<Timer> {
   bool loaded = false;
   late int seconds;
   late int minutes;
+  late bool stop;
 
   void countDown() {
     Future.delayed(const Duration(seconds: 1), () {
       setState(() {
         duration--;
       });
-      if (duration > 0) {
+      if (duration > 0 && !stop) {
         countDown();
       }
     });
@@ -48,6 +51,7 @@ class _TimerState extends State<Timer> {
       duration = widget.duration;
       textColor = widget.textColor;
       fontSize = widget.fontSize;
+      stop = widget.stop;
       countDown();
       loaded = true;
     }
