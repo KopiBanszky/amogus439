@@ -1,4 +1,5 @@
 import 'package:amogusvez2/pages/GameMain.dart';
+import 'package:amogusvez2/pages/VotedOut.dart';
 import 'package:amogusvez2/pages/Voting.dart';
 import 'package:amogusvez2/pages/Waiting.dart';
 import 'package:amogusvez2/pages/lobby.dart';
@@ -19,6 +20,7 @@ void main() {
       '/qrReader': (context) => const SrReaderPage(),
       '/waitingForVote': (context) => const WaitingPage(),
       '/voting': (context) => const VotingPage(),
+      '/votingResult': (context) => const VotedOutPage()
     },
   ));
 }
