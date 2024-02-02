@@ -84,6 +84,7 @@ class _VotingPageState extends State<VotingPage> {
   }
 
   Widget _buildPlayer(Player player) {
+    print(votes);
     return SizedBox(
       height: MediaQuery.of(context).size.height * .095,
       width: MediaQuery.of(context).size.width * .45,
