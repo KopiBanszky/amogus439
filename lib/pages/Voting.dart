@@ -185,6 +185,8 @@ class _VotingPageState extends State<VotingPage> {
       dead = arguments['dead'];
       time = arguments['time'];
       loaded = true;
+
+      listenOnSockets();
     }
 
     return Scaffold(
