@@ -40,6 +40,7 @@ class _VotingPageState extends State<VotingPage> {
     });
 
     socket.on("vote_placed", (data) {
+      print(data);
       if (data["code"] == 200) {
         Map<String, dynamic> vote = {};
         if (data["voter"] == -1) {
@@ -122,7 +123,7 @@ class _VotingPageState extends State<VotingPage> {
                         ColorFilter.mode(player.color, BlendMode.modulate),
                     child: Image.asset(
                       "assets/${(reporter.id == player.id) ? (isEmergencyCalled ? "caller.png" : "reporter.png") : (player.dead ? "dead.png" : "player.png")}",
-                      width: MediaQuery.of(context).size.width * .1,
+                      height: MediaQuery.of(context).size.height * .05,
                     ),
                   ),
                   Expanded(

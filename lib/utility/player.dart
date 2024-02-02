@@ -1,8 +1,9 @@
+// ignore_for_file: must_be_immutable, camel_case_types
+
 import 'package:flutter/material.dart';
 
 enum imgType { player, impostor, dead, emergency, report }
 
-// ignore: must_be_immutable
 class PlayerWidget extends StatelessWidget {
   PlayerWidget(
       {super.key, required this.color, required this.name, required this.img});

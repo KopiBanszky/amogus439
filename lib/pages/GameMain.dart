@@ -1,3 +1,5 @@
+// ignore_for_file: file_names, non_constant_identifier_names
+
 import 'package:amogusvez2/utility/alert.dart';
 import 'package:amogusvez2/utility/tasks.dart';
 import 'package:flutter/material.dart';
@@ -26,14 +28,11 @@ class _GameMainPageState extends State<GameMainPage> {
   late Socket socket;
   late List<Task> tasks = [];
   late String qr_action;
-  bool killEnabled = false;
   bool alive = true;
 
   void listenOnSockets() {
     socket.on("got_killed", (data) {
-      print(data);
       Player impo = Player.fromMap(data["player"]);
-      print("Megölt: ${impo.name}");
       setState(() {
         qr_action = "${plyr.id}-report";
       });
@@ -75,14 +74,6 @@ class _GameMainPageState extends State<GameMainPage> {
     });
   }
 
-  void enableKill(){
-      Future.delayed(Duration(seconds: game.killCooldown), () {
-        setState(() {
-          killEnabled = true;
-        });
-      });
-  }
-
   @override
   Widget build(BuildContext context) {
     arguments = ModalRoute.of(context)!.settings.arguments;
@@ -98,7 +89,6 @@ class _GameMainPageState extends State<GameMainPage> {
       qr_action = "${plyr.id}-alive";
 
       listenOnSockets();
-      enableKill();
 
       loaded = true;
     }
@@ -166,25 +156,12 @@ class _GameMainPageState extends State<GameMainPage> {
                         ),
                       )),
                   ElevatedButton(
-                      onPressed: () async {
-                        dynamic res = await Navigator.pushNamed(context, '/qrReader', arguments: {
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/qrReader', arguments: {
                           'player': plyr,
                           'socket': socket,
                           'gameId': gameId,
-                          'killEnabled': killEnabled,
                         });
-                        if(res != null) {
-                          setState(() {
-                            switch(res["code"]){
-                              case 201:
-                                killEnabled = false;
-                                enableKill();
-                                break;
-                                default:
-                                break;
-                            }
-                          });
-                        }
                       },
                       style: ElevatedButton.styleFrom(
                         disabledBackgroundColor: Colors.grey,
