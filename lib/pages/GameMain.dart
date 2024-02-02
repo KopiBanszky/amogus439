@@ -44,7 +44,9 @@ class _GameMainPageState extends State<GameMainPage> {
 
     socket.on("reported_player", (data) async {
       if (!alive) {
-        qr_action = "${plyr.id}-dead";
+        setState(() {
+          qr_action = "${plyr.id}-dead";
+        });
       }
       Navigator.popUntil(context, (route) => route.isCurrent);
       dynamic vote =
@@ -73,7 +75,9 @@ class _GameMainPageState extends State<GameMainPage> {
 
     socket.on("emergency_called", (data) async {
       if (!alive) {
-        qr_action = "${plyr.id}-dead";
+        setState(() {
+          qr_action = "${plyr.id}-dead";
+        });
       }
       Navigator.popUntil(context, (route) => route.isCurrent);
       dynamic vote =
