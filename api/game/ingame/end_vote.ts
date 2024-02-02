@@ -10,6 +10,7 @@ export default (game_id:number, force_vote:boolean) => {
             return;
         }
         const players:Player[] = result;
+        console.log(players);
 
 
         let votes:number = 0;
@@ -21,11 +22,23 @@ export default (game_id:number, force_vote:boolean) => {
             noSkip += player.votes;
         });
 
+        console.log(
+            "votes:", votes,
+            "noSkip:", noSkip
+        );
+
+        console.log(
+            "force_vote:", force_vote,
+            "votes < players.length:", votes < players.length,
+            "!force_vote:", !force_vote,
+            "ifstatement:", (votes < players.length) && !force_vote
+        )
+
         //check if all players voted or if the time is over, so force_vote is true
-        if(votes+1 < players.length && !force_vote) return;
+        if((votes < players.length) && !force_vote) return;
 
 
-        let skip:boolean = Math.floor(votes/2) >= noSkip; //check if skip is needed for sure
+        let skip:boolean = Math.round(votes/2) >= noSkip; //check if skip is needed for sure
         let max:number = -1;
         let outVoted:Player|undefined = undefined;
         let i:number = 0;
@@ -63,6 +76,12 @@ export default (game_id:number, force_vote:boolean) => {
         }
         //reset the votes
         db.query(`UPDATE Players SET voted = 0, votes = 0 WHERE game_id = ${game_id}`, (err, result) => {
+            if(err){
+                console.error(err);
+                return;
+            }
+        });
+        db.query(`UPDATE Games SET status = 1 WHERE id = ${game_id}`, (err, result) => {
             if(err){
                 console.error(err);
                 return;

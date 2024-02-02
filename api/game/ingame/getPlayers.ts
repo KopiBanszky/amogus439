@@ -29,6 +29,11 @@ export default <apiMethod> {
                 });
                 return 404;
             }
+            for(let player of result){
+                player.tasks = JSON.parse(player.tasks);
+                player.tasks_done = JSON.parse(player.tasks_done || "[]");
+                player.geo_pos = JSON.parse(player.geo_pos || JSON.stringify({latitude: 0, longitude: 0}));
+            }
             res.status(200).send({
                 message: 'Players retrieved successfully',
                 players: result
