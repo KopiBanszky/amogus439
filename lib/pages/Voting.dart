@@ -120,7 +120,7 @@ class _VotingPageState extends State<VotingPage> {
               fontSize: 20,
             ),
           ),
-          child: FittedBox(
+          child: Flexible(
             child: Column(
               children: [
                 Row(
