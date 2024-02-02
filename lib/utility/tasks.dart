@@ -44,6 +44,7 @@ class _TasksWidgetState extends State<TasksWidget> {
       if (data["code"] != 200) {
         showAlert("Hiba - ${data["code"]}", data["message"], Colors.red, true,
             () {}, "Ok", false, () {}, "", context);
+        return;
       }
       setState(() {
         taskWidgets = _buildTasks(tasks, gameId, userId);
