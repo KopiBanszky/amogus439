@@ -58,6 +58,7 @@ class _VotingPageState extends State<VotingPage> {
     });
 
     socket.on("vote_result", (data) {
+      print(data);
       setState(() {
         showVotes = true;
       });
