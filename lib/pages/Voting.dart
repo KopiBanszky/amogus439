@@ -40,7 +40,6 @@ class _VotingPageState extends State<VotingPage> {
     });
 
     socket.on("vote_placed", (data) {
-      print(data);
       if (data["code"] == 200) {
         Map<String, dynamic> vote = {};
         if (data["voter"] == -1) {
@@ -63,6 +62,7 @@ class _VotingPageState extends State<VotingPage> {
     socket.on("vote_result", (data) {
       print(data);
       setState(() {
+        time = 6;
         showVotes = true;
       });
     });
@@ -87,8 +87,6 @@ class _VotingPageState extends State<VotingPage> {
   }
 
   Widget _buildPlayer(Player player) {
-    print(votes);
-    print(player.dead);
     return SizedBox(
       height: MediaQuery.of(context).size.height * .095,
       width: MediaQuery.of(context).size.width * .45,
@@ -120,45 +118,42 @@ class _VotingPageState extends State<VotingPage> {
               fontSize: 20,
             ),
           ),
-          child: Flexible(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ColorFiltered(
-                      colorFilter:
-                          ColorFilter.mode(player.color, BlendMode.modulate),
-                      child: Image.asset(
-                        "assets/${(reporter.id == player.id) ? (isEmergencyCalled ? "caller.png" : "reporter.png") : (player.dead ? "dead.png" : "player.png")}",
-                        height: MediaQuery.of(context).size.height * .04,
-                      ),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ColorFiltered(
+                    colorFilter:
+                        ColorFilter.mode(player.color, BlendMode.modulate),
+                    child: Image.asset(
+                      "assets/${(reporter.id == player.id) ? (isEmergencyCalled ? "caller.png" : "reporter.png") : (player.dead ? "dead.png" : "player.png")}",
+                      height: MediaQuery.of(context).size.height * .04,
                     ),
-                    Expanded(
-                      child: Text(player.name,
-                          textAlign: TextAlign.start,
+                  ),
+                  Expanded(
+                    child: Text(player.name,
+                        textAlign: TextAlign.start,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          color: Colors.black,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            color: Colors.black,
-                            overflow: TextOverflow.ellipsis,
-                          )),
-                    ),
-                  ],
-                ),
-                if (showVotes)
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * .02,
-                    child: Row(children: _buildVoters(player.id)),
-                  )
-              ],
-            ),
+                        )),
+                  ),
+                ],
+              ),
+              if (showVotes)
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * .02,
+                  child: Row(children: _buildVoters(player.id)),
+                )
+            ],
           )),
     );
   }
 
   Widget _buildPlayers(List<Player> players) {
-    print(showVotes);
     List<Widget> playerWidgets = [];
     List<Widget> row = [];
 
@@ -198,84 +193,88 @@ class _VotingPageState extends State<VotingPage> {
       listenOnSockets();
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Szavazás", style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.grey[900],
-        iconTheme: const IconThemeData(color: Colors.white),
-      ),
-      backgroundColor: Colors.grey[900],
-      body: Center(
-          child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            Text(isEmergencyCalled ? "Emergency meeting" : "Holttest jelentve",
-                style: const TextStyle(color: Colors.white, fontSize: 20)),
-            const Text("Szavazásra idő: ",
-                style: TextStyle(color: Colors.white, fontSize: 20)),
-            Timer(duration: time, textColor: Colors.white, fontSize: 20),
-            const SizedBox(
-              height: 8.0,
-            ),
-            Flexible(
-              // height: MediaQuery.of(context).size.height * .5,
-
-              child: SingleChildScrollView(
-                child: _buildPlayers(players),
-              ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * .095,
-              width: MediaQuery.of(context).size.width * .45,
-              child: ElevatedButton(
-                  onPressed: voted == -1
-                      ? null
-                      : () {
-                          if (voted != 0) return;
-                          voted = -1;
-                          socket.emit("vote", {
-                            "game_id": gameId,
-                            "user_id": plyr.id,
-                            "vote_id": -1,
-                          });
-                        },
-                  style: ElevatedButton.styleFrom(
-                    disabledBackgroundColor: Colors.grey[700],
-                    backgroundColor: Colors.grey[300],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(7),
-                    ),
-                    padding: const EdgeInsets.fromLTRB(25, 15, 25, 15),
-                    side: const BorderSide(
-                      color: Colors.black,
-                      width: 1.5,
-                    ),
-                    textStyle: const TextStyle(
-                      fontSize: 20,
-                    ),
-                  ),
-                  child: Column(
-                    children: [
-                      const Text("Skip",
-                          textAlign: TextAlign.start,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.black,
-                            overflow: TextOverflow.ellipsis,
-                          )),
-                      if (showVotes)
-                        SizedBox(
-                          height: 20.0,
-                          child: Row(children: _buildVoters(-1)),
-                        )
-                    ],
-                  )),
-            )
-          ],
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("Szavazás", style: TextStyle(color: Colors.white)),
+          backgroundColor: Colors.grey[900],
+          automaticallyImplyLeading: false,
         ),
-      )),
+        backgroundColor: Colors.grey[900],
+        body: Center(
+            child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Text(
+                  isEmergencyCalled ? "Emergency meeting" : "Holttest jelentve",
+                  style: const TextStyle(color: Colors.white, fontSize: 20)),
+              const Text("Szavazásra idő: ",
+                  style: TextStyle(color: Colors.white, fontSize: 20)),
+              Timer(duration: time, textColor: Colors.white, fontSize: 20),
+              const SizedBox(
+                height: 8.0,
+              ),
+              Flexible(
+                // height: MediaQuery.of(context).size.height * .5,
+
+                child: SingleChildScrollView(
+                  child: _buildPlayers(players),
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * .095,
+                width: MediaQuery.of(context).size.width * .45,
+                child: ElevatedButton(
+                    onPressed: voted == -1
+                        ? null
+                        : () {
+                            if (voted != 0) return;
+                            voted = -1;
+                            socket.emit("vote", {
+                              "game_id": gameId,
+                              "user_id": plyr.id,
+                              "vote_id": -1,
+                            });
+                          },
+                    style: ElevatedButton.styleFrom(
+                      disabledBackgroundColor: Colors.grey[700],
+                      backgroundColor: Colors.grey[300],
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(7),
+                      ),
+                      padding: const EdgeInsets.fromLTRB(25, 15, 25, 15),
+                      side: const BorderSide(
+                        color: Colors.black,
+                        width: 1.5,
+                      ),
+                      textStyle: const TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        const Text("Skip",
+                            textAlign: TextAlign.start,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.black,
+                              overflow: TextOverflow.ellipsis,
+                            )),
+                        if (showVotes)
+                          SizedBox(
+                            height: 20.0,
+                            child: Row(children: _buildVoters(-1)),
+                          )
+                      ],
+                    )),
+              )
+            ],
+          ),
+        )),
+      ),
     );
   }
 }
