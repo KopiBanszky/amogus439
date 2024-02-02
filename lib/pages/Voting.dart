@@ -142,13 +142,13 @@ class _VotingPageState extends State<VotingPage> {
                           overflow: TextOverflow.ellipsis,
                         )),
                   ),
-                  if (showVotes)
-                    SizedBox(
-                      height: 8.0,
-                      child: Row(children: _buildVoters(player.id)),
-                    )
                 ],
               ),
+              if (showVotes)
+                SizedBox(
+                  height: 20.0,
+                  child: Row(children: _buildVoters(player.id)),
+                )
             ],
           )),
     );
@@ -262,9 +262,11 @@ class _VotingPageState extends State<VotingPage> {
                             color: Colors.black,
                             overflow: TextOverflow.ellipsis,
                           )),
-                      Row(
-                        children: _buildVoters(-1),
-                      )
+                      if (showVotes)
+                        SizedBox(
+                          height: 20.0,
+                          child: Row(children: _buildVoters(-1)),
+                        )
                     ],
                   )),
             )
