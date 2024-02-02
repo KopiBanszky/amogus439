@@ -28,14 +28,18 @@ class _TimerState extends State<Timer> {
   late bool stop;
 
   void countDown() {
-    Future.delayed(const Duration(seconds: 1), () {
-      setState(() {
-        duration--;
+    try {
+      Future.delayed(const Duration(seconds: 1), () {
+        setState(() {
+          duration--;
+        });
+        if (duration > 0 && !stop) {
+          countDown();
+        }
       });
-      if (duration > 0 && !stop) {
-        countDown();
-      }
-    });
+    } catch (e) {
+      print(e);
+    }
   }
 
   String addZero(int number) {
