@@ -29,6 +29,7 @@ class _VotingPageState extends State<VotingPage> {
   int voted = 0; //the player who got voted
   List<Map<String, dynamic>> votes = []; //{player_id, voter_color || grey}
   bool showVotes = false;
+  bool preventNewStop = false;
 
   void listenOnSockets() {
     socket.on("vote", (data) {
@@ -61,9 +62,11 @@ class _VotingPageState extends State<VotingPage> {
 
     socket.on("vote_result", (data) {
       print(data);
+      if (preventNewStop) return;
       setState(() {
         time = 6;
         showVotes = true;
+        preventNewStop = true;
       });
       late Player votedOut;
       if (!data["skip"]) votedOut = Player.fromMap(data["player"]);
@@ -209,6 +212,7 @@ class _VotingPageState extends State<VotingPage> {
       loaded = true;
 
       listenOnSockets();
+      timer();
     }
 
     return PopScope(
