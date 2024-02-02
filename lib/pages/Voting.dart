@@ -88,6 +88,7 @@ class _VotingPageState extends State<VotingPage> {
 
   Widget _buildPlayer(Player player) {
     print(votes);
+    print(player.dead);
     return SizedBox(
       height: MediaQuery.of(context).size.height * .095,
       width: MediaQuery.of(context).size.width * .45,
@@ -119,37 +120,39 @@ class _VotingPageState extends State<VotingPage> {
               fontSize: 20,
             ),
           ),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ColorFiltered(
-                    colorFilter:
-                        ColorFilter.mode(player.color, BlendMode.modulate),
-                    child: Image.asset(
-                      "assets/${(reporter.id == player.id) ? (isEmergencyCalled ? "caller.png" : "reporter.png") : (player.dead ? "dead.png" : "player.png")}",
-                      height: MediaQuery.of(context).size.height * .05,
+          child: FittedBox(
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ColorFiltered(
+                      colorFilter:
+                          ColorFilter.mode(player.color, BlendMode.modulate),
+                      child: Image.asset(
+                        "assets/${(reporter.id == player.id) ? (isEmergencyCalled ? "caller.png" : "reporter.png") : (player.dead ? "dead.png" : "player.png")}",
+                        height: MediaQuery.of(context).size.height * .05,
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    child: Text(player.name,
-                        textAlign: TextAlign.start,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          color: Colors.black,
+                    Expanded(
+                      child: Text(player.name,
+                          textAlign: TextAlign.start,
                           overflow: TextOverflow.ellipsis,
-                        )),
-                  ),
-                ],
-              ),
-              if (showVotes)
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * .016,
-                  child: Row(children: _buildVoters(player.id)),
-                )
-            ],
+                          style: const TextStyle(
+                            fontSize: 20,
+                            color: Colors.black,
+                            overflow: TextOverflow.ellipsis,
+                          )),
+                    ),
+                  ],
+                ),
+                if (showVotes)
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * .02,
+                    child: Row(children: _buildVoters(player.id)),
+                  )
+              ],
+            ),
           )),
     );
   }
