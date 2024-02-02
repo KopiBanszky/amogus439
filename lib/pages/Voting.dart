@@ -146,7 +146,7 @@ class _VotingPageState extends State<VotingPage> {
               ),
               if (showVotes)
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * .02,
+                  height: MediaQuery.of(context).size.height * .016,
                   child: Row(children: _buildVoters(player.id)),
                 )
             ],
