@@ -156,7 +156,7 @@ class _SrReaderPageState extends State<SrReaderPage> {
             //get player
             socket.on("kill", (data) async {
               if (data["code"] == 200) {
-                dynamic plyr_res = await http_get("api/game/ingame/getPlayer", {
+                RquestResult plyr_res = await http_get("api/game/ingame/getPlayer", {
                   "user_id": target_id.toString(),
                 });
                 if (plyr_res.ok) {
