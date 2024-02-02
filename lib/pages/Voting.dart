@@ -1,5 +1,6 @@
 // ignore_for_file: file_names, curly_braces_in_flow_control_structures
 
+import 'package:amogusvez2/utility/stLessTimer.dart';
 import 'package:amogusvez2/utility/timer.dart';
 import 'package:amogusvez2/utility/types.dart';
 import 'package:flutter/material.dart';
@@ -69,7 +70,9 @@ class _VotingPageState extends State<VotingPage> {
         preventNewStop = true;
       });
       late Player votedOut;
-      if (!data["skip"]) votedOut = Player.fromMap(data["player"]);
+      if (!data["skip"]) {
+        votedOut = Player.fromMap(data["player"]);
+      }
       Future.delayed(const Duration(seconds: 7), () {
         Navigator.pushReplacementNamed(context, "/votingResult", arguments: {
           "votedOut": votedOut,
@@ -235,11 +238,10 @@ class _VotingPageState extends State<VotingPage> {
                   style: const TextStyle(color: Colors.white, fontSize: 20)),
               const Text("Szavazásra idő: ",
                   style: TextStyle(color: Colors.white, fontSize: 20)),
-              Timer(
+              StLessTimer(
                 duration: time,
                 textColor: Colors.white,
                 fontSize: 20,
-                outerTimer: true,
               ),
               const SizedBox(
                 height: 8.0,
