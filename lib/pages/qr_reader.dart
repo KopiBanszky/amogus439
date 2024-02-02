@@ -24,6 +24,7 @@ class _SrReaderPageState extends State<SrReaderPage> {
   late Socket socket;
   late String gameId;
   late Player plyr;
+  late bool killEnabled;
   bool found = false;
 
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
@@ -49,6 +50,8 @@ class _SrReaderPageState extends State<SrReaderPage> {
     color = plyr.color;
     socket = arguments['socket'];
     gameId = arguments['gameId'];
+    killEnabled = arguments['killEnabled'];
+    
 
     return Scaffold(
       appBar: AppBar(
@@ -135,6 +138,15 @@ class _SrReaderPageState extends State<SrReaderPage> {
               controller.resumeCamera();
             }, "Ok", false, () {}, "", context);
           } else {
+            if(!killEnabled){
+              showAlert(
+                  "Megállj!", "Nem vagy még képes gyilkolni", Colors.blue, true, () {
+                controller.resumeCamera();
+              }, "Ok", false, () {}, "", context);
+              return;
+            }
+
+
             socket.emit("kill", {
               "game_id": gameId,
               "user_id": plyr.id,
@@ -156,7 +168,7 @@ class _SrReaderPageState extends State<SrReaderPage> {
                       "${target.name}-t sikeresen megölted!",
                       Colors.green,
                       true, () {
-                    Navigator.pop(context);
+                    Navigator.pop(context, {"code": 201});
                   }, "Ok", false, () {}, "", context);
                 }
               } else {
