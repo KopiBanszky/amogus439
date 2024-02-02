@@ -11,7 +11,7 @@ const vote = {
         const vote_id:number = args.vote_id; //player id to vote for, -1 to skip
 
         //check if voting is enabled
-        const isVoting = await new Promise((resolve, reject) => db.query(`SELECT status FROM Games WHERE id = ${game_id}`, (err, result) => {
+        const isVoting:any = await new Promise((resolve, reject) => db.query(`SELECT status, anonymus_vote FROM Games WHERE id = ${game_id}`, (err, result) => {
             if(err){
                 console.error(err);
                 resolve(false);
@@ -24,7 +24,7 @@ const vote = {
                 socket.emit('vote', {code: 403, message: 'Game not in voting phase'});
                 resolve(false);
             }
-            resolve(true);
+            resolve(result[0]);
         }));
         if(isVoting == false) return;
 
@@ -65,18 +65,24 @@ const vote = {
             }
 
             //check if anonymous vote is enabled
-            await new Promise((resolve, reject)=> db.query(`SELECT anonymous_vote FROM Games WHERE id = ${game_id}`, (err, result) => {
+            const anonymous_vote:boolean = isVoting.anonymous_vote == 1;
+
+
+            db.query(`UPDATE Players SET voted = 1 WHERE id = ${user_id}`, (err, result) => {
                 if(err){
                     console.error(err);
-                    resolve(false);
+                    return;
                 }
-                const anonymous_vote:boolean = result[0].anonymous_vote;
-
-                //send the vote to the players
-                socket.emit('vote', {code: 200, message: 'Voted successfully'});
-                io.in(`Game_${game_id}`).emit('vote_placed', {code: 200, message: 'Voted successfully', voter: (anonymous_vote ? -1 : playerWhoVote), voted: playerToVote||-1});
-                resolve(true);
-            }));
+            });
+            db.query(`UPDATE Players SET votes = ${playerToVote?.votes||1} WHERE id = ${vote_id}`, (err, result) => {
+                if(err){
+                    console.error(err);
+                    return;
+                }
+            });
+            //send the vote to the players
+            socket.emit('vote', {code: 200, message: 'Voted successfully'});
+            io.in(`Game_${game_id}`).emit('vote_placed', {code: 200, message: 'Voted successfully', voter: (anonymous_vote ? playerWhoVote : -1), voted: playerToVote||-1});
 
             //check if all players voted
             end_vote(game_id, false);

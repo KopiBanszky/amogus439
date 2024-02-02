@@ -4,11 +4,12 @@ import { Player, Game, Task } from '../../../source/utility';
 
 const report = {
     event: 'emergency',
-    callback: async (socket: any, data: any) => {
+    callback: async (data: any, socket: any) => {
         const {game_id, player_id} = data;
         const game_prom:any = await new Promise((resolve, reject) => db.query(`SELECT * FROM Games WHERE id = ${game_id}`, (err, result) => {
             if (err) {
                 resolve(null);
+                console.error(err);
                 socket.emit('emergency', {code: 500, message: 'Error in database'});
                 return;
             };
@@ -27,9 +28,10 @@ const report = {
             return;
         }
 
-        const player_prom:any = await new Promise((resolve, reject) => db.query(`SELECT * FROM Players WHERE player_id = ${player_id}`, (err, result) => {
+        const player_prom:any = await new Promise((resolve, reject) => db.query(`SELECT * FROM Players WHERE id = ${player_id}`, (err, result) => {
             if (err) {
                 resolve(null);
+                console.error(err);
                 socket.emit('emergency', {code: 500, message: 'Error in database'});
                 return;
             };
@@ -41,6 +43,9 @@ const report = {
             resolve(result[0]);
         }));
         if(player_prom == null) return;
+        player_prom.tasks = JSON.parse(player_prom.tasks);
+        player_prom.tasks_done = JSON.parse(player_prom.tasks_done || "[]");
+        player_prom.geo_pos = JSON.parse(player_prom.geo_pos || JSON.stringify({latitude: 0, longitude: 0}));
         const player:Player =  player_prom;
         if(player.dead){
             socket.emit('emergency', {code: 403, message: 'You are already dead'});
@@ -52,13 +57,14 @@ const report = {
 
         }
 
-        db.query(`UPDATE Games SET status = 4 WHERE game_id = ${game_id}`, (err, result) => {
+        db.query(`UPDATE Games SET status = 4 WHERE id = ${game_id}`, (err, result) => {
             if(err) {
+                console.error(err);
                 socket.emit('emergency', {code: 500, message: 'Error in database'});
                 return;
             }
             socket.emit('emergency', {code: 200, message: 'emergency pressed'});
-            io.to(`Game_${game_id}`).emit('emergency_called', {message: "Player called emergency", reporter: player});
+            io.in(`Game_${game_id}`).emit('emergency_called', {message: "Player called emergency", reporter: player});
         });
 
     }

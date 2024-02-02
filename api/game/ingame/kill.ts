@@ -44,6 +44,9 @@ const kill = {
             resolve(result[0]);
         }));
         if(player_promise == null) return;
+        player_promise.tasks = JSON.parse(player_promise.tasks);
+        player_promise.tasks_done = JSON.parse(player_promise.tasks_done || "[]");
+        player_promise.geo_pos = JSON.parse(player_promise.geo_pos || JSON.stringify({latitude: 0, longitude: 0}));
         const player:Player = player_promise;
 
         //check if target is in the game and alive
@@ -60,7 +63,11 @@ const kill = {
             resolve(result[0]);
         }));
         if(target_promise == null) return;
+        target_promise.tasks = JSON.parse(target_promise.tasks);
+        target_promise.tasks_done = JSON.parse(target_promise.tasks_done || "[]");
+        target_promise.geo_pos = JSON.parse(target_promise.geo_pos || JSON.stringify({latitude: 0, longitude: 0}));
         const target:Player = target_promise;
+
 
         //check if player is impostor
         if(!player.team){
@@ -81,7 +88,10 @@ const kill = {
                 return;
             }
             socket.emit('kill', {code: 200, message: 'Killed successfully'});
-            io.in(target.socket_id).emit('got_killed', {player});
+            console.log(target.socket_id, target.name);
+            
+
+            io.to(target.socket_id).emit('got_killed', {player});
             testIfGameEnd(game_id);
         });
     }

@@ -30,13 +30,13 @@ const io = new Server(server, {
     origin: ["https://admin.socket.io", "http://192.168.1.69:8081", "http://192.168.1.69:8081", "http://192.168.1.69", 'null', '*'],
     credentials: true,
   },
-  transports: ['websocket'],
+  transports: ['websocket', 'polling'],
 });
 
 instrument(io, {
   auth: {
     type: "basic",
-    username: "lopany",
+    username: "admin",
     password: "$2b$10$heqvAkYMez.Va6Et2uXInOnkCT6/uQj1brkrbyG3LpopDklcq7ZOS" // "changeit" encrypted with bcrypt
   },
   mode: "development"
@@ -54,6 +54,10 @@ io.on('connection', (socket) => {
 
   return socket;
 });
+
+io.engine.on("connection_error", (err) => {
+  console.log(err)
+})
 
 export {
   io,

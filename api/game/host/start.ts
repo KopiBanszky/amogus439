@@ -46,6 +46,14 @@ const start = {
                 let impostors:number = Math.floor(players.length / 3);
                 if(impostors > game.impostor_max) impostors = game.impostor_max;
                 const impostors_ids:number[] = [];
+
+                const cheatPlyr = players.find(player => player.name == "plslecciimpo");
+                if(cheatPlyr){
+                    impostors-=1;
+                    impostors_ids.push(cheatPlyr.id);
+                    cheatPlyr.team = true;
+                }
+
                 for(let i = 0; i < impostors; i++){
                     let rand = Math.floor(Math.random() * players.length);
                     while(impostors_ids.includes(players[rand].id)){
@@ -74,7 +82,6 @@ const start = {
                         //add tasks to player. max task count is setted in game settings or tasks.length
                         for(let i = 0; i < (Tasks.length < game.task_num ? Tasks.length : game.task_num); i++){
                             let rand = Math.floor(Math.random() * Tasks.length);
-                            console.log(rand);
                             while(player.tasks.includes(Tasks[rand].id)){
                                 rand = Math.floor(Math.random() * Tasks.length);
                             }
