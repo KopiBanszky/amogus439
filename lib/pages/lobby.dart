@@ -72,12 +72,12 @@ class _LobbyPageState extends State<LobbyPage> {
 
     //removes a player from the list
     socket.on("player_disconnected", (data) {
-      if(data["socket_id"] != null)
-      setState(() {
-        players.removeWhere((element) => element.socketId == data["socket_id"]);
-      });
-      }
-      catch(e){
+      try {
+        setState(() {
+          players
+              .removeWhere((element) => element.socketId == data["socket_id"]);
+        });
+      } catch (e) {
         print(e);
       }
     });
