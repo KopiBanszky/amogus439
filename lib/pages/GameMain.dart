@@ -58,17 +58,17 @@ class _GameMainPageState extends State<GameMainPage> {
         'dead': Player.fromMap(data["reported"]),
       });
 
-      if (!vote["skip"]) {
-        Player voted = vote["votedOut"];
-        if (voted.id == plyr.id) {
-          setState(() {
-            alive = false;
-            qr_action = "${plyr.id}-dead";
-          });
-          showAlert("Meghaltál", "Kiszavaztak", Colors.red, true, () {}, "Ok",
-              false, () {}, "", context);
-        }
-      }
+      // if (!vote["skip"]) {
+      //   Player voted = vote["votedOut"];
+      //   if (voted.id == plyr.id) {
+      //     setState(() {
+      //       alive = false;
+      //       qr_action = "${plyr.id}-dead";
+      //     });
+      //     showAlert("Meghaltál", "Kiszavaztak", Colors.red, true, () {}, "Ok",
+      //         false, () {}, "", context);
+      //   }
+      // }
     });
 
     socket.on("emergency_called", (data) async {
@@ -87,17 +87,17 @@ class _GameMainPageState extends State<GameMainPage> {
         'dead': Player.fromMap(data["reported"]),
       });
 
-      if (!vote["skip"]) {
-        Player voted = vote["votedOut"];
-        if (voted.id == plyr.id) {
-          setState(() {
-            alive = false;
-            qr_action = "${plyr.id}-dead";
-          });
-          showAlert("Meghaltál", "Kiszavaztak", Colors.red, true, () {}, "Ok",
-              false, () {}, "", context);
-        }
-      }
+      // if (!vote["skip"]) {
+      //   Player voted = vote["votedOut"];
+      //   if (voted.id == plyr.id) {
+      //     setState(() {
+      //       alive = false;
+      //       qr_action = "${plyr.id}-dead";
+      //     });
+      //     showAlert("Meghaltál", "Kiszavaztak", Colors.red, true, () {}, "Ok",
+      //         false, () {}, "", context);
+      //   }
+      // }
     });
   }
 

@@ -81,7 +81,6 @@ class _VotingPageState extends State<VotingPage> {
     for (int i = 0; i < votes.length; i++) {
       Map<String, dynamic> vote = votes[i];
       if (vote["player_id"] == id)
-        // ignore: curly_braces_in_flow_control_structures
         voterWidgets.add(ColorFiltered(
           colorFilter:
               ColorFilter.mode(vote["voter_color"], BlendMode.modulate),
