@@ -1,4 +1,4 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, curly_braces_in_flow_control_structures
 
 import 'package:amogusvez2/utility/timer.dart';
 import 'package:amogusvez2/utility/types.dart';
@@ -64,6 +64,14 @@ class _VotingPageState extends State<VotingPage> {
       setState(() {
         time = 6;
         showVotes = true;
+      });
+      late Player votedOut;
+      if (!data["skip"]) votedOut = Player.fromMap(data["player"]);
+      Future.delayed(const Duration(seconds: 7), () {
+        Navigator.pushReplacementNamed(context, "/votingResult", arguments: {
+          "votedOut": votedOut,
+          "skip": data["skip"],
+        });
       });
     });
   }

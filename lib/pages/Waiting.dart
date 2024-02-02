@@ -95,90 +95,95 @@ class _WaitingPageState extends State<WaitingPage> {
       loaded = true;
     }
 
-    return Scaffold(
-      backgroundColor: Colors.grey[900],
-      body: Center(
-          child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              isEmergencyCalled
-                  ? "Emergency összehívve ${reporter.name} által"
-                  : "${dead.name} holtteste jelentve ${reporter.name} által",
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.white, fontSize: 20),
-            ),
-            const SizedBox(
-              height: 8.0,
-            ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  if (!isEmergencyCalled)
-                    PlayerWidget(
-                        color: dead.color, name: dead.name, img: imgType.dead),
-                  PlayerWidget(
-                      color: reporter.color,
-                      name: reporter.name,
-                      img: isEmergencyCalled
-                          ? imgType.emergency
-                          : imgType.report)
-                ],
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        backgroundColor: Colors.grey[900],
+        body: Center(
+            child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                isEmergencyCalled
+                    ? "Emergency összehívve ${reporter.name} által"
+                    : "${dead.name} holtteste jelentve ${reporter.name} által",
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Colors.white, fontSize: 20),
               ),
-            ),
-            const SizedBox(
-              height: 8.0,
-            ),
-            const Text(
-              "Várakozás a szavazás indítására...",
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
-            const SizedBox(
-              height: 8.0,
-            ),
-            if (host)
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  disabledBackgroundColor: Colors.grey,
-                  backgroundColor: Colors.blue,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(7),
-                  ),
-                  padding: const EdgeInsets.fromLTRB(25, 15, 25, 15),
-                  side: const BorderSide(
-                    color: Colors.white,
-                    width: 1.5,
-                  ),
-                  textStyle: const TextStyle(
-                    fontSize: 20,
-                  ),
+              const SizedBox(
+                height: 8.0,
+              ),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    if (!isEmergencyCalled)
+                      PlayerWidget(
+                          color: dead.color,
+                          name: dead.name,
+                          img: imgType.dead),
+                    PlayerWidget(
+                        color: reporter.color,
+                        name: reporter.name,
+                        img: isEmergencyCalled
+                            ? imgType.emergency
+                            : imgType.report)
+                  ],
                 ),
-                child: const Text("Szavazás indítása",
-                    style: TextStyle(
+              ),
+              const SizedBox(
+                height: 8.0,
+              ),
+              const Text(
+                "Várakozás a szavazás indítására...",
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              const SizedBox(
+                height: 8.0,
+              ),
+              if (host)
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    disabledBackgroundColor: Colors.grey,
+                    backgroundColor: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(7),
+                    ),
+                    padding: const EdgeInsets.fromLTRB(25, 15, 25, 15),
+                    side: const BorderSide(
                       color: Colors.white,
-                    )),
-                onPressed: () {
-                  if (ok) {
-                    socket.emit("start_vote", {
-                      "game_id": gameId,
-                      "user_id": plyr.id,
-                    });
-                  } else {
-                    showAlert("Betöltés", "Bróbáld újra", Colors.blue, true,
-                        () {}, "Ok", false, () {}, "", context);
-                  }
-                },
-              )
-          ],
-        ),
-      )),
+                      width: 1.5,
+                    ),
+                    textStyle: const TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                  child: const Text("Szavazás indítása",
+                      style: TextStyle(
+                        color: Colors.white,
+                      )),
+                  onPressed: () {
+                    if (ok) {
+                      socket.emit("start_vote", {
+                        "game_id": gameId,
+                        "user_id": plyr.id,
+                      });
+                    } else {
+                      showAlert("Betöltés", "Bróbáld újra", Colors.blue, true,
+                          () {}, "Ok", false, () {}, "", context);
+                    }
+                  },
+                )
+            ],
+          ),
+        )),
+      ),
     );
   }
 }

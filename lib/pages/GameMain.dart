@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, non_constant_identifier_names
+// ignore_for_file: file_names, non_constant_identifier_names, use_build_context_synchronously
 
 import 'package:amogusvez2/utility/alert.dart';
 import 'package:amogusvez2/utility/tasks.dart';
@@ -42,12 +42,13 @@ class _GameMainPageState extends State<GameMainPage> {
           "Ok", false, () {}, "", context);
     });
 
-    socket.on("reported_player", (data) {
+    socket.on("reported_player", (data) async {
       if (!alive) {
         qr_action = "${plyr.id}-dead";
       }
       Navigator.popUntil(context, (route) => route.isCurrent);
-      Navigator.pushNamed(context, '/waitingForVote', arguments: {
+      dynamic vote =
+          await Navigator.pushNamed(context, '/waitingForVote', arguments: {
         'player': plyr,
         'socket': socket,
         'gameId': gameId,
@@ -56,22 +57,47 @@ class _GameMainPageState extends State<GameMainPage> {
         'reporter': Player.fromMap(data["reporter"]),
         'dead': Player.fromMap(data["reported"]),
       });
+
+      if (!vote["skip"]) {
+        Player voted = vote["votedOut"];
+        if (voted.id == plyr.id) {
+          setState(() {
+            alive = false;
+            qr_action = "${plyr.id}-dead";
+          });
+          showAlert("Meghaltál", "Kiszavaztak", Colors.red, true, () {}, "Ok",
+              false, () {}, "", context);
+        }
+      }
     });
 
-    socket.on("emergency_called", (data) {
+    socket.on("emergency_called", (data) async {
       if (!alive) {
         qr_action = "${plyr.id}-dead";
       }
       Navigator.popUntil(context, (route) => route.isCurrent);
-      Navigator.pushNamed(context, '/waitingForVote', arguments: {
+      dynamic vote =
+          await Navigator.pushNamed(context, '/waitingForVote', arguments: {
         'player': plyr,
         'socket': socket,
         'gameId': gameId,
         "host": host,
-        'isEmergencyCalled': true,
+        'isEmergencyCalled': false,
         'reporter': Player.fromMap(data["reporter"]),
-        'dead': null,
+        'dead': Player.fromMap(data["reported"]),
       });
+
+      if (!vote["skip"]) {
+        Player voted = vote["votedOut"];
+        if (voted.id == plyr.id) {
+          setState(() {
+            alive = false;
+            qr_action = "${plyr.id}-dead";
+          });
+          showAlert("Meghaltál", "Kiszavaztak", Colors.red, true, () {}, "Ok",
+              false, () {}, "", context);
+        }
+      }
     });
   }
 
