@@ -1,3 +1,5 @@
+// ignore_for_file: curly_braces_in_flow_control_structures
+
 import 'package:amogusvez2/utility/alert.dart';
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart';
@@ -70,6 +72,7 @@ class _LobbyPageState extends State<LobbyPage> {
 
     //removes a player from the list
     socket.on("player_disconnected", (data) {
+      if(data["socket_id"] != null)
       setState(() {
         players.removeWhere((element) => element.socketId == data["socket_id"]);
       });

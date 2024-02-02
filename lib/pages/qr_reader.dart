@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, curly_braces_in_flow_control_structures
 
 import 'dart:convert';
 import 'dart:io';
@@ -142,12 +142,13 @@ class _SrReaderPageState extends State<SrReaderPage> {
               showAlert(
                   "Megállj!", "Nem vagy még képes gyilkolni", Colors.red, true, () {
                 controller.resumeCamera();
+                Navigator.pop(context);
               }, "Ok", false, () {}, "", context);
               return;
             }
 
 
-            socket.emit("kill", {
+            if(killEnabled) socket.emit("kill", {
               "game_id": gameId,
               "user_id": plyr.id,
               "target_id": target_id,
@@ -155,6 +156,7 @@ class _SrReaderPageState extends State<SrReaderPage> {
 
             //get player
             socket.on("kill", (data) async {
+              if(!killEnabled) return;
               if (data["code"] == 200) {
                 RquestResult plyr_res = await http_get("api/game/ingame/getPlayer", {
                   "user_id": target_id.toString(),
