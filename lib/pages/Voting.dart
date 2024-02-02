@@ -54,6 +54,8 @@ class _VotingPageState extends State<VotingPage> {
         } else {
           vote["player_id"] = data["voted"]["id"];
         }
+        votes.add(vote);
+        vote = {};
       }
     });
 
