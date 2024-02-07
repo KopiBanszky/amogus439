@@ -65,6 +65,7 @@ const vote = {
             }
 
             //check if anonymous vote is enabled
+            console.log(isVoting);
             const anonymous_vote:boolean = isVoting.anonymous_vote == 1;
 
 

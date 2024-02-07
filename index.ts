@@ -48,3 +48,7 @@ export {
     port,
     app
 };
+
+
+import {server} from "./api/game/websocket";
+server.listen(80, () => console.info(`Az http server fut ezen a porton: ${ 80 }\nhttp://localhost/`));
