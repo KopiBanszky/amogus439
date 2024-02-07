@@ -30,7 +30,7 @@ class _VotedOutPageState extends State<VotedOutPage> {
         body: ElevatedButton(
           onPressed: () {
             Navigator.pop(context, {
-              "votedOut": votedOut,
+              "votedOut": skip ? null : votedOut!,
               "skip": skip,
             });
           },
