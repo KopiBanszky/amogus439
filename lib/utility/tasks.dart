@@ -41,10 +41,14 @@ class _TasksWidgetState extends State<TasksWidget> {
 
   void listendToSockets(Socket socket) {
     socket.on("task_done", (data) {
-      if (data["code"] != 200) {
+      if ((data["code"] % 200) >= 100) {
         showAlert("Hiba - ${data["code"]}", data["message"], Colors.red, true,
             () {}, "Ok", false, () {}, "", context);
         return;
+      }
+      if (data["code"] == 205) {
+        showAlert("Hiba - ${data["code"]}", data["message"], Colors.blue, true,
+            () {}, "Ok", false, () {}, "", context);
       }
       setState(() {
         taskWidgets = _buildTasks(tasks, gameId, userId);

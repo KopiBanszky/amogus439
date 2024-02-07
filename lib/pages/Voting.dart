@@ -210,7 +210,7 @@ class _VotingPageState extends State<VotingPage> {
       players = arguments['players'];
       isEmergencyCalled = arguments['isEmergencyCalled'];
       reporter = arguments['reporter'];
-      dead = arguments['dead'];
+      if (!isEmergencyCalled) dead = arguments['dead'];
       time = arguments['time'];
       loaded = true;
 
@@ -235,6 +235,9 @@ class _VotingPageState extends State<VotingPage> {
               Text(
                   isEmergencyCalled ? "Emergency meeting" : "Holttest jelentve",
                   style: const TextStyle(color: Colors.white, fontSize: 20)),
+              if (plyr.dead)
+                const Text("Már nem szavazhatsz!",
+                    style: TextStyle(color: Colors.white, fontSize: 20)),
               const Text("Szavazásra idő: ",
                   style: TextStyle(color: Colors.white, fontSize: 20)),
               StLessTimer(

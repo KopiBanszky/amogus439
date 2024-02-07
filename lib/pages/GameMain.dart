@@ -35,9 +35,10 @@ class _GameMainPageState extends State<GameMainPage> {
     socket.on("got_killed", (data) {
       Player impo = Player.fromMap(data["player"]);
       setState(() {
-        qr_action = "${plyr.id}-report";
+        qr_action = "439amogus-${plyr.id}-report";
       });
       alive = false;
+      plyr.dead = true;
       showAlert("Meghaltál", "Megölt: ${impo.name}", impo.color, true, () {},
           "Ok", false, () {}, "", context);
     });
@@ -45,7 +46,7 @@ class _GameMainPageState extends State<GameMainPage> {
     socket.on("reported_player", (data) async {
       if (!alive) {
         setState(() {
-          qr_action = "${plyr.id}-dead";
+          qr_action = "439amogus-${plyr.id}-dead";
         });
       }
       Navigator.popUntil(context, (route) => route.isCurrent);
@@ -65,7 +66,7 @@ class _GameMainPageState extends State<GameMainPage> {
       //   if (voted.id == plyr.id) {
       //     setState(() {
       //       alive = false;
-      //       qr_action = "${plyr.id}-dead";
+      //       qr_action = "439amogus-${plyr.id}-dead";
       //     });
       //     showAlert("Meghaltál", "Kiszavaztak", Colors.red, true, () {}, "Ok",
       //         false, () {}, "", context);
@@ -76,7 +77,7 @@ class _GameMainPageState extends State<GameMainPage> {
     socket.on("emergency_called", (data) async {
       if (!alive) {
         setState(() {
-          qr_action = "${plyr.id}-dead";
+          qr_action = "439amogus-${plyr.id}-dead";
         });
       }
       Navigator.popUntil(context, (route) => route.isCurrent);
@@ -86,9 +87,9 @@ class _GameMainPageState extends State<GameMainPage> {
         'socket': socket,
         'gameId': gameId,
         "host": host,
-        'isEmergencyCalled': false,
+        'isEmergencyCalled': true,
         'reporter': Player.fromMap(data["reporter"]),
-        'dead': Player.fromMap(data["reported"]),
+        'dead': null,
       });
 
       // if (!vote["skip"]) {
@@ -96,7 +97,7 @@ class _GameMainPageState extends State<GameMainPage> {
       //   if (voted.id == plyr.id) {
       //     setState(() {
       //       alive = false;
-      //       qr_action = "${plyr.id}-dead";
+      //       qr_action = "439amogus-${plyr.id}-dead";
       //     });
       //     showAlert("Meghaltál", "Kiszavaztak", Colors.red, true, () {}, "Ok",
       //         false, () {}, "", context);
@@ -125,7 +126,7 @@ class _GameMainPageState extends State<GameMainPage> {
       game = arguments['game'];
       socket = arguments['socket'];
       tasks = arguments['tasks'] ?? [];
-      qr_action = "${plyr.id}-alive";
+      qr_action = "439amogus-${plyr.id}-alive";
 
       listenOnSockets();
       enableKill();
@@ -144,7 +145,7 @@ class _GameMainPageState extends State<GameMainPage> {
           ColorFiltered(
             colorFilter: ColorFilter.mode(plyr.color, BlendMode.modulate),
             child: Image.asset(
-              "assets/${plyr.team ? "impostor.png" : "player.png"}",
+              "assets/${plyr.dead ? "dead.png" : (plyr.team ? "impostor.png" : "player.png")}",
               width: MediaQuery.of(context).size.width * .1,
             ),
           )

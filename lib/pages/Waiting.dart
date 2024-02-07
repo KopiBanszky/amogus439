@@ -57,7 +57,7 @@ class _WaitingPageState extends State<WaitingPage> {
           "socket": socket,
           "isEmergencyCalled": isEmergencyCalled,
           "reporter": reporter,
-          "dead": dead,
+          "dead": isEmergencyCalled ? null : dead,
           "time": data["vote_time"],
           "players": players,
         });

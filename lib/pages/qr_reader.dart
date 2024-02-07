@@ -51,7 +51,6 @@ class _SrReaderPageState extends State<SrReaderPage> {
     socket = arguments['socket'];
     gameId = arguments['gameId'];
     killEnabled = arguments['killEnabled'];
-    
 
     return Scaffold(
       appBar: AppBar(
@@ -106,9 +105,10 @@ class _SrReaderPageState extends State<SrReaderPage> {
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) {
+      if (!scanData.code.toString().startsWith("439amogus-")) return;
       List<String> data = scanData.code.toString().split("-");
-      int target_id = int.parse(data[0]);
-      String action = data[1];
+      int target_id = int.parse(data[1]);
+      String action = data[2];
 
       controller.pauseCamera();
       switch (action) {
@@ -138,27 +138,29 @@ class _SrReaderPageState extends State<SrReaderPage> {
               controller.resumeCamera();
             }, "Ok", false, () {}, "", context);
           } else {
-            if(!killEnabled){
+            if (!killEnabled) {
               showAlert(
-                  "Megállj!", "Nem vagy még képes gyilkolni", Colors.red, true, () {
+                  "Megállj!", "Nem vagy még képes gyilkolni", Colors.red, true,
+                  () {
                 controller.resumeCamera();
                 Navigator.pop(context);
               }, "Ok", false, () {}, "", context);
               return;
             }
 
-
-            if(killEnabled) socket.emit("kill", {
-              "game_id": gameId,
-              "user_id": plyr.id,
-              "target_id": target_id,
-            });
+            if (killEnabled)
+              socket.emit("kill", {
+                "game_id": gameId,
+                "user_id": plyr.id,
+                "target_id": target_id,
+              });
 
             //get player
             socket.on("kill", (data) async {
-              if(!killEnabled) return;
+              if (!killEnabled) return;
               if (data["code"] == 200) {
-                RquestResult plyr_res = await http_get("api/game/ingame/getPlayer", {
+                RquestResult plyr_res =
+                    await http_get("api/game/ingame/getPlayer", {
                   "user_id": target_id.toString(),
                 });
                 if (plyr_res.ok) {
