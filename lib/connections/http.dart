@@ -11,7 +11,7 @@ class RquestResult {
 
 const PROTOCOL = "http";
 const PROTOCOLL_METHOD = Uri.http;
-const DOMAIN = /*laptop*/ "192.168.1.106"; //PC:*/ "192.168.1.69";
+const DOMAIN = /*laptop "192.168.1.106"; //PC:*/ "192.168.1.69";
 
 Future<RquestResult> http_get(String route, [dynamic data]) async {
   //var dataStr = jsonEncode(data);//.replaceAll(":", "=").replaceAll(",", "&").replaceAll("{", "").replaceAll("}", "");
