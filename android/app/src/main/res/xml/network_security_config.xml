@@ -1,9 +1,9 @@
 <network-security-config>
-    <base-config cleartextTrafficPermitted="true">
+    <!-- <base-config cleartextTrafficPermitted="true">
         <trust-anchors>
             <certificates src="system" />
         </trust-anchors>
-    </base-config>
+    </base-config> -->
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">
            192.168.1.69

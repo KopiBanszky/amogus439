@@ -74,7 +74,7 @@ class _VotingPageState extends State<VotingPage> {
       }
       Future.delayed(const Duration(seconds: 7), () {
         Navigator.pushReplacementNamed(context, "/votingResult", arguments: {
-          "votedOut": votedOut,
+          "votedOut": data["skip"] ? null : votedOut,
           "skip": data["skip"],
         });
       });

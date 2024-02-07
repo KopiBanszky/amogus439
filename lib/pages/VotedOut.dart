@@ -14,7 +14,7 @@ class _VotedOutPageState extends State<VotedOutPage> {
   dynamic arguments;
 
   late bool skip; //true if the player skipped the vote, false if not
-  late Player votedOut; //the player who got voted out
+  late Player? votedOut; //the player who got voted out
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,7 @@ class _VotedOutPageState extends State<VotedOutPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "${skip ? "Senki nem" : votedOut.name} lett kiszavazva!",
+                  "${skip ? "Senki nem" : votedOut!.name} lett kiszavazva!",
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 30,
@@ -61,8 +61,8 @@ class _VotedOutPageState extends State<VotedOutPage> {
                   ),
                 if (!skip)
                   PlayerWidget(
-                      color: votedOut.color,
-                      name: votedOut.name,
+                      color: votedOut!.color,
+                      name: votedOut!.name,
                       img: imgType.dead),
                 const SizedBox(
                   height: 20,
