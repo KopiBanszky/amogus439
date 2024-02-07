@@ -72,6 +72,9 @@ class _VotingPageState extends State<VotingPage> {
       if (!data["skip"]) {
         votedOut = Player.fromMap(data["player"]);
       }
+      socket.off("vote_result");
+      socket.off("vote_placed");
+      socket.off("vote");
       Future.delayed(const Duration(seconds: 7), () {
         Navigator.pushReplacementNamed(context, "/votingResult", arguments: {
           "votedOut": data["skip"] ? null : votedOut,

@@ -49,7 +49,7 @@ class _WaitingPageState extends State<WaitingPage> {
 
   void listenToSocket() {
     socket.on("start_vote", (data) {
-      if (data["code"] == 200)
+      if (data["code"] == 200) if (mounted)
         Navigator.pushReplacementNamed(context, "/voting", arguments: {
           "player": plyr,
           "gameId": gameId,
@@ -61,6 +61,19 @@ class _WaitingPageState extends State<WaitingPage> {
           "time": data["vote_time"],
           "players": players,
         });
+      else {
+        showAlert(
+            "Hiba - unknown",
+            "Nem lehet szavazást indítani\nIsmeretlen hiba",
+            Colors.red,
+            true,
+            () {},
+            "Ok",
+            false,
+            () {},
+            "",
+            context);
+      }
       else {
         showAlert(
             "Hiba - ${data["code"]}",

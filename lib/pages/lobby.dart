@@ -103,7 +103,10 @@ class _LobbyPageState extends State<LobbyPage> {
         return;
       }
       Game resGame = Game.fromMap(data["game"]);
-
+      socket.off("player_disconnected");
+      socket.off("role_update");
+      socket.off("start_game");
+      socket.off("update_players");
       Navigator.pushReplacementNamed(context, "/roleReveal", arguments: {
         "host": host,
         "gameId": gameId,

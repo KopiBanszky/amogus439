@@ -49,7 +49,7 @@ class _GameMainPageState extends State<GameMainPage> {
           qr_action = "439amogus-${plyr.id}-dead";
         });
       }
-      Navigator.popUntil(context, (route) => route.isCurrent);
+      // Navigator.popUntil(context, (route) => route.isCurrent);
       dynamic vote =
           await Navigator.pushNamed(context, '/waitingForVote', arguments: {
         'player': plyr,
@@ -80,7 +80,7 @@ class _GameMainPageState extends State<GameMainPage> {
           qr_action = "439amogus-${plyr.id}-dead";
         });
       }
-      Navigator.popUntil(context, (route) => route.isCurrent);
+      // Navigator.popUntil(context, (route) => route.isCurrent);
       dynamic vote =
           await Navigator.pushNamed(context, '/waitingForVote', arguments: {
         'player': plyr,
