@@ -43,14 +43,15 @@ class _GameMainPageState extends State<GameMainPage> {
           "Ok", false, () {}, "", context);
     });
 
-    socket.on("reported_player", (data) {
+    socket.on("reported_player", (data) async {
       if (!alive) {
         setState(() {
           qr_action = "439amogus-${plyr.id}-dead";
         });
       }
       // Navigator.popUntil(context, (route) => route.isCurrent);
-      Navigator.pushNamed(context, '/waitingForVote', arguments: {
+      dynamic res =
+          await Navigator.pushNamed(context, '/waitingForVote', arguments: {
         'player': plyr,
         'socket': socket,
         'gameId': gameId,
@@ -59,6 +60,8 @@ class _GameMainPageState extends State<GameMainPage> {
         'reporter': Player.fromMap(data["reporter"]),
         'dead': Player.fromMap(data["reported"]),
       });
+
+      print(res);
 
       // if (!vote["skip"]) {
       //   Player voted = vote["votedOut"];

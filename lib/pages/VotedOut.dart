@@ -44,37 +44,40 @@ class _VotedOutPageState extends State<VotedOutPage> {
             ),
             padding: EdgeInsets.zero,
           ),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "${skip ? "Senki nem" : votedOut!.name} lett kiszavazva!",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 30,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "${skip ? "Senki nem" : votedOut!.name} lett kiszavazva!",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 30,
+                    ),
                   ),
-                ),
-                if (!skip)
+                  if (!skip)
+                    const SizedBox(
+                      height: 20,
+                    ),
+                  if (!skip)
+                    PlayerWidget(
+                        color: votedOut!.color,
+                        name: votedOut!.name,
+                        img: imgType.dead),
                   const SizedBox(
                     height: 20,
                   ),
-                if (!skip)
-                  PlayerWidget(
-                      color: votedOut!.color,
-                      name: votedOut!.name,
-                      img: imgType.dead),
-                const SizedBox(
-                  height: 20,
-                ),
-                const Text(
-                  "Kattints a képernyőre a folytatáshoz!",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
+                  const Text(
+                    "Kattints a képernyőre a folytatáshoz!",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ));
