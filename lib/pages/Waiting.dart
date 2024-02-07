@@ -62,17 +62,7 @@ class _WaitingPageState extends State<WaitingPage> {
           "players": players,
         });
       else {
-        showAlert(
-            "Hiba - unknown",
-            "Nem lehet szavazást indítani\nIsmeretlen hiba",
-            Colors.red,
-            true,
-            () {},
-            "Ok",
-            false,
-            () {},
-            "",
-            context);
+        print("unmounted");
       }
       else {
         showAlert(
