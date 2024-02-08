@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
@@ -13,9 +12,9 @@ Future<LatLng> getGeoPos() async {
 enum Platform_name { android, web }
 
 Platform_name getPlatform() {
-  if (Platform.isAndroid) {
-    return Platform_name.android;
-  } else {
+  if (kIsWeb) {
     return Platform_name.web;
+  } else {
+    return Platform_name.android;
   }
 }
