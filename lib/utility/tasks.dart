@@ -61,6 +61,7 @@ class _TasksWidgetState extends State<TasksWidget> {
             .indexOf(tasks.firstWhere((element) => element.id == data["id"]));
         tasks.replaceRange(index, index + 1, [newTask]);
         tasksHaldDone.add(data["id"]);
+        tasksHaldDone.add(newTask.id);
       } else
         // ignore: curly_braces_in_flow_control_structures
         tasksDone.add(data["id"]);
