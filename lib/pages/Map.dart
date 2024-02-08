@@ -21,6 +21,7 @@ class _MapPageState extends State<MapPage> {
   dynamic arguments;
   MapboxMapController? mapboxMap;
   bool imgsAdded = false;
+  Player? plyr;
 
   List<Task> tasks = [];
 
@@ -45,6 +46,12 @@ class _MapPageState extends State<MapPage> {
           ),
         );
       }
+      RquestResult plyrRes = await http_get(
+          "api/game/ingame/getPlayer", {"user_id": plyr!.id.toString()});
+      if (plyrRes.ok) {
+        dynamic plyrData = jsonDecode(jsonDecode(plyrRes.data));
+        plyr = Player.fromMap(plyrData["message"]);
+      }
       return true;
     }
     return false;
@@ -53,6 +60,8 @@ class _MapPageState extends State<MapPage> {
   void _displayPoints() {
     for (int i = 0; i < tasks.length; i++) {
       Task task = tasks[i];
+      if (plyr!.tasks.contains(task.id)) continue;
+      if (plyr!.taskDone.contains(task.id)) continue;
       late String type;
       if (task.type < 2)
         type = "task";
@@ -112,15 +121,7 @@ class _MapPageState extends State<MapPage> {
     });
   }
 
-  void _initState() {
-    getTasks().then((value) {
-      if (value) {
-        _displayPoints();
-      }
-    });
-  }
-
-  void _onMapCreated(MapboxMapController mapboxMap) async {
+  void _onMapCreated(MapboxMapController mapboxMap) {
     this.mapboxMap = mapboxMap;
     // final ByteData bytes = await rootBundle.load('assets/player.png');
     // final Uint8List list = bytes.buffer.asUint8List();
@@ -135,8 +136,14 @@ class _MapPageState extends State<MapPage> {
     //   simultaneousRotateAndPinchToZoomEnabled: false,
     //   increaseRotateThresholdWhenPinchingToZoom: false,
     // ));
+
     getGeoPos().then((value) {
       if (!imgsAdded) _addCustomeImgs();
+      getTasks().then((value) {
+        if (value) {
+          _displayPoints();
+        }
+      });
       mapboxMap.animateCamera(
         CameraUpdate.newCameraPosition(
           CameraPosition(
@@ -160,7 +167,7 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     arguments = ModalRoute.of(context)!.settings.arguments;
-    _initState();
+    plyr = arguments["player"];
 
     return Scaffold(
       appBar: AppBar(
@@ -175,19 +182,18 @@ class _MapPageState extends State<MapPage> {
       ),
       backgroundColor: Colors.grey[900],
       body: Center(
-        child: Expanded(
-          child: MapboxMap(
-            accessToken:
-                "pk.eyJ1Ijoia29waWJvaSIsImEiOiJjbHFjdGZ3dGEwNXFsMmtycTUzZHRqNXJvIn0.haRdnumlvJ5AIQ88GIe-bA",
-            styleString: MapboxStyles.SATELLITE_STREETS,
-            key: const ValueKey("mapWidget"),
-            onMapCreated: _onMapCreated,
-            initialCameraPosition: const CameraPosition(
-              target: LatLng(47.4451677, 18.913277),
-              zoom: 16.5,
-            ),
-            myLocationEnabled: true,
+        child: MapboxMap(
+          accessToken:
+              "pk.eyJ1Ijoia29waWJvaSIsImEiOiJjbHFjdGZ3dGEwNXFsMmtycTUzZHRqNXJvIn0.haRdnumlvJ5AIQ88GIe-bA",
+          styleString: MapboxStyles.SATELLITE_STREETS,
+          key: const ValueKey("mapWidget"),
+          onMapCreated: _onMapCreated,
+          initialCameraPosition: const CameraPosition(
+            target: LatLng(47.4451677, 18.913277),
+            zoom: 16.5,
           ),
+          myLocationEnabled: true,
+          zoomGesturesEnabled: false,
         ),
       ),
     );

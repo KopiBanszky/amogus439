@@ -306,6 +306,12 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                       ),
+                      // ElevatedButton(
+                      //     onPressed: () {
+                      //       Navigator.pushNamed(context, '/map',
+                      //           arguments: {'map': "TestMap1"});
+                      //     },
+                      //     child: const Text("test"))
                     ],
                   ),
                 )
