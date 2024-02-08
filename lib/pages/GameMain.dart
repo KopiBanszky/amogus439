@@ -191,6 +191,7 @@ class _GameMainPageState extends State<GameMainPage> {
                       onPressed: () {
                         Navigator.pushNamed(context, "/map", arguments: {
                           'map': game.map,
+                          'player': plyr,
                         });
                       },
                       style: ElevatedButton.styleFrom(
