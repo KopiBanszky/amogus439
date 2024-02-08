@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:vibration/vibration.dart';
-import 'dart:js' as js;
+// import 'dart:js' as js;
 
 import '../utility/taskbar.dart';
 import '../utility/types.dart';
@@ -44,8 +44,6 @@ class _GameMainPageState extends State<GameMainPage> {
       plyr.dead = true;
       if (getPlatform() == Platform_name.android) {
         Vibration.vibrate(duration: 1000);
-      } else {
-        js.context.callMethod('vibrate', [1000]);
       }
 
       showAlert("Meghaltál", "Megölt: ${impo.name}", impo.color, true, () {},
@@ -60,8 +58,6 @@ class _GameMainPageState extends State<GameMainPage> {
       }
       if (getPlatform() == Platform_name.android) {
         Vibration.vibrate(duration: 1000);
-      } else {
-        js.context.callMethod('vibrate', [1000]);
       }
       // Navigator.popUntil(context, (route) => route.isCurrent);
       dynamic res =
@@ -98,8 +94,6 @@ class _GameMainPageState extends State<GameMainPage> {
       }
       if (getPlatform() == Platform_name.android) {
         Vibration.vibrate(duration: 1000);
-      } else {
-        js.context.callMethod('vibrate', [1000]);
       }
       // Navigator.popUntil(context, (route) => route.isCurrent);
       Navigator.pushNamed(context, '/waitingForVote', arguments: {
