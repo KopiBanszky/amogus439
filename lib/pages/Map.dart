@@ -60,12 +60,13 @@ class _MapPageState extends State<MapPage> {
   void _displayPoints() {
     for (int i = 0; i < tasks.length; i++) {
       Task task = tasks[i];
-      if (plyr!.tasks.contains(task.id)) continue;
-      if (plyr!.taskDone.contains(task.id)) continue;
+      print(task.name);
       late String type;
-      if (task.type < 2)
+      if (task.type < 2) {
+        if (!plyr!.tasks.contains(task.id)) continue;
+        if (plyr!.taskDone.contains(task.id)) continue;
         type = "task";
-      else if (task.type == 12)
+      } else if (task.type == 12)
         type = "task2";
       else if (task.type > 2)
         continue;
