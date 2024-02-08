@@ -2,9 +2,12 @@
 
 import 'package:amogusvez2/utility/alert.dart';
 import 'package:amogusvez2/utility/tasks.dart';
+import 'package:amogusvez2/utility/utilities.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:socket_io_client/socket_io_client.dart';
+import 'package:vibration/vibration.dart';
+import 'dart:js' as js;
 
 import '../utility/taskbar.dart';
 import '../utility/types.dart';
@@ -39,6 +42,12 @@ class _GameMainPageState extends State<GameMainPage> {
       });
       alive = false;
       plyr.dead = true;
+      if (getPlatform() == Platform_name.android) {
+        Vibration.vibrate(duration: 1000);
+      } else {
+        js.context.callMethod('vibrate', [1000]);
+      }
+
       showAlert("Meghaltál", "Megölt: ${impo.name}", impo.color, true, () {},
           "Ok", false, () {}, "", context);
     });
@@ -48,6 +57,11 @@ class _GameMainPageState extends State<GameMainPage> {
         setState(() {
           qr_action = "439amogus-${plyr.id}-dead";
         });
+      }
+      if (getPlatform() == Platform_name.android) {
+        Vibration.vibrate(duration: 1000);
+      } else {
+        js.context.callMethod('vibrate', [1000]);
       }
       // Navigator.popUntil(context, (route) => route.isCurrent);
       dynamic res =
@@ -81,6 +95,11 @@ class _GameMainPageState extends State<GameMainPage> {
         setState(() {
           qr_action = "439amogus-${plyr.id}-dead";
         });
+      }
+      if (getPlatform() == Platform_name.android) {
+        Vibration.vibrate(duration: 1000);
+      } else {
+        js.context.callMethod('vibrate', [1000]);
       }
       // Navigator.popUntil(context, (route) => route.isCurrent);
       Navigator.pushNamed(context, '/waitingForVote', arguments: {
@@ -154,108 +173,113 @@ class _GameMainPageState extends State<GameMainPage> {
       ),
       backgroundColor: Colors.grey[900],
       body: Center(
-        child: Column(
-          children: [
-            if (game.taskVisible)
-              TaskBarWidget(
-                socket: socket,
-                playersCount: players,
-                tasksCount: game.taskNumber,
-                impostorsCount: game.impostorMax,
-              ),
-            if (game.taskVisible)
-              const SizedBox(
-                height: 10,
-              ),
-            TasksWidget(
-                socket: socket, tasks: tasks, gameId: gameId, userId: plyr.id),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        disabledBackgroundColor: Colors.grey,
-                        backgroundColor: Colors.blue,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(7),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              if (game.taskVisible)
+                TaskBarWidget(
+                  socket: socket,
+                  playersCount: players,
+                  tasksCount: game.taskNumber,
+                  impostorsCount: game.impostorMax,
+                ),
+              if (game.taskVisible)
+                const SizedBox(
+                  height: 10,
+                ),
+              TasksWidget(
+                  socket: socket,
+                  tasks: tasks,
+                  gameId: gameId,
+                  userId: plyr.id),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          disabledBackgroundColor: Colors.grey,
+                          backgroundColor: Colors.blue,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(7),
+                          ),
+                          padding: const EdgeInsets.fromLTRB(25, 15, 25, 15),
+                          side: const BorderSide(
+                            color: Colors.white,
+                            width: 1.5,
+                          ),
+                          textStyle: const TextStyle(
+                            fontSize: 20,
+                          ),
                         ),
-                        padding: const EdgeInsets.fromLTRB(25, 15, 25, 15),
-                        side: const BorderSide(
-                          color: Colors.white,
-                          width: 1.5,
-                        ),
-                        textStyle: const TextStyle(
-                          fontSize: 20,
-                        ),
-                      ),
-                      child: const Text(
-                        "Térkép",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      )),
-                  ElevatedButton(
-                      onPressed: () async {
-                        dynamic res = await Navigator.pushNamed(
-                            context, '/qrReader',
-                            arguments: {
-                              'player': plyr,
-                              'socket': socket,
-                              'gameId': gameId,
-                              'killEnabled': killEnabled,
-                            });
+                        child: const Text(
+                          "Térkép",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        )),
+                    ElevatedButton(
+                        onPressed: () async {
+                          dynamic res = await Navigator.pushNamed(
+                              context, '/qrReader',
+                              arguments: {
+                                'player': plyr,
+                                'socket': socket,
+                                'gameId': gameId,
+                                'killEnabled': killEnabled,
+                              });
 
-                        if (res != null) {
-                          setState(() {
-                            switch (res["code"]) {
-                              case 201:
-                                killEnabled = false;
-                                enableKill();
-                                break;
-                              default:
-                                break;
-                            }
-                          });
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        disabledBackgroundColor: Colors.grey,
-                        backgroundColor: Colors.orange,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(7),
+                          if (res != null) {
+                            setState(() {
+                              switch (res["code"]) {
+                                case 201:
+                                  killEnabled = false;
+                                  enableKill();
+                                  break;
+                                default:
+                                  break;
+                              }
+                            });
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          disabledBackgroundColor: Colors.grey,
+                          backgroundColor: Colors.orange,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(7),
+                          ),
+                          padding: const EdgeInsets.fromLTRB(25, 15, 25, 15),
+                          side: const BorderSide(
+                            color: Colors.white,
+                            width: 1.5,
+                          ),
+                          textStyle: const TextStyle(
+                            fontSize: 20,
+                          ),
                         ),
-                        padding: const EdgeInsets.fromLTRB(25, 15, 25, 15),
-                        side: const BorderSide(
-                          color: Colors.white,
-                          width: 1.5,
-                        ),
-                        textStyle: const TextStyle(
-                          fontSize: 20,
-                        ),
-                      ),
-                      child: const Text(
-                        "Qr-kód olvasó",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      )),
-                ],
+                        child: const Text(
+                          "Qr-kód olvasó",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        )),
+                  ],
+                ),
               ),
-            ),
-            //QR kód
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: QrImageView(
-                data: qr_action,
-                size: 300,
-                version: QrVersions.auto,
-                backgroundColor: Colors.white,
-              ),
-            )
-          ],
+              //QR kód
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: QrImageView(
+                  data: qr_action,
+                  size: 300,
+                  version: QrVersions.auto,
+                  backgroundColor: Colors.white,
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
