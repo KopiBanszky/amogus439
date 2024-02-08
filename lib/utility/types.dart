@@ -1,16 +1,29 @@
 // Dart equivalent for TypeScript interface Task
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:convert';
 import 'dart:ui';
 
 class Task {
   final int id; // task id, autoincrement
   final String name; // task name
+  final int
+      type; /*0: simple task, 
+                  1: dual task 1,
+                  12: dual task 2,
+                  2: constant point (pl: emergency),
+                  3: single sabotage,
+                  4: dual sabotage 1,
+                  42: dual sabotage 2*/
+  final int connect_id; // if type is 1 or 12, this is the other task id
   final Map<String, double> geoPos; // task location [latitude, longitude]
   final String map; // map name
 
   Task({
     required this.id,
     required this.name,
+    required this.type,
+    required this.connect_id,
     required this.geoPos,
     required this.map,
   });
@@ -19,8 +32,10 @@ class Task {
     return Task(
       id: map['id'],
       name: map['name'],
-      geoPos: Map<String, double>.from(
-          map['geo_pos'].map((key, value) => MapEntry(key, value.toDouble()))),
+      type: map['type'],
+      connect_id: map['connect_id'],
+      geoPos: Map<String, double>.from(map['geo_pos'].map<Map<String, double>>(
+          (key, value) => MapEntry(key, value.toDouble()))),
       map: map['map'],
     );
   }

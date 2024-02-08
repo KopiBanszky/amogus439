@@ -1,3 +1,5 @@
+import 'package:amogusvez2/admin/AddPoint.dart';
+import 'package:amogusvez2/admin/MainAdmin.dart';
 import 'package:amogusvez2/pages/GameMain.dart';
 import 'package:amogusvez2/pages/VotedOut.dart';
 import 'package:amogusvez2/pages/Voting.dart';
@@ -21,6 +23,8 @@ void main() {
       '/waitingForVote': (context) => const WaitingPage(),
       '/voting': (context) => const VotingPage(),
       '/votingResult': (context) => const VotedOutPage(),
+      '/admin': (context) => const AdminMainPage(),
+      '/addPoint': (context) => const AddPointPage(),
     },
   ));
 }

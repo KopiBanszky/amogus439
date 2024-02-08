@@ -113,6 +113,9 @@ class _SrReaderPageState extends State<SrReaderPage> {
       controller.pauseCamera();
       switch (action) {
         case "dead":
+          showAlert("Megállj!", "A játékos már halott", Colors.blue, true, () {
+            controller.resumeCamera();
+          }, "Ok", false, () {}, "", context);
           break;
         case "report":
           socket.emit("report", {
@@ -206,6 +209,8 @@ class _SrReaderPageState extends State<SrReaderPage> {
       }
     });
   }
+
+  //TODO: make web compatible (https://stackoverflow.com/questions/73836991/how-to-scan-qr-code-with-flutter-web-app)
 
   @override
   void dispose() {

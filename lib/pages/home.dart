@@ -3,8 +3,10 @@
 import 'dart:convert';
 
 import 'package:amogusvez2/connections/http.dart';
+import 'package:amogusvez2/utility/alertInput.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
 import '../connections/socketio.dart';
@@ -33,9 +35,29 @@ class _HomePageState extends State<HomePage> {
             {
               setState(() {
                 connectionAvailable = true;
+                _requestLocationPermission();
               })
             }
         });
+  }
+
+  void _requestLocationPermission() async {
+    PermissionStatus status = await Permission.location.request();
+    if (status.isGranted) {
+      // Permission granted
+    } else {
+      showAlert(
+          "GPS",
+          "Kérlek engedélyezd a pontos helymeghatározást, nélküle sajnos nem tudsz játszani.",
+          Colors.blue,
+          true,
+          _requestLocationPermission,
+          "Ok",
+          false,
+          () {},
+          "",
+          context);
+    }
   }
 
   @override
@@ -216,6 +238,74 @@ class _HomePageState extends State<HomePage> {
                         ),
                       )
                   ),*/
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 60.0),
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              dynamic res = await showAlertInput(
+                                  "Jelszó",
+                                  "Írd be a jelszót!",
+                                  InputType.password,
+                                  "Jelszó",
+                                  Colors.red,
+                                  true,
+                                  () {},
+                                  "Ok",
+                                  true,
+                                  () {},
+                                  "Mégse",
+                                  context);
+
+                              if (res != null) {
+                                http_post("api/manager/login",
+                                    {"password": res["input"]}).then((value) {
+                                  dynamic data = jsonDecode(value.data);
+                                  if (data["ok"]) {
+                                    Navigator.pushNamed(context, "/admin");
+                                  } else {
+                                    showAlert(
+                                        "Hiba",
+                                        "Hibás jelszó!",
+                                        Colors.red,
+                                        true,
+                                        () {},
+                                        "Ok",
+                                        false,
+                                        () {},
+                                        "",
+                                        context);
+                                  }
+                                });
+                              }
+                            },
+                            style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(Colors.red),
+                              shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(7),
+                              )),
+                              padding: MaterialStateProperty.all(
+                                  const EdgeInsets.fromLTRB(25, 15, 25, 15)),
+                              side: MaterialStateProperty.all(const BorderSide(
+                                color: Colors.white,
+                                width: 1.5,
+                              )),
+                              textStyle:
+                                  MaterialStateProperty.all(const TextStyle(
+                                fontSize: 20,
+                              )),
+                            ),
+                            child: const Text(
+                              "Manager Page",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 )
