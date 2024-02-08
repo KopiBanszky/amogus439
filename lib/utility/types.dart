@@ -7,6 +7,7 @@ import 'dart:ui';
 class Task {
   final int id; // task id, autoincrement
   final String name; // task name
+  final String code; // task code
   final int
       type; /*0: simple task, 
                   1: dual task 1,
@@ -22,6 +23,7 @@ class Task {
   Task({
     required this.id,
     required this.name,
+    required this.code,
     required this.type,
     required this.connect_id,
     required this.geoPos,
@@ -32,6 +34,7 @@ class Task {
     return Task(
       id: map['id'],
       name: map['name'],
+      code: map['code'],
       type: map['type'],
       connect_id: map['connect_id'],
       geoPos: Map<String, double>.from(map['geo_pos'].map<Map<String, double>>(

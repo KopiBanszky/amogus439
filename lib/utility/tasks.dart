@@ -1,4 +1,5 @@
 import 'package:amogusvez2/utility/alert.dart';
+import 'package:amogusvez2/utility/alertInput.dart';
 import 'package:amogusvez2/utility/types.dart';
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart';
@@ -29,19 +30,20 @@ class _TasksWidgetState extends State<TasksWidget> {
   bool loaded = false;
   List<Widget> taskWidgets = [];
   List<int> tasksDone = [];
+  List<int> tasksHaldDone = [];
 
-  void doTask(String gameId, int taskId, int userId) {
-    tasksDone.add(taskId);
+  void doTask(String gameId, int taskId, int userId, String taskCode) {
     socket.emit("task_done", {
       "game_id": gameId,
       "task_id": taskId,
       "user_id": userId,
+      "task_code": taskCode,
     });
   }
 
   void listendToSockets(Socket socket) {
     socket.on("task_done", (data) {
-      if ((data["code"] % 200) >= 100) {
+      if ((data["code"] % 200) >= 100 || (data["code"] % 400) <= 100) {
         showAlert("Hiba - ${data["code"]}", data["message"], Colors.red, true,
             () {}, "Ok", false, () {}, "", context);
         return;
@@ -50,6 +52,18 @@ class _TasksWidgetState extends State<TasksWidget> {
         showAlert("Hiba - ${data["code"]}", data["message"], Colors.blue, true,
             () {}, "Ok", false, () {}, "", context);
       }
+      if (data["code"] == 203) {
+        showAlert("Kettős task", data["message"], Colors.orange, true, () {},
+            "Ok", false, () {}, "", context);
+
+        Task newTask = Task.fromMap(data["new_task"]);
+        int index = tasks
+            .indexOf(tasks.firstWhere((element) => element.id == data["id"]));
+        tasks.replaceRange(index, index + 1, [newTask]);
+        tasksHaldDone.add(data["id"]);
+      } else
+        // ignore: curly_braces_in_flow_control_structures
+        tasksDone.add(data["id"]);
       setState(() {
         taskWidgets = _buildTasks(tasks, gameId, userId);
       });
@@ -64,12 +78,30 @@ class _TasksWidgetState extends State<TasksWidget> {
         width: MediaQuery.of(context).size.width * .97,
         height: MediaQuery.of(context).size.height * .07,
         decoration: BoxDecoration(
-          color: tasksDone.contains(task.id) ? Colors.green : Colors.grey[800],
+          color: tasksDone.contains(task.id)
+              ? Colors.green
+              : tasksHaldDone.contains(task.id)
+                  ? Colors.orange
+                  : Colors.grey[800],
           borderRadius: BorderRadius.circular(7),
         ),
         child: ElevatedButton(
-          onPressed: () {
-            doTask(gameId, task.id, userId);
+          onPressed: () async {
+            dynamic res = await showAlertInput(
+                "Task kód",
+                "Írd be a kapott kódot",
+                InputType.text,
+                "Kód",
+                Colors.blue,
+                true,
+                () {},
+                "Kész",
+                true,
+                () {},
+                "Mégse",
+                context);
+
+            doTask(gameId, task.id, userId, res["input"]);
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.transparent,

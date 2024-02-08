@@ -60,6 +60,7 @@ class _AddPointPageState extends State<AddPointPage> {
         id: 0,
         map: "",
         name: "Válassz párt!",
+        code: "",
         type: 0),
   ];
   List<Task> tasks_forDisplay = [];
@@ -69,6 +70,7 @@ class _AddPointPageState extends State<AddPointPage> {
       id: 0,
       map: "",
       name: "Válassz párt!",
+      code: "",
       type: 0);
 
   void getTasks() async {
@@ -80,6 +82,7 @@ class _AddPointPageState extends State<AddPointPage> {
         Task task = Task(
           id: data["message"][i]["id"],
           name: data["message"][i]["name"],
+          code: data["message"][i]["code"],
           map: data["message"][i]["map"],
           type: data["message"][i]["type"],
           connect_id: data["message"][i]["connect_id"],
