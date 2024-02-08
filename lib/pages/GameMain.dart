@@ -192,7 +192,11 @@ class _GameMainPageState extends State<GameMainPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushNamed(context, "/map", arguments: {
+                            'map': game.map,
+                          });
+                        },
                         style: ElevatedButton.styleFrom(
                           disabledBackgroundColor: Colors.grey,
                           backgroundColor: Colors.blue,

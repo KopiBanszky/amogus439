@@ -11,6 +11,8 @@ import 'package:amogusvez2/pages/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:amogusvez2/pages/home.dart';
 
+import 'pages/Map.dart';
+
 void main() {
   runApp(MaterialApp(
     routes: {
@@ -25,6 +27,7 @@ void main() {
       '/votingResult': (context) => const VotedOutPage(),
       '/admin': (context) => const AdminMainPage(),
       '/addPoint': (context) => const AddPointPage(),
+      '/map': (context) => const MapPage(),
     },
   ));
 }
