@@ -37,8 +37,8 @@ class Task {
       code: map['code'],
       type: map['type'],
       connect_id: map['connect_id'],
-      geoPos: Map<String, double>.from(map['geo_pos'].map<Map<String, double>>(
-          (key, value) => MapEntry(key, value.toDouble()))),
+      geoPos: Map<String, double>.from(
+          map['geo_pos'].map((key, value) => MapEntry(key, value.toDouble()))),
       map: map['map'],
     );
   }
