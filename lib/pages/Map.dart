@@ -50,7 +50,7 @@ class _MapPageState extends State<MapPage> {
           "api/game/ingame/getPlayer", {"user_id": plyr!.id.toString()});
       if (plyrRes.ok) {
         dynamic plyrData = jsonDecode(jsonDecode(plyrRes.data));
-        plyr = Player.fromMap(plyrData["message"]);
+        plyr = Player.fromMap(plyrData["player"]);
       }
       return true;
     }
