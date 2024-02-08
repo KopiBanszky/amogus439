@@ -118,8 +118,6 @@ class _MapPageState extends State<MapPage> {
         _displayPoints();
       }
     });
-
-    super.initState();
   }
 
   void _onMapCreated(MapboxMapController mapboxMap) async {

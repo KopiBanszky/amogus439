@@ -166,118 +166,113 @@ class _GameMainPageState extends State<GameMainPage> {
         ]),
       ),
       backgroundColor: Colors.grey[900],
-      body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              if (game.taskVisible)
-                TaskBarWidget(
-                  socket: socket,
-                  playersCount: players,
-                  tasksCount: game.taskNumber,
-                  impostorsCount: game.impostorMax,
-                ),
-              if (game.taskVisible)
-                const SizedBox(
-                  height: 10,
-                ),
-              TasksWidget(
-                  socket: socket,
-                  tasks: tasks,
-                  gameId: gameId,
-                  userId: plyr.id),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, "/map", arguments: {
-                            'map': game.map,
-                          });
-                        },
-                        style: ElevatedButton.styleFrom(
-                          disabledBackgroundColor: Colors.grey,
-                          backgroundColor: Colors.blue,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(7),
-                          ),
-                          padding: const EdgeInsets.fromLTRB(25, 15, 25, 15),
-                          side: const BorderSide(
-                            color: Colors.white,
-                            width: 1.5,
-                          ),
-                          textStyle: const TextStyle(
-                            fontSize: 20,
-                          ),
-                        ),
-                        child: const Text(
-                          "Térkép",
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        )),
-                    ElevatedButton(
-                        onPressed: () async {
-                          dynamic res = await Navigator.pushNamed(
-                              context, '/qrReader',
-                              arguments: {
-                                'player': plyr,
-                                'socket': socket,
-                                'gameId': gameId,
-                                'killEnabled': killEnabled,
-                              });
-
-                          if (res != null) {
-                            setState(() {
-                              switch (res["code"]) {
-                                case 201:
-                                  killEnabled = false;
-                                  enableKill();
-                                  break;
-                                default:
-                                  break;
-                              }
-                            });
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          disabledBackgroundColor: Colors.grey,
-                          backgroundColor: Colors.orange,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(7),
-                          ),
-                          padding: const EdgeInsets.fromLTRB(25, 15, 25, 15),
-                          side: const BorderSide(
-                            color: Colors.white,
-                            width: 1.5,
-                          ),
-                          textStyle: const TextStyle(
-                            fontSize: 20,
-                          ),
-                        ),
-                        child: const Text(
-                          "Qr-kód olvasó",
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        )),
-                  ],
-                ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            if (game.taskVisible)
+              TaskBarWidget(
+                socket: socket,
+                playersCount: players,
+                tasksCount: game.taskNumber,
+                impostorsCount: game.impostorMax,
               ),
-              //QR kód
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: QrImageView(
-                  data: qr_action,
-                  size: 300,
-                  version: QrVersions.auto,
-                  backgroundColor: Colors.white,
-                ),
-              )
-            ],
-          ),
+            if (game.taskVisible)
+              const SizedBox(
+                height: 10,
+              ),
+            TasksWidget(
+                socket: socket, tasks: tasks, gameId: gameId, userId: plyr.id),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, "/map", arguments: {
+                          'map': game.map,
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                        disabledBackgroundColor: Colors.grey,
+                        backgroundColor: Colors.blue,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(7),
+                        ),
+                        padding: const EdgeInsets.fromLTRB(25, 15, 25, 15),
+                        side: const BorderSide(
+                          color: Colors.white,
+                          width: 1.5,
+                        ),
+                        textStyle: const TextStyle(
+                          fontSize: 20,
+                        ),
+                      ),
+                      child: const Text(
+                        "Térkép",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      )),
+                  ElevatedButton(
+                      onPressed: () async {
+                        dynamic res = await Navigator.pushNamed(
+                            context, '/qrReader',
+                            arguments: {
+                              'player': plyr,
+                              'socket': socket,
+                              'gameId': gameId,
+                              'killEnabled': killEnabled,
+                            });
+
+                        if (res != null) {
+                          setState(() {
+                            switch (res["code"]) {
+                              case 201:
+                                killEnabled = false;
+                                enableKill();
+                                break;
+                              default:
+                                break;
+                            }
+                          });
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        disabledBackgroundColor: Colors.grey,
+                        backgroundColor: Colors.orange,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(7),
+                        ),
+                        padding: const EdgeInsets.fromLTRB(25, 15, 25, 15),
+                        side: const BorderSide(
+                          color: Colors.white,
+                          width: 1.5,
+                        ),
+                        textStyle: const TextStyle(
+                          fontSize: 20,
+                        ),
+                      ),
+                      child: const Text(
+                        "Qr-kód olvasó",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      )),
+                ],
+              ),
+            ),
+            //QR kód
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: QrImageView(
+                data: qr_action,
+                size: 300,
+                version: QrVersions.auto,
+                backgroundColor: Colors.white,
+              ),
+            )
+          ],
         ),
       ),
     );
