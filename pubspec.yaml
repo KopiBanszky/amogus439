@@ -41,7 +41,7 @@ dependencies:
   permission_handler: ^11.2.1
   geolocator: ^7.6.2
   vibration: ^1.7.4
-  pretty_qr_code: ^3.2.1
+  # pretty_qr_code: ^3.2.1
 
 
   # The following adds the Cupertino Icons font to your application.
