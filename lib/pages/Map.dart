@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:amogusvez2/connections/http.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
@@ -137,6 +138,13 @@ class _MapPageState extends State<MapPage> {
     //   simultaneousRotateAndPinchToZoomEnabled: false,
     //   increaseRotateThresholdWhenPinchingToZoom: false,
     // ));
+    if (kIsWeb) {
+      getTasks().then((value) {
+        if (value) {
+          _displayPoints();
+        }
+      });
+    }
 
     getGeoPos().then((value) {
       if (!imgsAdded) _addCustomeImgs();

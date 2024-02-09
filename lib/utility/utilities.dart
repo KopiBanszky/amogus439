@@ -4,7 +4,7 @@ import 'package:mapbox_gl/mapbox_gl.dart';
 
 Future<LatLng> getGeoPos() async {
   Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.best);
+      desiredAccuracy: LocationAccuracy.high);
 
   return LatLng(position.latitude, position.longitude);
 }
