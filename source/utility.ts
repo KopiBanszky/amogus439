@@ -45,6 +45,15 @@ interface Player {
 interface Task {
     id: number, //task id, autoincrement
     name: string, //task name
+    code: string, //task code
+    type: number, /*0: simple task, 
+                    1: dual task 1,
+                    12: dual task 2,
+                    2: constant point (pl: emergency),
+                    3: single sabotage,
+                    4: dual sabotage 1,
+                    42: dual sabotage 2*/
+    connect_id: number, //if the task is dual, this is the other task's id
     geo_pos: [string, number], //task location [latitude, longitude]
     map: string //map name
 }

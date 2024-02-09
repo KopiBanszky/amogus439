@@ -31,7 +31,7 @@ export default <apiMethod> {
                 return 404;
             }
             const task = result[0];
-            task.geo_pos = JSON.parse(task.geo_pos || JSON.stringify({latitude: 0, longitude: 0}));
+            task.geo_pos = JSON.parse(task.geo_pos/* || JSON.stringify({latitude: 0, longitude: 0})*/);
 
 
             res.status(200).send({

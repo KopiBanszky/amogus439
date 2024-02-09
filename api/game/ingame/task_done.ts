@@ -9,6 +9,7 @@ const task_done = {
         const game_id:number = args.game_id;
         const user_id:number = args.user_id;
         const task_id:number = args.task_id;
+        const task_code:string = args.task_code;
 
         //check if game exists
         const game_promise:any = await new Promise((resolve, reject) => db.query(`SELECT * FROM Games WHERE id = ${game_id}`, (err, result) => {
@@ -46,7 +47,7 @@ const task_done = {
         if(player_promise == null) return;
         const player:Player = player_promise;
         if(player.team){
-            socket.emit('task_done', {code: 205, message: 'You are an impostor, the task does not count'});
+            socket.emit('task_done', {code: 205, message: 'You are an impostor, the task does not count', id: task_id});
             return;
         }
 
@@ -66,6 +67,18 @@ const task_done = {
         if (task_promise == null) return;
         const task: Task = task_promise;
 
+        if(task.code != task_code){
+            socket.emit('task_done', {code: 402, message: 'Helytelen kód'});
+            return;
+        }
+
+        if(task.type == 1){
+            db.query(`SELECT * FROM Tasks WHERE connect_id = ${task.id}`, (err, result) => {
+                result[0].geo_pos = JSON.parse(result[0].geo_pos);
+                socket.emit('task_done', {code: 203, message: 'Ez egy kettős task, meg kell csinálnod a másikat is', id: task.id, new_task: result[0]});
+            });
+            return;
+        }
 
         player.tasks_done = JSON.parse(player.tasks_done.toString() || JSON.stringify([]));
         //check if task is already done
@@ -82,7 +95,7 @@ const task_done = {
                 socket.emit('task_done', {code: 500, message: 'Internal server error'});
                 return;
             }
-            socket.emit('task_done', {code: 200, message: 'Task done'});
+            socket.emit('task_done', {code: 200, message: 'Task done', id: task_id});
             console.log(game.task_visibility, game_id );
             if(game.task_visibility) io.in(`Game_${game_id}`).emit('task_done_by_crew', {player_id: player.id, task_id: task_id});
             testIfGameEnd(game_id);
