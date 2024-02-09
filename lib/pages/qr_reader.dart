@@ -91,6 +91,7 @@ class _SrReaderPageState extends State<SrReaderPage> {
                   MobileScanner(
                     controller: controller_scanner!,
                     onDetect: (barcode) {
+                      print(barcode.raw);
                       controller_scanner!.stop();
                       _handleQrData(barcode.raw.toString(), controller_scanner);
                     },
@@ -100,9 +101,11 @@ class _SrReaderPageState extends State<SrReaderPage> {
                   Positioned(
                     bottom: 10,
                     child: IconButton(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.flash_on,
-                        color: Colors.white,
+                        color: controller_scanner!.torchEnabled
+                            ? Colors.amber
+                            : Colors.white,
                       ),
                       onPressed: () {
                         controller_scanner!.toggleTorch();
