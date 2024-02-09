@@ -102,7 +102,7 @@ class _TasksWidgetState extends State<TasksWidget> {
                 "Mégse",
                 context);
 
-            if (res) doTask(gameId, task.id, userId, res["input"]);
+            if (res != null) doTask(gameId, task.id, userId, res["input"]);
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.transparent,

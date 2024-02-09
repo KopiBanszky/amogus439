@@ -72,22 +72,25 @@ class _MapPageState extends State<MapPage> {
       else if (task.type > 2)
         continue;
       else if (task.type == 2) type = "location";
-      mapboxMap!.addSymbol(
-        SymbolOptions(
-          geometry: LatLng(
-            tasks[i].geoPos["lat"]!,
-            tasks[i].geoPos["lon"]!,
+      if (mapboxMap != null)
+        mapboxMap!.addSymbol(
+          SymbolOptions(
+            geometry: LatLng(
+              tasks[i].geoPos["lat"]!,
+              tasks[i].geoPos["lon"]!,
+            ),
+            iconImage: type,
+            iconSize: .1,
+            textOffset: const Offset(0, 2),
+            textHaloWidth: 1,
           ),
-          iconImage: type,
-          iconSize: .1,
-          textOffset: const Offset(0, 2),
-          textHaloWidth: 1,
-        ),
-      );
+        );
+      else
+        print("mapboxMap is null");
     }
   }
 
-  void _addCustomeImgs() async {
+  Future<bool> _addCustomeImgs() async {
     final ByteData byteDataPlyr = await rootBundle.load('assets/player.png');
     final Uint8List bytesPlyr = byteDataPlyr.buffer.asUint8List();
     await mapboxMap!.addImage(
@@ -121,33 +124,15 @@ class _MapPageState extends State<MapPage> {
     setState(() {
       imgsAdded = true;
     });
+    return true;
   }
 
   void _onMapCreated(MapboxMapController mapboxMap) {
     this.mapboxMap = mapboxMap;
-    // final ByteData bytes = await rootBundle.load('assets/player.png');
-    // final Uint8List list = bytes.buffer.asUint8List();
-    // mapboxMap.gestures.updateSettings(GesturesSettings(
-    //   quickZoomEnabled: false,
-    //   zoomAnimationAmount: 0,
-    //   pinchToZoomDecelerationEnabled: false,
-    //   pinchToZoomEnabled: false,
-    //   doubleTapToZoomInEnabled: false,
-    //   doubleTouchToZoomOutEnabled: false,
-    //   increasePinchToZoomThresholdWhenRotating: false,
-    //   simultaneousRotateAndPinchToZoomEnabled: false,
-    //   increaseRotateThresholdWhenPinchingToZoom: false,
-    // ));
-    if (kIsWeb) {
-      getTasks().then((value) {
-        if (value) {
-          _displayPoints();
-        }
-      });
-    }
-
-    getGeoPos().then((value) {
-      if (!imgsAdded) _addCustomeImgs();
+    print(mapboxMap);
+    print(mapboxMap.cameraPosition);
+    getGeoPos().then((value) async {
+      if (!imgsAdded) await _addCustomeImgs();
       getTasks().then((value) {
         if (value) {
           _displayPoints();
