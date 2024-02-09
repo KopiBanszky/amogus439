@@ -33,7 +33,7 @@ class _LobbyPageState extends State<LobbyPage> {
     List<Row> playerWidgets = [];
     int db = 0;
 
-    List<int> displaid = [];
+    // List<int> displaid = [];
 
     for (int i = 0; i < rows; i++) {
       List<PlayerWidget> row = [];
@@ -41,8 +41,8 @@ class _LobbyPageState extends State<LobbyPage> {
       for (int j = 0; j < 3; j++) {
         if (db >= length) break;
         Player plyr = players[i * 3 + j];
-        if (displaid.contains(plyr.id)) continue;
-        displaid.add(plyr.id);
+        // if (displaid.contains(plyr.id)) continue;
+        // displaid.add(plyr.id);
         PlayerWidget playerWidget = PlayerWidget(
             color: plyr.color, name: plyr.name, img: imgType.player);
         row.add(playerWidget);
