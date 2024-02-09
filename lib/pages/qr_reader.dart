@@ -7,14 +7,12 @@ import 'package:amogusvez2/connections/http.dart';
 import 'package:amogusvez2/utility/types.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_barcode_sdk/flutter_barcode_sdk.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:socket_io_client/socket_io_client.dart';
-import 'package:camera/camera.dart';
+import 'package:mobile_scanner/src/enums/camera_facing.dart' as mobile_scanner;
 
 import '../utility/alert.dart';
-
-late List<CameraDescription> _cameras;
 
 class SrReaderPage extends StatefulWidget {
   const SrReaderPage({super.key});
@@ -33,52 +31,23 @@ class _SrReaderPageState extends State<SrReaderPage> {
   bool found = false;
 
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  Barcode? result;
-  QRViewController? qr_controller;
-
-  CameraController? controller;
+  MobileScannerController? controller_scanner = MobileScannerController(
+    // ...
+    detectionSpeed: DetectionSpeed.normal,
+    facing: mobile_scanner.CameraFacing.front,
+    torchEnabled: true,
+  );
+  QRViewController? controller;
 
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
   @override
   void reassemble() {
     super.reassemble();
-    if (kIsWeb) return;
     if (Platform.isAndroid) {
-      qr_controller!.pauseCamera();
+      controller!.pauseCamera();
     } else if (Platform.isIOS) {
-      qr_controller!.resumeCamera();
-    }
-  }
-
-  void startStream(CameraController _controller) async {
-    await _controller.startImageStream((CameraImage image) async {
-      int format = ImagePixelFormat.IPF_NV21.index;
-
-      switch (image.format.group) {
-        case ImageFormatGroup.yuv420:
-          format = ImagePixelFormat.IPF_NV21.index;
-          break;
-        case ImageFormatGroup.bgra8888:
-          format = ImagePixelFormat.IPF_ARGB_8888.index;
-          break;
-        default:
-          format = ImagePixelFormat.IPF_RGB_888.index;
-      }
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    if (!kIsWeb) {
-      controller = CameraController(_cameras[0], ResolutionPreset.max);
-      controller!.initialize().then((_) {
-        if (!mounted) {
-          return;
-        }
-        setState(() {});
-      });
+      controller!.resumeCamera();
     }
   }
 
@@ -115,12 +84,19 @@ class _SrReaderPageState extends State<SrReaderPage> {
         children: <Widget>[
           Expanded(
             flex: 5,
-            child: kIsWeb
-                ? (!controller!.value.isInitialized
-                    ? Container()
-                    : MaterialApp(
-                        home: CameraPreview(controller!),
-                      ))
+            child: true
+                ? Stack(
+                    children: [
+                      MobileScanner(
+                        controller: controller_scanner!,
+                        onDetect: (barcode) {
+                          controller_scanner!.stop();
+                          _handleQrData(
+                              barcode.raw.toString(), controller_scanner);
+                        },
+                      ),
+                    ],
+                  )
                 : QRView(
                     key: qrKey,
                     overlay: QrScannerOverlayShape(
@@ -148,14 +124,14 @@ class _SrReaderPageState extends State<SrReaderPage> {
   }
 
   void _onQRViewCreated(QRViewController controller) {
-    this.qr_controller = controller;
+    this.controller = controller;
     controller.scannedDataStream.listen((scanData) {
       controller.pauseCamera();
-      _handleQrData(scanData.code.toString(), controller);
+      // _handleQrData(scanData.code.toString(), controller);
     });
   }
 
-  void _handleQrData(String qrString, QRViewController? andController) {
+  void _handleQrData(String qrString, MobileScannerController? controller) {
     // return true to resume camera
     if (qrString.startsWith("439amogus-")) return;
     List<String> data = qrString.split("-");
@@ -165,7 +141,8 @@ class _SrReaderPageState extends State<SrReaderPage> {
     switch (action) {
       case "dead":
         showAlert("Megállj!", "A játékos már halott", Colors.blue, true, () {
-          andController!.resumeCamera();
+          // andController!.resumeCamera();
+          controller!.start();
         }, "Ok", false, () {}, "", context);
         break;
       case "report":
@@ -180,7 +157,8 @@ class _SrReaderPageState extends State<SrReaderPage> {
             showAlert(
                 "Hiba - ${data["code"]}", data["message"], Colors.red, true,
                 () {
-              andController!.resumeCamera();
+              // andController!.resumeCamera();
+              controller!.start();
             }, "Ok", false, () {}, "", context);
           }
         });
@@ -189,14 +167,16 @@ class _SrReaderPageState extends State<SrReaderPage> {
         if (!plyr.team) {
           showAlert("Megállj!", "A játékos még életben van", Colors.blue, true,
               () {
-            andController!.resumeCamera();
+            // andController!.resumeCamera();
+            controller!.start();
           }, "Ok", false, () {}, "", context);
         } else {
           if (!killEnabled) {
             showAlert(
                 "Megállj!", "Nem vagy még képes gyilkolni", Colors.red, true,
                 () {
-              andController!.resumeCamera();
+              // andController!.resumeCamera();
+              controller!.start();
               Navigator.pop(context);
             }, "Ok", false, () {}, "", context);
             return;
@@ -233,7 +213,8 @@ class _SrReaderPageState extends State<SrReaderPage> {
               showAlert(
                   "Hiba - ${data["code"]}", data["message"], Colors.red, true,
                   () {
-                andController!.resumeCamera();
+                // andController!.resumeCamera();
+                controller!.start();
               }, "Ok", false, () {}, "", context);
             }
           });
@@ -249,13 +230,15 @@ class _SrReaderPageState extends State<SrReaderPage> {
             showAlert(
                 "Hiba - ${data["code"]}", data["message"], Colors.red, true,
                 () {
-              andController!.resumeCamera();
+              // andController!.resumeCamera();
+              controller!.start();
             }, "Ok", false, () {}, "", context);
           }
         });
         break;
       default:
-        andController!.resumeCamera();
+        // andController!.resumeCamera();
+        controller!.start();
         break;
     }
   }
@@ -264,7 +247,7 @@ class _SrReaderPageState extends State<SrReaderPage> {
 
   @override
   void dispose() {
-    qr_controller?.dispose();
+    controller?.dispose();
     super.dispose();
   }
 }

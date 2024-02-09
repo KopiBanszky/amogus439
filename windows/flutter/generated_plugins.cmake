@@ -3,7 +3,6 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  flutter_barcode_sdk
   permission_handler_windows
 )
 
