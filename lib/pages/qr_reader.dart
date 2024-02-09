@@ -33,7 +33,6 @@ class _SrReaderPageState extends State<SrReaderPage> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   MobileScannerController? controller_scanner = MobileScannerController(
     // ...
-    autoStart: true,
     detectionSpeed: DetectionSpeed.noDuplicates,
     facing: mobile_scanner.CameraFacing.back,
     torchEnabled: false,
@@ -43,14 +42,10 @@ class _SrReaderPageState extends State<SrReaderPage> {
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
   @override
-  // void reassemble() {
-  //   super.reassemble();
-  //   if (Platform.isAndroid) {
-  //     controller!.pauseCamera();
-  //   } else if (Platform.isIOS) {
-  //     controller!.resumeCamera();
-  //   }
-  // }
+  void reassemble() {
+    super.reassemble();
+    controller_scanner!.start();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,13 +87,12 @@ class _SrReaderPageState extends State<SrReaderPage> {
                   MobileScanner(
                     controller: controller_scanner!,
                     onDetect: (capture) {
-                      print("ITT VANGYOK KÖCSÖG\n\n\n\n\n\n\nMÉGMINDIG");
                       final List<Barcode> barcodes = capture.barcodes;
                       for (final barcode in barcodes) {
                         final String code = barcode.rawValue!;
                         if (code.startsWith("439amogus-")) {
                           _handleQrData(code, controller_scanner);
-                          controller_scanner!.stop();
+                          // controller_scanner!.stop();
                         }
                       }
                     },
@@ -169,7 +163,7 @@ class _SrReaderPageState extends State<SrReaderPage> {
 
   void _handleQrData(String qrString, MobileScannerController? controller) {
     // return true to resume camera
-    if (qrString.startsWith("439amogus-")) return;
+    // if (qrString.startsWith("439amogus-")) return;
     List<String> data = qrString.split("-");
     int target_id = int.parse(data[1]);
     String action = data[2];
@@ -278,8 +272,6 @@ class _SrReaderPageState extends State<SrReaderPage> {
         break;
     }
   }
-
-  //TODO: make web compatible (https://stackoverflow.com/questions/73836991/how-to-scan-qr-code-with-flutter-web-app)
 
   // @override
   // void dispose() {
