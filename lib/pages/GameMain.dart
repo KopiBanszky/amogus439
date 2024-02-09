@@ -282,8 +282,8 @@ class _GameMainPageState extends State<GameMainPage> {
                         scale: .15,
                         colorFilter:
                             ColorFilter.mode(plyr.color, BlendMode.modulate),
-                        image: const AssetImage(
-                          "assets/task.png",
+                        image: AssetImage(
+                          "assets/${plyr.dead ? "dead.png" : "player.png"}",
                         ),
                       ),
                     )),
