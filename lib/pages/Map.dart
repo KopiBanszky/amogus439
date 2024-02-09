@@ -78,7 +78,7 @@ class _MapPageState extends State<MapPage> {
             tasks[i].geoPos["lon"]!,
           ),
           iconImage: type,
-          iconSize: .2,
+          iconSize: .1,
           textOffset: const Offset(0, 2),
           textHaloWidth: 1,
         ),

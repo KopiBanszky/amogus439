@@ -184,6 +184,13 @@ class _VotingPageState extends State<VotingPage> {
         ));
         row = [];
       }
+      if (i == players.length - 1) {
+        row.add(SizedBox(width: MediaQuery.of(context).size.width * .45));
+        playerWidgets.add(Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: row,
+        ));
+      }
     }
 
     return Column(
