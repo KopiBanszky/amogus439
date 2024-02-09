@@ -8,6 +8,7 @@ import 'package:amogusvez2/pages/lobby.dart';
 import 'package:amogusvez2/pages/qr_reader.dart';
 import 'package:amogusvez2/pages/roleReveal.dart';
 import 'package:amogusvez2/pages/settings.dart';
+import 'package:amogusvez2/pages/test.dart';
 import 'package:flutter/material.dart';
 import 'package:amogusvez2/pages/home.dart';
 
@@ -28,6 +29,7 @@ void main() {
       '/admin': (context) => const AdminMainPage(),
       '/addPoint': (context) => const AddPointPage(),
       '/map': (context) => const MapPage(),
+      '/test': (context) => const Test(),
     },
   ));
 }

@@ -33,6 +33,7 @@ class _SrReaderPageState extends State<SrReaderPage> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   MobileScannerController? controller_scanner = MobileScannerController(
     // ...
+    autoStart: true,
     detectionSpeed: DetectionSpeed.noDuplicates,
     facing: mobile_scanner.CameraFacing.back,
     torchEnabled: false,
@@ -91,6 +92,7 @@ class _SrReaderPageState extends State<SrReaderPage> {
                   MobileScanner(
                     controller: controller_scanner!,
                     onDetect: (capture) {
+                      print("ITT VANGYOK KÖCSÖG\n\n\n\n\n\n\nMÉGMINDIG");
                       final List<Barcode> barcodes = capture.barcodes;
                       for (final barcode in barcodes) {
                         final String code = barcode.rawValue!;
@@ -100,29 +102,32 @@ class _SrReaderPageState extends State<SrReaderPage> {
                         }
                       }
                     },
-                    scanWindow: Rect.fromCenter(
-                        center: Offset.zero, width: 10.0, height: 10.0),
+                    // scanWindow: Rect.fromCenter(
+                    //     center: Offset.zero, width: 10.0, height: 10.0),
                   ),
                   Positioned(
                     bottom: 10,
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * .2,
-                      height: MediaQuery.of(context).size.width * .2,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[900]!.withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      child: IconButton(
-                        iconSize: 32.0,
-                        icon: Icon(
-                          Icons.flash_on,
-                          color: controller_scanner!.torchEnabled
-                              ? Colors.amber
-                              : Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * .2,
+                        height: MediaQuery.of(context).size.width * .2,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[900]!.withOpacity(0.5),
+                          borderRadius: BorderRadius.circular(100),
                         ),
-                        onPressed: () {
-                          controller_scanner!.toggleTorch();
-                        },
+                        child: IconButton(
+                          iconSize: 32.0,
+                          icon: Icon(
+                            Icons.flash_on,
+                            color: controller_scanner!.torchEnabled
+                                ? Colors.amber
+                                : Colors.white,
+                          ),
+                          onPressed: () {
+                            controller_scanner!.toggleTorch();
+                          },
+                        ),
                       ),
                     ),
                   ),
