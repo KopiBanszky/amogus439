@@ -35,7 +35,7 @@ class _SrReaderPageState extends State<SrReaderPage> {
     // ...
     detectionSpeed: DetectionSpeed.normal,
     facing: mobile_scanner.CameraFacing.back,
-    torchEnabled: true,
+    torchEnabled: false,
   );
   // QRViewController? controller;
 
@@ -91,6 +91,7 @@ class _SrReaderPageState extends State<SrReaderPage> {
                   MobileScanner(
                     controller: controller_scanner!,
                     onDetect: (barcode) {
+                      print(barcode.barcodes);
                       print(barcode.raw);
                       controller_scanner!.stop();
                       _handleQrData(barcode.raw.toString(), controller_scanner);
