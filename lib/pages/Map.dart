@@ -67,9 +67,11 @@ class _MapPageState extends State<MapPage> {
         if (!plyr!.tasks.contains(task.id)) continue;
         if (plyr!.taskDone.contains(task.id)) continue;
         type = "task";
-      } else if (task.type == 12)
+      } else if (task.type == 12) {
+        if (!plyr!.tasks.contains(task.connect_id)) continue;
+        if (plyr!.taskDone.contains(task.connect_id)) continue;
         type = "task2";
-      else if (task.type > 2)
+      } else if (task.type > 2)
         continue;
       else if (task.type == 2) type = "location";
       if (mapboxMap != null)
