@@ -174,6 +174,7 @@ class _VotingPageState extends State<VotingPage> {
 
     for (int i = 0; i < players.length; i++) {
       Player plyr = players[i];
+      print(plyr.name);
       Widget playerWidget = _buildPlayer(plyr);
       row.add(playerWidget);
       if (i % 2 == 1) {

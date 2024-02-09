@@ -200,10 +200,10 @@ class _MapPageState extends State<MapPage> {
           onMapCreated: _onMapCreated,
           initialCameraPosition: const CameraPosition(
             target: LatLng(47.4451677, 18.913277),
-            zoom: 16.8,
+            zoom: 16.9,
           ),
           myLocationEnabled: true,
-          zoomGesturesEnabled: false,
+          // zoomGesturesEnabled: false,
         ),
       ),
     );
