@@ -158,9 +158,12 @@ class _GameMainPageState extends State<GameMainPage> {
               style: const TextStyle(color: Colors.white, fontSize: 20)),
           ColorFiltered(
             colorFilter: ColorFilter.mode(plyr.color, BlendMode.modulate),
-            child: Image.asset(
-              "assets/${plyr.dead ? "dead.png" : (plyr.team ? "impostor.png" : "player.png")}",
-              width: MediaQuery.of(context).size.width * .1,
+            child: Hero(
+              tag: "appbar-img",
+              child: Image.asset(
+                "assets/${plyr.dead ? "dead.png" : (plyr.team ? "impostor.png" : "player.png")}",
+                width: MediaQuery.of(context).size.width * .1,
+              ),
             ),
           )
         ]),

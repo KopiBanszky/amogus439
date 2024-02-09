@@ -172,14 +172,22 @@ class _MapPageState extends State<MapPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Map",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-          ),
-        ),
-        backgroundColor: Colors.red,
+        titleTextStyle: const TextStyle(color: Colors.white, fontSize: 20),
+        title:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          const Text("Térkép",
+              style: TextStyle(color: Colors.white, fontSize: 20)),
+          ColorFiltered(
+            colorFilter: ColorFilter.mode(plyr!.color, BlendMode.modulate),
+            child: Hero(
+              tag: "appbar-img",
+              child: Image.asset(
+                "assets/${plyr!.dead ? "dead.png" : (plyr!.team ? "impostor.png" : "player.png")}",
+                width: MediaQuery.of(context).size.width * .1,
+              ),
+            ),
+          )
+        ]),
       ),
       backgroundColor: Colors.grey[900],
       body: Center(
@@ -191,7 +199,7 @@ class _MapPageState extends State<MapPage> {
           onMapCreated: _onMapCreated,
           initialCameraPosition: const CameraPosition(
             target: LatLng(47.4451677, 18.913277),
-            zoom: 16.5,
+            zoom: 16.8,
           ),
           myLocationEnabled: true,
           zoomGesturesEnabled: false,
