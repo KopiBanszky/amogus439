@@ -33,7 +33,7 @@ class _SrReaderPageState extends State<SrReaderPage> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   MobileScannerController? controller_scanner = MobileScannerController(
     // ...
-    detectionSpeed: DetectionSpeed.normal,
+    detectionSpeed: DetectionSpeed.noDuplicates,
     facing: mobile_scanner.CameraFacing.back,
     torchEnabled: false,
   );
@@ -90,27 +90,40 @@ class _SrReaderPageState extends State<SrReaderPage> {
                 children: [
                   MobileScanner(
                     controller: controller_scanner!,
-                    onDetect: (barcode) {
-                      print(barcode.barcodes);
-                      print(barcode.raw);
-                      controller_scanner!.stop();
-                      _handleQrData(barcode.raw.toString(), controller_scanner);
+                    onDetect: (capture) {
+                      final List<Barcode> barcodes = capture.barcodes;
+                      for (final barcode in barcodes) {
+                        final String code = barcode.rawValue!;
+                        if (code.startsWith("439amogus-")) {
+                          _handleQrData(code, controller_scanner);
+                          controller_scanner!.stop();
+                        }
+                      }
                     },
                     scanWindow: Rect.fromCenter(
                         center: Offset.zero, width: 10.0, height: 10.0),
                   ),
                   Positioned(
                     bottom: 10,
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.flash_on,
-                        color: controller_scanner!.torchEnabled
-                            ? Colors.amber
-                            : Colors.white,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * .2,
+                      height: MediaQuery.of(context).size.width * .2,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[900]!.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(100),
                       ),
-                      onPressed: () {
-                        controller_scanner!.toggleTorch();
-                      },
+                      child: IconButton(
+                        iconSize: 32.0,
+                        icon: Icon(
+                          Icons.flash_on,
+                          color: controller_scanner!.torchEnabled
+                              ? Colors.amber
+                              : Colors.white,
+                        ),
+                        onPressed: () {
+                          controller_scanner!.toggleTorch();
+                        },
+                      ),
                     ),
                   ),
                 ],
