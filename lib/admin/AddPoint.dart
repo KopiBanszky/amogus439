@@ -1,7 +1,6 @@
-// ignore_for_file: curly_braces_in_flow_control_structures
+// ignore_for_file: curly_braces_in_flow_control_structures, non_constant_identifier_names, file_names
 
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:amogusvez2/connections/http.dart';
 import 'package:amogusvez2/utility/alert.dart';
@@ -19,8 +18,8 @@ class AddPointPage extends StatefulWidget {
 }
 
 class _AddPointPageState extends State<AddPointPage> {
-  TextEditingController _mapController = TextEditingController();
-  TextEditingController _nameController = TextEditingController();
+  final TextEditingController _mapController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
 
   List<String> values = ["-1", "0", "1", "12", "2", "3", "4", "42"];
   List<String> maps = [];
@@ -78,7 +77,6 @@ class _AddPointPageState extends State<AddPointPage> {
     if (res.ok) {
       dynamic data = jsonDecode(jsonDecode(res.data));
       for (int i = 0; i < data["message"].length; i++) {
-        print(data["message"][i]["geo_pos"]["len"].runtimeType);
         Task task = Task(
           id: data["message"][i]["id"],
           name: data["message"][i]["name"],

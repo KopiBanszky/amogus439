@@ -61,7 +61,6 @@ class _VotingPageState extends State<VotingPage> {
     });
 
     socket.on("vote_result", (data) {
-      print(data);
       if (preventNewStop) return;
       setState(() {
         time = 6;
@@ -174,7 +173,6 @@ class _VotingPageState extends State<VotingPage> {
 
     for (int i = 0; i < players.length; i++) {
       Player plyr = players[i];
-      print(plyr.name);
       Widget playerWidget = _buildPlayer(plyr);
       row.add(playerWidget);
       if (i % 2 == 1) {
@@ -199,7 +197,6 @@ class _VotingPageState extends State<VotingPage> {
   }
 
   void timer() {
-    print(time);
     Future.delayed(const Duration(seconds: 1), () {
       setState(() {
         time--;

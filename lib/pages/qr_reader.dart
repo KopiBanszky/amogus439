@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, curly_braces_in_flow_control_structures
+// ignore_for_file: non_constant_identifier_names, curly_braces_in_flow_control_structures, implementation_imports
 
 import 'dart:convert';
 // import 'dart:io';
@@ -173,7 +173,7 @@ class _SrReaderPageState extends State<SrReaderPage> {
       case "dead":
         showAlert("Megállj!", "A játékos már halott", Colors.blue, true, () {
           // andController!.resumeCamera();
-          controller!.start();
+          controller.start();
         }, "Ok", false, () {}, "", context);
         break;
       case "report":
@@ -189,7 +189,7 @@ class _SrReaderPageState extends State<SrReaderPage> {
                 "Hiba - ${data["code"]}", data["message"], Colors.red, true,
                 () {
               // andController!.resumeCamera();
-              controller!.start();
+              controller.start();
             }, "Ok", false, () {}, "", context);
           }
         });
@@ -199,7 +199,7 @@ class _SrReaderPageState extends State<SrReaderPage> {
           showAlert("Megállj!", "A játékos még életben van", Colors.blue, true,
               () {
             // andController!.resumeCamera();
-            controller!.start();
+            controller.start();
           }, "Ok", false, () {}, "", context);
         } else {
           if (!killEnabled) {
@@ -207,7 +207,7 @@ class _SrReaderPageState extends State<SrReaderPage> {
                 "Megállj!", "Nem vagy még képes gyilkolni", Colors.red, true,
                 () {
               // andController!.resumeCamera();
-              controller!.start();
+              controller.start();
               Navigator.pop(context);
             }, "Ok", false, () {}, "", context);
             return;
@@ -245,7 +245,7 @@ class _SrReaderPageState extends State<SrReaderPage> {
                   "Hiba - ${data["code"]}", data["message"], Colors.red, true,
                   () {
                 // andController!.resumeCamera();
-                controller!.start();
+                controller.start();
               }, "Ok", false, () {}, "", context);
             }
           });
@@ -262,14 +262,14 @@ class _SrReaderPageState extends State<SrReaderPage> {
                 "Hiba - ${data["code"]}", data["message"], Colors.red, true,
                 () {
               // andController!.resumeCamera();
-              controller!.start();
+              controller.start();
             }, "Ok", false, () {}, "", context);
           }
         });
         break;
       default:
         // andController!.resumeCamera();
-        controller!.start();
+        controller.start();
         break;
     }
   }

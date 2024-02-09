@@ -61,9 +61,7 @@ class _WaitingPageState extends State<WaitingPage> {
           "time": data["vote_time"],
           "players": players,
         });
-      else {
-        print("unmounted");
-      }
+      else {}
       else {
         showAlert(
             "Hiba - ${data["code"]}",

@@ -6,7 +6,6 @@ import 'package:amogusvez2/connections/http.dart';
 import 'package:amogusvez2/utility/alertInput.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 

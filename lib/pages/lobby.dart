@@ -83,6 +83,7 @@ class _LobbyPageState extends State<LobbyPage> {
               .removeWhere((element) => element.socketId == data["socket_id"]);
         });
       } catch (e) {
+        // ignore: avoid_print
         print(e);
       }
     });

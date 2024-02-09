@@ -1,4 +1,4 @@
-// ignore_for_file: curly_braces_in_flow_control_structures
+// ignore_for_file: curly_braces_in_flow_control_structures, file_names
 
 import 'dart:convert';
 
@@ -61,7 +61,6 @@ class _MapPageState extends State<MapPage> {
   void _displayPoints(MapboxMapController mapboxMap) {
     for (int i = 0; i < tasks.length; i++) {
       Task task = tasks[i];
-      print(task.name);
       late String type;
       if (task.type < 2) {
         if (!plyr!.tasks.contains(task.id)) continue;
@@ -74,21 +73,18 @@ class _MapPageState extends State<MapPage> {
       } else if (task.type > 2)
         continue;
       else if (task.type == 2) type = "location";
-      if (mapboxMap != null)
-        mapboxMap!.addSymbol(
-          SymbolOptions(
-            geometry: LatLng(
-              tasks[i].geoPos["lat"]!,
-              tasks[i].geoPos["lon"]!,
-            ),
-            iconImage: type,
-            iconSize: kIsWeb ? .05 : .1,
-            textOffset: const Offset(0, 2),
-            textHaloWidth: 1,
+      mapboxMap.addSymbol(
+        SymbolOptions(
+          geometry: LatLng(
+            tasks[i].geoPos["lat"]!,
+            tasks[i].geoPos["lon"]!,
           ),
-        );
-      else
-        print("mapboxMap is null");
+          iconImage: type,
+          iconSize: kIsWeb ? .05 : .1,
+          textOffset: const Offset(0, 2),
+          textHaloWidth: 1,
+        ),
+      );
     }
   }
 
@@ -131,8 +127,6 @@ class _MapPageState extends State<MapPage> {
 
   void _onMapCreated(MapboxMapController mapboxMap) {
     this.mapboxMap = mapboxMap;
-    print(mapboxMap);
-    print(mapboxMap.cameraPosition);
     getGeoPos().then((value) async {
       if (!imgsAdded) await _addCustomeImgs();
       getTasks().then((value) {

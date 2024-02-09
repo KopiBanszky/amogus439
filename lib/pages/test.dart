@@ -30,9 +30,7 @@ class _TestState extends State<Test> {
                       facing: CameraFacing.back,
                       torchEnabled: false,
                     ),
-                    onDetect: (capture) {
-                      print("asd");
-                    },
+                    onDetect: (capture) {},
                     // scanWindow: Rect.fromCenter(
                     //     center: Offset.zero, width: 10.0, height: 10.0),
                   ),

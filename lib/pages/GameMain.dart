@@ -51,7 +51,7 @@ class _GameMainPageState extends State<GameMainPage> {
           "Ok", false, () {}, "", context);
     });
 
-    socket.on("reported_player", (data) async {
+    socket.on("reported_player", (data) {
       if (!alive) {
         setState(() {
           qr_action = "439amogus-${plyr.id}-dead";
@@ -61,8 +61,8 @@ class _GameMainPageState extends State<GameMainPage> {
         Vibration.vibrate(duration: 1000);
       }
       // Navigator.popUntil(context, (route) => route.isCurrent);
-      dynamic res =
-          await Navigator.pushNamed(context, '/waitingForVote', arguments: {
+
+      Navigator.pushNamed(context, '/waitingForVote', arguments: {
         'player': plyr,
         'socket': socket,
         'gameId': gameId,
@@ -71,8 +71,6 @@ class _GameMainPageState extends State<GameMainPage> {
         'reporter': Player.fromMap(data["reporter"]),
         'dead': Player.fromMap(data["reported"]),
       });
-
-      print(res);
 
       // if (!vote["skip"]) {
       //   Player voted = vote["votedOut"];
