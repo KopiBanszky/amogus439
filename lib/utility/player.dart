@@ -6,12 +6,17 @@ enum imgType { player, impostor, dead, emergency, report }
 
 class PlayerWidget extends StatelessWidget {
   PlayerWidget(
-      {super.key, required this.color, required this.name, required this.img});
+      {super.key,
+      required this.color,
+      required this.name,
+      required this.img,
+      this.hero});
 
   final Color color;
   final String name;
   final imgType img;
   late String imgPath;
+  final String? hero;
 
   @override
   Widget build(BuildContext context) {
@@ -40,12 +45,15 @@ class PlayerWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            ColorFiltered(
-                colorFilter: ColorFilter.mode(color, BlendMode.modulate),
-                child: Image.asset(
-                  "assets/$imgPath",
-                  width: MediaQuery.of(context).size.width * .25,
-                )),
+            Hero(
+              tag: hero ?? name,
+              child: ColorFiltered(
+                  colorFilter: ColorFilter.mode(color, BlendMode.modulate),
+                  child: Image.asset(
+                    "assets/$imgPath",
+                    width: MediaQuery.of(context).size.width * .25,
+                  )),
+            ),
             Text(name,
                 style: const TextStyle(color: Colors.white, fontSize: 20))
           ],
