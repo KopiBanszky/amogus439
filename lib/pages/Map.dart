@@ -58,7 +58,7 @@ class _MapPageState extends State<MapPage> {
     return false;
   }
 
-  void _displayPoints() {
+  void _displayPoints(MapboxMapController mapboxMap) {
     for (int i = 0; i < tasks.length; i++) {
       Task task = tasks[i];
       print(task.name);
@@ -80,7 +80,7 @@ class _MapPageState extends State<MapPage> {
               tasks[i].geoPos["lon"]!,
             ),
             iconImage: type,
-            iconSize: .1,
+            iconSize: kIsWeb ? .01 : .1,
             textOffset: const Offset(0, 2),
             textHaloWidth: 1,
           ),
@@ -135,7 +135,7 @@ class _MapPageState extends State<MapPage> {
       if (!imgsAdded) await _addCustomeImgs();
       getTasks().then((value) {
         if (value) {
-          _displayPoints();
+          _displayPoints(mapboxMap);
         }
       });
       mapboxMap.animateCamera(
