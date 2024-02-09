@@ -5,11 +5,16 @@ import 'dart:io';
 
 import 'package:amogusvez2/connections/http.dart';
 import 'package:amogusvez2/utility/types.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_barcode_sdk/flutter_barcode_sdk.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:socket_io_client/socket_io_client.dart';
+import 'package:camera/camera.dart';
 
 import '../utility/alert.dart';
+
+late List<CameraDescription> _cameras;
 
 class SrReaderPage extends StatefulWidget {
   const SrReaderPage({super.key});
@@ -29,17 +34,51 @@ class _SrReaderPageState extends State<SrReaderPage> {
 
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   Barcode? result;
-  QRViewController? controller;
+  QRViewController? qr_controller;
+
+  CameraController? controller;
 
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
   @override
   void reassemble() {
     super.reassemble();
+    if (kIsWeb) return;
     if (Platform.isAndroid) {
-      controller!.pauseCamera();
+      qr_controller!.pauseCamera();
     } else if (Platform.isIOS) {
-      controller!.resumeCamera();
+      qr_controller!.resumeCamera();
+    }
+  }
+
+  void startStream(CameraController _controller) async {
+    await _controller.startImageStream((CameraImage image) async {
+      int format = ImagePixelFormat.IPF_NV21.index;
+
+      switch (image.format.group) {
+        case ImageFormatGroup.yuv420:
+          format = ImagePixelFormat.IPF_NV21.index;
+          break;
+        case ImageFormatGroup.bgra8888:
+          format = ImagePixelFormat.IPF_ARGB_8888.index;
+          break;
+        default:
+          format = ImagePixelFormat.IPF_RGB_888.index;
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (!kIsWeb) {
+      controller = CameraController(_cameras[0], ResolutionPreset.max);
+      controller!.initialize().then((_) {
+        if (!mounted) {
+          return;
+        }
+        setState(() {});
+      });
     }
   }
 
@@ -76,17 +115,23 @@ class _SrReaderPageState extends State<SrReaderPage> {
         children: <Widget>[
           Expanded(
             flex: 5,
-            child: QRView(
-              key: qrKey,
-              overlay: QrScannerOverlayShape(
-                borderRadius: 10,
-                borderColor: Colors.red,
-                borderLength: 30,
-                borderWidth: 10,
-                cutOutSize: 300,
-              ),
-              onQRViewCreated: _onQRViewCreated,
-            ),
+            child: kIsWeb
+                ? (!controller!.value.isInitialized
+                    ? Container()
+                    : MaterialApp(
+                        home: CameraPreview(controller!),
+                      ))
+                : QRView(
+                    key: qrKey,
+                    overlay: QrScannerOverlayShape(
+                      borderRadius: 10,
+                      borderColor: Colors.red,
+                      borderLength: 30,
+                      borderWidth: 10,
+                      cutOutSize: 300,
+                    ),
+                    onQRViewCreated: _onQRViewCreated,
+                  ),
           ),
           // const Expanded(
           //   flex: 1,
@@ -103,118 +148,123 @@ class _SrReaderPageState extends State<SrReaderPage> {
   }
 
   void _onQRViewCreated(QRViewController controller) {
-    this.controller = controller;
+    this.qr_controller = controller;
     controller.scannedDataStream.listen((scanData) {
-      if (!scanData.code.toString().startsWith("439amogus-")) return;
-      List<String> data = scanData.code.toString().split("-");
-      int target_id = int.parse(data[1]);
-      String action = data[2];
-
       controller.pauseCamera();
-      switch (action) {
-        case "dead":
-          showAlert("Megállj!", "A játékos már halott", Colors.blue, true, () {
-            controller.resumeCamera();
-          }, "Ok", false, () {}, "", context);
-          break;
-        case "report":
-          socket.emit("report", {
-            "game_id": gameId,
-            "player_id": plyr.id,
-            "dead_id": target_id,
-          });
+      _handleQrData(scanData.code.toString(), controller);
+    });
+  }
 
-          socket.on("report", (data) {
-            if (data["code"] != 200) {
-              showAlert(
-                  "Hiba - ${data["code"]}", data["message"], Colors.red, true,
-                  () {
-                controller.resumeCamera();
-              }, "Ok", false, () {}, "", context);
-            }
-          });
-          break;
-        case "alive":
-          if (!plyr.team) {
+  void _handleQrData(String qrString, QRViewController? andController) {
+    // return true to resume camera
+    if (qrString.startsWith("439amogus-")) return;
+    List<String> data = qrString.split("-");
+    int target_id = int.parse(data[1]);
+    String action = data[2];
+
+    switch (action) {
+      case "dead":
+        showAlert("Megállj!", "A játékos már halott", Colors.blue, true, () {
+          andController!.resumeCamera();
+        }, "Ok", false, () {}, "", context);
+        break;
+      case "report":
+        socket.emit("report", {
+          "game_id": gameId,
+          "player_id": plyr.id,
+          "dead_id": target_id,
+        });
+
+        socket.on("report", (data) {
+          if (data["code"] != 200) {
             showAlert(
-                "Megállj!", "A játékos még életben van", Colors.blue, true, () {
-              controller.resumeCamera();
+                "Hiba - ${data["code"]}", data["message"], Colors.red, true,
+                () {
+              andController!.resumeCamera();
             }, "Ok", false, () {}, "", context);
-          } else {
-            if (!killEnabled) {
-              showAlert(
-                  "Megállj!", "Nem vagy még képes gyilkolni", Colors.red, true,
-                  () {
-                controller.resumeCamera();
-                Navigator.pop(context);
-              }, "Ok", false, () {}, "", context);
-              return;
-            }
+          }
+        });
+        break;
+      case "alive":
+        if (!plyr.team) {
+          showAlert("Megállj!", "A játékos még életben van", Colors.blue, true,
+              () {
+            andController!.resumeCamera();
+          }, "Ok", false, () {}, "", context);
+        } else {
+          if (!killEnabled) {
+            showAlert(
+                "Megállj!", "Nem vagy még képes gyilkolni", Colors.red, true,
+                () {
+              andController!.resumeCamera();
+              Navigator.pop(context);
+            }, "Ok", false, () {}, "", context);
+            return;
+          }
 
-            if (killEnabled)
-              socket.emit("kill", {
-                "game_id": gameId,
-                "user_id": plyr.id,
-                "target_id": target_id,
+          if (killEnabled)
+            socket.emit("kill", {
+              "game_id": gameId,
+              "user_id": plyr.id,
+              "target_id": target_id,
+            });
+
+          //get player
+          socket.on("kill", (data) async {
+            if (!killEnabled) return;
+            if (data["code"] == 200) {
+              RquestResult plyr_res =
+                  await http_get("api/game/ingame/getPlayer", {
+                "user_id": target_id.toString(),
               });
-
-            //get player
-            socket.on("kill", (data) async {
-              if (!killEnabled) return;
-              if (data["code"] == 200) {
-                RquestResult plyr_res =
-                    await http_get("api/game/ingame/getPlayer", {
-                  "user_id": target_id.toString(),
-                });
-                if (plyr_res.ok) {
-                  dynamic data = jsonDecode(jsonDecode(plyr_res.data));
-                  Player target = Player.fromMap(data["player"]);
-                  // ignore: use_build_context_synchronously
-                  showAlert(
-                      "Sikeres gyilkolás",
-                      "${target.name}-t sikeresen megölted!",
-                      Colors.green,
-                      true, () {
-                    Navigator.pop(context, {"code": 201});
-                  }, "Ok", false, () {}, "", context);
-                }
-              } else {
+              if (plyr_res.ok) {
+                dynamic data = jsonDecode(jsonDecode(plyr_res.data));
+                Player target = Player.fromMap(data["player"]);
+                // ignore: use_build_context_synchronously
                 showAlert(
-                    "Hiba - ${data["code"]}", data["message"], Colors.red, true,
-                    () {
-                  controller.resumeCamera();
+                    "Sikeres gyilkolás",
+                    "${target.name}-t sikeresen megölted!",
+                    Colors.green,
+                    true, () {
+                  Navigator.pop(context, {"code": 201});
                 }, "Ok", false, () {}, "", context);
               }
-            });
-          }
-          break;
-        case "emergency":
-          socket.emit("emergency", {
-            "game_id": gameId,
-            "player_id": plyr.id,
-          });
-          socket.on("emergency", (data) {
-            if (data["code"] != 200) {
+            } else {
               showAlert(
                   "Hiba - ${data["code"]}", data["message"], Colors.red, true,
                   () {
-                controller.resumeCamera();
+                andController!.resumeCamera();
               }, "Ok", false, () {}, "", context);
             }
           });
-          break;
-        default:
-          controller.resumeCamera();
-          break;
-      }
-    });
+        }
+        break;
+      case "emergency":
+        socket.emit("emergency", {
+          "game_id": gameId,
+          "player_id": plyr.id,
+        });
+        socket.on("emergency", (data) {
+          if (data["code"] != 200) {
+            showAlert(
+                "Hiba - ${data["code"]}", data["message"], Colors.red, true,
+                () {
+              andController!.resumeCamera();
+            }, "Ok", false, () {}, "", context);
+          }
+        });
+        break;
+      default:
+        andController!.resumeCamera();
+        break;
+    }
   }
 
   //TODO: make web compatible (https://stackoverflow.com/questions/73836991/how-to-scan-qr-code-with-flutter-web-app)
 
   @override
   void dispose() {
-    controller?.dispose();
+    qr_controller?.dispose();
     super.dispose();
   }
 }

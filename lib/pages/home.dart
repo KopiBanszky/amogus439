@@ -36,12 +36,13 @@ class _HomePageState extends State<HomePage> {
               setState(() {
                 connectionAvailable = true;
                 _requestLocationPermission();
+                _requestCameraPermission();
               })
             }
         });
   }
 
-  void _requestLocationPermission() async {
+  Future<void> _requestLocationPermission() async {
     PermissionStatus status = await Permission.location.request();
     if (status.isGranted) {
       // Permission granted
@@ -52,6 +53,25 @@ class _HomePageState extends State<HomePage> {
           Colors.blue,
           true,
           _requestLocationPermission,
+          "Ok",
+          false,
+          () {},
+          "",
+          context);
+    }
+  }
+
+  void _requestCameraPermission() async {
+    PermissionStatus status = await Permission.camera.request();
+    if (status.isGranted) {
+      // Permission granted
+    } else {
+      showAlert(
+          "Kamera",
+          "Kérlek engedélyezd a kamera használatát, nélküle sajnos nem tudsz játszani.",
+          Colors.blue,
+          true,
+          _requestCameraPermission,
           "Ok",
           false,
           () {},
