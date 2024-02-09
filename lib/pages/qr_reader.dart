@@ -1,14 +1,14 @@
 // ignore_for_file: non_constant_identifier_names, curly_braces_in_flow_control_structures
 
 import 'dart:convert';
-import 'dart:io';
+// import 'dart:io';
 
 import 'package:amogusvez2/connections/http.dart';
 import 'package:amogusvez2/utility/types.dart';
-import 'package:flutter/foundation.dart';
+// import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+// import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:mobile_scanner/src/enums/camera_facing.dart' as mobile_scanner;
 
@@ -34,22 +34,22 @@ class _SrReaderPageState extends State<SrReaderPage> {
   MobileScannerController? controller_scanner = MobileScannerController(
     // ...
     detectionSpeed: DetectionSpeed.normal,
-    facing: mobile_scanner.CameraFacing.front,
+    facing: mobile_scanner.CameraFacing.back,
     torchEnabled: true,
   );
-  QRViewController? controller;
+  // QRViewController? controller;
 
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
   @override
-  void reassemble() {
-    super.reassemble();
-    if (Platform.isAndroid) {
-      controller!.pauseCamera();
-    } else if (Platform.isIOS) {
-      controller!.resumeCamera();
-    }
-  }
+  // void reassemble() {
+  //   super.reassemble();
+  //   if (Platform.isAndroid) {
+  //     controller!.pauseCamera();
+  //   } else if (Platform.isIOS) {
+  //     controller!.resumeCamera();
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -83,32 +83,46 @@ class _SrReaderPageState extends State<SrReaderPage> {
       body: Column(
         children: <Widget>[
           Expanded(
-            flex: 5,
-            child: true
-                ? Stack(
-                    children: [
-                      MobileScanner(
-                        controller: controller_scanner!,
-                        onDetect: (barcode) {
-                          controller_scanner!.stop();
-                          _handleQrData(
-                              barcode.raw.toString(), controller_scanner);
-                        },
-                      ),
-                    ],
-                  )
-                : QRView(
-                    key: qrKey,
-                    overlay: QrScannerOverlayShape(
-                      borderRadius: 10,
-                      borderColor: Colors.red,
-                      borderLength: 30,
-                      borderWidth: 10,
-                      cutOutSize: 300,
-                    ),
-                    onQRViewCreated: _onQRViewCreated,
+              flex: 5,
+              child: /*true
+                ? */
+                  Stack(
+                children: [
+                  MobileScanner(
+                    controller: controller_scanner!,
+                    onDetect: (barcode) {
+                      controller_scanner!.stop();
+                      _handleQrData(barcode.raw.toString(), controller_scanner);
+                    },
+                    scanWindow: Rect.fromCenter(
+                        center: Offset.zero, width: 10.0, height: 10.0),
                   ),
-          ),
+                  Positioned(
+                    bottom: 10,
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.flash_on,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        controller_scanner!.toggleTorch();
+                      },
+                    ),
+                  ),
+                ],
+              )
+              // : QRView(
+              //     key: qrKey,
+              //     overlay: QrScannerOverlayShape(
+              //       borderRadius: 10,
+              //       borderColor: Colors.red,
+              //       borderLength: 30,
+              //       borderWidth: 10,
+              //       cutOutSize: 300,
+              //     ),
+              //     onQRViewCreated: _onQRViewCreated,
+              //   ),
+              ),
           // const Expanded(
           //   flex: 1,
           //   child: Center(
@@ -123,13 +137,13 @@ class _SrReaderPageState extends State<SrReaderPage> {
     );
   }
 
-  void _onQRViewCreated(QRViewController controller) {
-    this.controller = controller;
-    controller.scannedDataStream.listen((scanData) {
-      controller.pauseCamera();
-      // _handleQrData(scanData.code.toString(), controller);
-    });
-  }
+  // void _onQRViewCreated(QRViewController controller) {
+  //   this.controller = controller;
+  //   controller.scannedDataStream.listen((scanData) {
+  //     controller.pauseCamera();
+  //     // _handleQrData(scanData.code.toString(), controller);
+  //   });
+  // }
 
   void _handleQrData(String qrString, MobileScannerController? controller) {
     // return true to resume camera
@@ -245,9 +259,9 @@ class _SrReaderPageState extends State<SrReaderPage> {
 
   //TODO: make web compatible (https://stackoverflow.com/questions/73836991/how-to-scan-qr-code-with-flutter-web-app)
 
-  @override
-  void dispose() {
-    controller?.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   controller?.dispose();
+  //   super.dispose();
+  // }
 }
