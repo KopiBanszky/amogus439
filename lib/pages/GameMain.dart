@@ -282,7 +282,7 @@ class _GameMainPageState extends State<GameMainPage> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
-                margin: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 color: Colors.white,
                 child: PrettyQrView.data(
                     data: qr_action,
