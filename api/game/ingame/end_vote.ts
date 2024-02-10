@@ -44,18 +44,25 @@ export default (game_id:number, force_vote:boolean) => {
         let i:number = 0;
 
         //find the player with the most votes
-        while(!skip && i<players.length){
-            if(players[i].votes == max) skip = true; //if there are more than one player with the most votes, skip
+        while(i<players.length){
+            console.log("Player votes:", players[i].votes);
+            if(players[i].votes == max) {
+                skip = true;
+                console.log("0: skip");
+            } //if there are more than one player with the most votes, skip
             if(players[i].votes > max){
                 max = players[i].votes;
                 outVoted = players[i];
+                skip = false;
             }
             i++;
         }
 
         //check if skip is needed
         //if there are more people who voted to skip than the max votes, skip
+        console.log(max, votes, noSkip, (votes-noSkip) >= max, "skip");
         if((votes-noSkip) >= max){
+            console.log("1: skip");
             skip = true;
         }
 

@@ -80,9 +80,11 @@ const start = {
                         player.tasks_done = [];
 
                         //add tasks to player. max task count is setted in game settings or tasks.length
-                        for(let i = 0; i < (Tasks.length < game.task_num ? Tasks.length : game.task_num); i++){
+                        const availableTypes:number[] = [0, 1];
+                        const taskLngth = Tasks.filter(task => availableTypes.includes(task.type)).length;
+                        for(let i = 0; i < (taskLngth < game.task_num ? taskLngth : game.task_num); i++){
                             let rand = Math.floor(Math.random() * Tasks.length);
-                            while(player.tasks.includes(Tasks[rand].id)){
+                            while(player.tasks.includes(Tasks[rand].id) || !availableTypes.includes(Tasks[rand].type)){
                                 rand = Math.floor(Math.random() * Tasks.length);
                             }
                             player.tasks.push(Tasks[rand].id);

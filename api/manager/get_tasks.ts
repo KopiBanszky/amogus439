@@ -7,7 +7,8 @@ export default <apiMethod> {
     path: '/api/manager/get_tasks',
     method: 'GET',
     handler: function (req:any, res:any) {
-        const sql = "SELECT * FROM Tasks";
+        const {mapName} = req.query; 
+        const sql = `SELECT * FROM Tasks ${mapName ? `WHERE map = '${mapName}'` : ''}`;
         db.query(sql, (err, result) => {
             if(err) throw err;
 

@@ -8,6 +8,7 @@ import maps from "./manager/maps";
 import getPlayer from "./game/ingame/getPlayer";
 import getPlayers from "./game/ingame/getPlayers";
 import getTasks from "./game/ingame/getTasks";
+import login from "./manager/login";
 
 
 export default {
@@ -20,5 +21,6 @@ export default {
     maps,
     getPlayer,
     getPlayers,
-    getTasks
+    getTasks,
+    login
 }

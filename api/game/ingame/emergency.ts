@@ -56,6 +56,7 @@ const report = {
             return;
 
         }
+        player.emergency++;
 
         db.query(`UPDATE Games SET status = 4 WHERE id = ${game_id}`, (err, result) => {
             if(err) {
@@ -66,7 +67,12 @@ const report = {
             socket.emit('emergency', {code: 200, message: 'emergency pressed'});
             io.in(`Game_${game_id}`).emit('emergency_called', {message: "Player called emergency", reporter: player});
         });
-
+        db.query(`UPDATE Players SET emergency = ${player.emergency} WHERE id = ${player_id}`, (err, result) => {
+            if(err) {
+                console.error(err);
+                return;
+            }
+        });
     }
 }
 

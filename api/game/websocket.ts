@@ -4,6 +4,9 @@ import http from 'http';
 import { app } from '../../index';
 import { instrument } from '@socket.io/admin-ui';
 import * as EVNETS from './ws_exports';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 //-----PRODUCTION-----
 /*const https = require("https");
@@ -36,8 +39,8 @@ const io = new Server(server, {
 instrument(io, {
   auth: {
     type: "basic",
-    username: "admin",
-    password: "$2b$10$heqvAkYMez.Va6Et2uXInOnkCT6/uQj1brkrbyG3LpopDklcq7ZOS" // "changeit" encrypted with bcrypt
+    username: process.env.ADMIN_NAME || "admin",
+    password: process.env.ADMIN_PASS || "admin",
   },
   mode: "development"
 })

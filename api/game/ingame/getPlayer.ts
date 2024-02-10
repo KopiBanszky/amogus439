@@ -33,7 +33,7 @@ export default <apiMethod> {
             const player = result[0];
             player.tasks = JSON.parse(player.tasks);
             player.tasks_done = JSON.parse(player.tasks_done || "[]");
-            player.geo_pos = JSON.parse(player.geo_pos || JSON.stringify({latitude: 0, longitude: 0}));
+            player.geo_pos = JSON.parse(player.geo_pos || JSON.stringify({lat: 0, lon: 0}));
 
             res.status(200).send({
                 message: 'Player retrieved successfully',
