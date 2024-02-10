@@ -117,6 +117,18 @@ class _GameMainPageState extends State<GameMainPage> {
       //   }
       // }
     });
+
+    socket.on("vote_result", (data) {
+      if (data["skip"]) return;
+      Player voted = Player.fromMap(data["votedOut"]);
+      if (voted.id == plyr.id) {
+        setState(() {
+          alive = false;
+          plyr.dead = true;
+          qr_action = "439amogus-${plyr.id}-dead";
+        });
+      }
+    });
   }
 
   void enableKill() {
