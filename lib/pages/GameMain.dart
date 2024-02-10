@@ -4,6 +4,7 @@ import 'package:amogusvez2/utility/alert.dart';
 import 'package:amogusvez2/utility/tasks.dart';
 import 'package:amogusvez2/utility/utilities.dart';
 import 'package:flutter/material.dart';
+import 'package:pretty_qr_code/pretty_qr_code.dart';
 // import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:socket_io_client/socket_io_client.dart';
@@ -280,7 +281,7 @@ class _GameMainPageState extends State<GameMainPage> {
             //QR kód
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: /*Container(
+              child: Container(
                 margin: const EdgeInsets.all(10),
                 color: Colors.white,
                 child: PrettyQrView.data(
@@ -297,13 +298,13 @@ class _GameMainPageState extends State<GameMainPage> {
                         ),
                       ),
                     )),
-              ),*/
+              ), /*
                   QrImageView(
                 data: qr_action,
                 size: 300,
                 version: QrVersions.auto,
                 backgroundColor: Colors.white,
-              ),
+              ),*/
             )
           ],
         ),

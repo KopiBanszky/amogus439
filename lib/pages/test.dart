@@ -26,11 +26,17 @@ class _TestState extends State<Test> {
                   MobileScanner(
                     controller: MobileScannerController(
                       autoStart: true,
-                      detectionSpeed: DetectionSpeed.normal,
+                      detectionSpeed: DetectionSpeed.unrestricted,
                       facing: CameraFacing.back,
                       torchEnabled: false,
                     ),
-                    onDetect: (capture) {},
+                    onDetect: (capture) {
+                      final List<Barcode> barcodes = capture.barcodes;
+                      for (final barcode in barcodes) {
+                        final String code = barcode.rawValue!;
+                        print(code);
+                      }
+                    },
                     // scanWindow: Rect.fromCenter(
                     //     center: Offset.zero, width: 10.0, height: 10.0),
                   ),
