@@ -9,6 +9,8 @@ import getPlayer from "./game/ingame/getPlayer";
 import getPlayers from "./game/ingame/getPlayers";
 import getTasks from "./game/ingame/getTasks";
 import login from "./manager/login";
+import trigger_sabotage from "./game/ingame/sabotages/trigger_sabotage";
+import fix_simple from "./game/ingame/sabotages/fix_simple";
 
 
 export default {
@@ -22,5 +24,7 @@ export default {
     getPlayer,
     getPlayers,
     getTasks,
-    login
+    login,
+    trigger_sabotage,
+    fix_simple
 }
