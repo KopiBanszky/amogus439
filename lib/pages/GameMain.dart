@@ -274,6 +274,7 @@ class _GameMainPageState extends State<GameMainPage> {
       setState(() {
         if (currentSabotage != null) currentSabotage[0]["time"]--;
       });
+      if (currentSabotage == null) return;
       if (currentSabotage![0]["time"] > 0) {
         timer();
       }

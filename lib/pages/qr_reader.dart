@@ -171,12 +171,16 @@ class _SrReaderPageState extends State<SrReaderPage> {
   // }
 
   void _handleQrData(String qrString, MobileScannerController? controller) {
-    controller!.stop();
+    if (controller == null) {
+      Navigator.pop(context);
+      return;
+    }
     // return true to resume camera
     // if (qrString.startsWith("439amogus-")) return;
     List<String> data = qrString.split("-");
     int target_id = int.parse(data[1]);
     String action = data[2];
+    if (!(reactor && action == "reactor")) controller!.stop();
 
     switch (action) {
       case "dead":
