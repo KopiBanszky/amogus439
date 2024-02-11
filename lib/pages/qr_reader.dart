@@ -334,7 +334,7 @@ class _SrReaderPageState extends State<SrReaderPage> {
         socket.emit("reaktorfix", {
           "game_id": gameId,
           "user_id": plyr.id,
-          "game_sb_id": currentSabotage["game_sb_id"],
+          "game_sb_id": currentSabotage[target_id]["game_sb_id"],
         });
 
         socket.on("reaktorfix", (data) {

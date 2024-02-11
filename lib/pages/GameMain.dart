@@ -310,7 +310,7 @@ class _GameMainPageState extends State<GameMainPage> {
               style: const TextStyle(color: Colors.white, fontSize: 20)),
           if (reactor)
             StLessTimer(
-                duration: currentSabotage["time"],
+                duration: currentSabotage[0]["time"],
                 textColor: Colors.red,
                 fontSize: 20.0),
           Hero(
@@ -342,7 +342,7 @@ class _GameMainPageState extends State<GameMainPage> {
               ),
             impostorMenu
                 ? SabotagesWidget(
-                    sabotage: currentSabotage,
+                    sabotage: reactor ? currentSabotage[0] : currentSabotage,
                     socket: socket,
                     gameId: gameId,
                     userId: plyr.id,
@@ -358,7 +358,7 @@ class _GameMainPageState extends State<GameMainPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   ElevatedButton(
-                      onPressed: !sabotage
+                      onPressed: reactor
                           ? () {
                               Navigator.pushNamed(context, "/map", arguments: {
                                 'map': game.map,
