@@ -108,7 +108,6 @@ class _NavigationMinigameState extends State<NavigationMinigame> {
 
   @override
   void initState() {
-    socket = arguments["socket"];
     generateTask();
     while (light()) {
       generateTask();
@@ -116,13 +115,6 @@ class _NavigationMinigameState extends State<NavigationMinigame> {
 
     _displayTask();
     timer();
-
-    socket.on("fix_simple", (data) {
-      if (data["code"] != 200) {
-        showAlert("Hiba - ${data["code"]}", data["message"], Colors.red, true,
-            () {}, "Ok", false, () {}, "", context);
-      }
-    });
 
     super.initState();
   }
@@ -142,9 +134,16 @@ class _NavigationMinigameState extends State<NavigationMinigame> {
   @override
   Widget build(BuildContext context) {
     arguments = ModalRoute.of(context)?.settings.arguments;
+    socket = arguments["socket"];
     plyr = arguments["player"];
     gameId = arguments["gameId"];
     sabotage = arguments["sabotage"];
+    socket.on("fix_simple", (data) {
+      if (data["code"] != 200) {
+        showAlert("Hiba - ${data["code"]}", data["message"], Colors.red, true,
+            () {}, "Ok", false, () {}, "", context);
+      }
+    });
 
     return Scaffold(
         appBar: AppBar(

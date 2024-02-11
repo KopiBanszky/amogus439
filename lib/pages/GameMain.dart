@@ -369,7 +369,7 @@ class _GameMainPageState extends State<GameMainPage> {
                                 'sabotageOn': sabotage,
                               });
                             }
-                          : sabotage
+                          : reactor
                               ? () {
                                   Navigator.pushNamed(context, "/map",
                                       arguments: {
