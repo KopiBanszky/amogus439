@@ -1,6 +1,7 @@
 // ignore_for_file: file_names, non_constant_identifier_names, use_build_context_synchronously
 
 import 'package:amogusvez2/utility/alert.dart';
+import 'package:amogusvez2/utility/sabotages.dart';
 import 'package:amogusvez2/utility/stLessTimer.dart';
 import 'package:amogusvez2/utility/tasks.dart';
 import 'package:amogusvez2/utility/utilities.dart';
@@ -35,6 +36,8 @@ class _GameMainPageState extends State<GameMainPage> {
   late String qr_action;
   bool killEnabled = false;
   bool alive = true;
+
+  bool impostorMenu = false;
 
   bool sabotage = false;
   dynamic currentSabotage;
@@ -283,8 +286,15 @@ class _GameMainPageState extends State<GameMainPage> {
               const SizedBox(
                 height: 10,
               ),
-            TasksWidget(
-                socket: socket, tasks: tasks, gameId: gameId, userId: plyr.id),
+            impostorMenu
+                ? SabotagesWidget(
+                    sabotage: currentSabotage,
+                  )
+                : TasksWidget(
+                    socket: socket,
+                    tasks: tasks,
+                    gameId: gameId,
+                    userId: plyr.id),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
@@ -377,20 +387,38 @@ class _GameMainPageState extends State<GameMainPage> {
               child: Container(
                 padding: const EdgeInsets.all(10),
                 color: Colors.white,
-                child: PrettyQrView.data(
-                    data: qr_action,
-                    decoration: PrettyQrDecoration(
-                      shape: const PrettyQrSmoothSymbol(
-                          color: Colors.black, roundFactor: 0),
-                      image: PrettyQrDecorationImage(
-                        scale: .15,
-                        colorFilter:
-                            ColorFilter.mode(plyr.color, BlendMode.modulate),
-                        image: AssetImage(
-                          "assets/${plyr.dead ? "dead.png" : "player.png"}",
+                child: ElevatedButton(
+                  onPressed: plyr.team
+                      ? () {
+                          setState(() {
+                            impostorMenu = !impostorMenu;
+                          });
+                        }
+                      : null,
+                  style: ElevatedButton.styleFrom(
+                    disabledBackgroundColor: Colors.transparent,
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(0),
+                    ),
+                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                  ),
+                  child: PrettyQrView.data(
+                      data: qr_action,
+                      decoration: PrettyQrDecoration(
+                        shape: const PrettyQrSmoothSymbol(
+                            color: Colors.black, roundFactor: 0),
+                        image: PrettyQrDecorationImage(
+                          scale: .15,
+                          colorFilter:
+                              ColorFilter.mode(plyr.color, BlendMode.modulate),
+                          image: AssetImage(
+                            "assets/${plyr.dead ? "dead.png" : (impostorMenu ? "impostor.png" : "player.png")}",
+                          ),
                         ),
-                      ),
-                    )),
+                      )),
+                ),
               ), /*
                   QrImageView(
                 data: qr_action,

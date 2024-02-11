@@ -275,7 +275,7 @@ class _SrReaderPageState extends State<SrReaderPage> {
         break;
 
       case "lights":
-        if (currentSabotage != null) {
+        if (currentSabotage == null) {
           showAlert("Megállj!", "Nincs aktív sabotázs", Colors.blue, true, () {
             // andController!.resumeCamera();
             controller.start();
