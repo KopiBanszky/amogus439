@@ -173,13 +173,13 @@ class _GameMainPageState extends State<GameMainPage> {
           break;
         case "Reaktor":
           reactor = true;
-          timer();
           showAlert("Sabotage", "A reaktor leolvad! Menj, segíts megjavítani!",
               Colors.red, true, () {}, "Ok", false, () {}, "", context);
           break;
       }
       setState(() {
         sabotage = true;
+        if (reactor) timer();
       });
     });
 
