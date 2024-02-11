@@ -553,6 +553,11 @@ The host player has to trigger the `start_vote` event.
     - communication [can't see task and map] => [reconnect to wifi with some stupid task]
     - electrics [can't call emergency meeting] => [idk]
     - hacks [impostor can see players on map] => [players have to solve some basic math task]
+        - 1  `.1 .45 .65`
+        - 2  `.1 .65 .3`
+        - 3  `.1 .65 .43`
+        - 4  `.3 .65 .1`
+
     - something that kills players [counter]
 
 1. cam system

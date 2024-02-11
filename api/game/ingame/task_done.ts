@@ -98,7 +98,7 @@ const task_done = {
             socket.emit('task_done', {code: 200, message: 'Task done', id: task_id});
             console.log(game.task_visibility, game_id );
             if(game.task_visibility) io.in(`Game_${game_id}`).emit('task_done_by_crew', {player_id: player.id, task_id: task_id});
-            testIfGameEnd(game_id);
+            testIfGameEnd(game_id, false);
         });
     }
 }

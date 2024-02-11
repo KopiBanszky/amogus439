@@ -1,7 +1,7 @@
 import db from '../../../../database/export_db_connection';
 import { io } from '../../websocket';
 
-export default function (sabotage: any, game_id:number, user_id: number){
+export function simple_sabotage(sabotage: any, game_id:number, user_id: number){
     db.query(`INSERT INTO Game_sabotage SET triggerd = CURRENT_TIMESTAMP(), ?`, {
         game_id: game_id,
         sabotage_id: sabotage.SID,
@@ -11,7 +11,8 @@ export default function (sabotage: any, game_id:number, user_id: number){
             console.error(err);
             return;
         }
-        io.to(`Game_${game_id}`).emit('sabotage', {
+        sabotage.game_sb_id = result.insertId;
+        io.in(`Game_${game_id}`).emit('sabotage_trigg', {
             type: sabotage.name,
             sabotage: sabotage
         });

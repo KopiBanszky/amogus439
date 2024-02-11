@@ -92,7 +92,7 @@ const kill = {
             
 
             io.to(target.socket_id).emit('got_killed', {player});
-            testIfGameEnd(game_id);
+            testIfGameEnd(game_id, false);
         });
     }
 }

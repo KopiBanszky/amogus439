@@ -10,7 +10,6 @@ export default (game_id:number, force_vote:boolean) => {
             return;
         }
         const players:Player[] = result;
-        console.log(players);
 
 
         let votes:number = 0;
@@ -22,17 +21,6 @@ export default (game_id:number, force_vote:boolean) => {
             noSkip += player.votes;
         });
 
-        console.log(
-            "votes:", votes,
-            "noSkip:", noSkip
-        );
-
-        console.log(
-            "force_vote:", force_vote,
-            "votes < players.length:", votes < players.length,
-            "!force_vote:", !force_vote,
-            "ifstatement:", (votes < players.length) && !force_vote
-        )
 
         //check if all players voted or if the time is over, so force_vote is true
         if((votes < players.length) && !force_vote) return;
@@ -60,7 +48,6 @@ export default (game_id:number, force_vote:boolean) => {
 
         //check if skip is needed
         //if there are more people who voted to skip than the max votes, skip
-        console.log(max, votes, noSkip, (votes-noSkip) >= max, "skip");
         if((votes-noSkip) >= max){
             console.log("1: skip");
             skip = true;
@@ -78,7 +65,7 @@ export default (game_id:number, force_vote:boolean) => {
                     console.error(err);
                     return;
                 }
-                testIfGameEnd(game_id);
+                testIfGameEnd(game_id, false);
             });
         }
         //reset the votes

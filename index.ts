@@ -29,7 +29,7 @@ app.get("/check", (req:any, res:any) => res.json(
 
 for (let route of Object.values(API.default)){
     // const route:apiMethod = API.default[i];
-    // console.log(route.path, route.method);
+    console.log(route.path, route.method);
     if(route.method && route.method == 'POST'){
         app.post(route.path, urlencodedParser, route.handler);
     }

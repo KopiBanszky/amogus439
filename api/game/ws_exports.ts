@@ -8,6 +8,9 @@ import task_done from "./ingame/task_done";
 import kill from "./ingame/kill";
 import report from "./ingame/report";
 import start from "./host/start";
+import fix_reaktor from "./ingame/sabotages/fix_reaktor";
+import trigger_sabotage from "./ingame/sabotages/trigger_sabotage";
+import fix_simple from "./ingame/sabotages/fix_simple";
 
 
 
@@ -21,5 +24,8 @@ export default {
     task_done,
     kill,
     report,
-    start
+    start,
+    fix_reaktor,
+    trigger_sabotage,
+    fix_simple
 };

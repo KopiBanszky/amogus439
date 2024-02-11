@@ -1,37 +1,46 @@
 import { Game, Player, apiMethod, isEmpty } from "../../../../source/utility";
 import db from "../../../../database/export_db_connection";
-import simple_sabotage from "./simple_sabotage";
-import reaktor from "./reaktor";
+import {simple_sabotage} from "./simple_sabotage";
+import {reaktor} from "./reaktor";
+import { settings } from "../../../manager/constant_settings";
 
-export default <apiMethod>{
-    path: '/api/game/ingame/sabotage',
-    method: 'POST',
-    handler: async function (req: any, res: any) {
+
+export default {
+    event: 'sabotage',
+    callback: async (args:any, socket:any) => {
+
+
         const {
             game_id,
             user_id,
             sabotage
-        } = req.body;
+        } = args;
 
+        
         if (game_id == undefined || game_id == null || user_id == undefined || user_id == null || sabotage == undefined || sabotage == null) {
-            res.status(400).send({
+            
+            socket.emit("sabotage", {
+                code: 400,
                 message: 'Values cannot be empty'
             });
             return 400;
         }
+        
 
         const player_promise: any = await new Promise((resolve, reject) => {
             db.query(`SELECT * FROM Players WHERE game_id = ${game_id} AND id = ${user_id}`, (err, result) => {
                 if (err) {
                     console.error(err);
-                    res.status(500).send({
+                    socket.emit("sabotage", {
+                        code: 501,
                         message: 'Internal server error',
                     });
                     resolve(false);
                     return 500;
                 }
                 if (result.length == 0) {
-                    res.status(404).send({
+                    socket.emit("sabotage", {
+                        code: 404,
                         message: 'Player not found'
                     });
                     resolve(false);
@@ -43,9 +52,10 @@ export default <apiMethod>{
         if (player_promise == false) return;
 
         const player: Player = player_promise;
-        if (player.team) {
-            res.status(403).send({
-                message: 'You are an impostor'
+        if (!player.team) {
+            socket.emit("sabotage", {
+                code: 403,
+                message: 'You are not an impostor'
             });
             return 403;
         }
@@ -54,7 +64,7 @@ export default <apiMethod>{
             db.query(`SELECT * FROM Games WHERE id = ${game_id}`, (err, result) => {
                 if (err) {
                     console.error(err);
-                    res.status(501).send({
+                    socket.emit("sabotage", {
                         code: 501,
                         message: 'Internal server error',
                     });
@@ -62,7 +72,7 @@ export default <apiMethod>{
                     return 500;
                 }
                 if (result.length == 0) {
-                    res.status(404).send({
+                    socket.emit("sabotage", {
                         code: 404,
                         message: 'Game not found'
                     });
@@ -75,7 +85,7 @@ export default <apiMethod>{
 
         if (game_promise == false) return;
         if (game_promise.status != 1) {
-            res.status(403).send({
+            socket.emit("sabotage", {
                 code: 403,
                 message: 'Game not in progress'
             });
@@ -88,7 +98,7 @@ export default <apiMethod>{
             db.query(`SELECT *, Sabotages.id AS SID FROM Sabotages INNER JOIN Tasks ON (Sabotages.task_id = Tasks.id) WHERE name = '${sabotage}' AND map = '${game.map}'`, (err, result) => {
                 if (err) {
                     console.error(err);
-                    res.status(502).send({
+                    socket.emit("sabotage", {
                         code: 502,
                         message: 'Internal server error',
                     });
@@ -96,14 +106,13 @@ export default <apiMethod>{
                     return 500;
                 }
                 if (result.length == 0) {
-                    res.status(404).send({
+                    socket.emit("sabotage", {
                         code: 404,
                         message: 'Sabotage not found'
                     });
                     resolve(false);
                     return 404;
                 }
-                console.log(result);
                 resolve(result);
             });
         });
@@ -114,19 +123,18 @@ export default <apiMethod>{
             db.query(`SELECT * FROM Game_sabotage WHERE game_id = ${game_id} ORDER BY id DESC`, (err, result) => {
                 if (err) {
                     console.error(err);
-                    res.status(503).send({
+                    socket.emit("sabotage", {
                         code: 503,
                         message: 'Internal server error',
                     });
                     resolve(false);
                     return 500;
                 }
-                console.log(result);
                 for (let index = 0; index < result.length; index++) {
                     const element = result[index];
 
                     if (element.tag > 0) {
-                        res.status(403).send({
+                        socket.emit("sabotage", {
                             code: 403,
                             message: 'Sabotage already triggered'
                         });
@@ -138,10 +146,10 @@ export default <apiMethod>{
                         const time = new Date(element.triggerd);
                         const current_time = new Date();
 
-                        const COOLDOWN = 100 * 1000;
+                        const COOLDOWN = settings.sabotage_coolwown * 1000;
 
                         if (current_time.getTime() - time.getTime() < COOLDOWN) {
-                            res.status(403).send({
+                            socket.emit("sabotage", {
                                 code: 403,
                                 message: 'Sabotage is on cooldown'
                             });
@@ -158,28 +166,24 @@ export default <apiMethod>{
         });
 
         if (allowed == false) return;
-        switch (sabotage) {
-            case 'Reaktor':
-                reaktor(sabotage_promise, game_id, game_id);
-                break;
-            case 'Lights':
-                simple_sabotage(sabotage_promise[0], game_id ,game_id);
-                break;
-            case 'Navigation':
-                simple_sabotage(sabotage_promise[0], game_id ,game_id);
-                break;
-            default:
-                res.status(404).send({
-                    code: 404,
-                    message: 'Sabotage not found'
-                });
-                break;
+
+        if (sabotage === 'Reaktor') {
+            reaktor(sabotage_promise, game_id, user_id);
+        } else if (sabotage === 'Lights') {
+            simple_sabotage(sabotage_promise[0], game_id, user_id);
+        } else if (sabotage === 'Navigation') {;
+            simple_sabotage(sabotage_promise[0], game_id, user_id);
+        } else {
+            socket.emit("sabotage", {
+                code: 404,
+                message: 'Sabotage not found'
+            });
+            return;
         }
-        res.status(200).send({
+        socket.emit("sabotage", {
             code: 200,
             message: 'Sabotage triggered'
         });
-
 
     }
 };
