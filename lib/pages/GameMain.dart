@@ -293,6 +293,9 @@ class _GameMainPageState extends State<GameMainPage> {
       socket = arguments['socket'];
       tasks = arguments['tasks'] ?? [];
       qr_action = "439amogus-${plyr.id}-alive";
+      currentSabotage = arguments['sabotage'];
+      reactor = arguments['reactor'] ?? false;
+      sabotage = arguments['sabotageOn'] ?? false;
 
       listenOnSockets();
       enableKill();
