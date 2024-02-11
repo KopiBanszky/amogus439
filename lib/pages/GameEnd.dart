@@ -44,7 +44,7 @@ class _GameEndPageState extends State<GameEndPage> {
     return Scaffold(
         backgroundColor: Colors.grey[900],
         body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
@@ -54,9 +54,14 @@ class _GameEndPageState extends State<GameEndPage> {
                 fontSize: 40,
                 fontWeight: FontWeight.bold,
               ),
+              textAlign: TextAlign.center,
             ),
-            Stack(
-              children: _buildPlayers(players),
+            SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.width * .5,
+              child: Stack(
+                children: _buildPlayers(players),
+              ),
             ),
             ElevatedButton(
               onPressed: () {
