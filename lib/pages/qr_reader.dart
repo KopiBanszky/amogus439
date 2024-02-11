@@ -29,6 +29,8 @@ class _SrReaderPageState extends State<SrReaderPage> {
   late Player plyr;
   late bool killEnabled;
   late dynamic currentSabotage;
+  bool sabotage = false;
+  bool reactor = false;
   bool found = false;
 
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
@@ -56,7 +58,9 @@ class _SrReaderPageState extends State<SrReaderPage> {
     socket = arguments['socket'];
     gameId = arguments['gameId'];
     killEnabled = arguments['killEnabled'];
-    currentSabotage = arguments['currentSabotage'];
+    currentSabotage = arguments['sabotage'];
+    reactor = arguments['reactor'];
+    sabotage = arguments['sabotageOn'];
 
     return Scaffold(
       appBar: AppBar(

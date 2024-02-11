@@ -27,9 +27,7 @@ class _SabotagesWidgetState extends State<SabotagesWidget> {
   void initState() {
     super.initState();
 
-    sabotage = widget.sabotage;
     socket = widget.socket;
-
     socket.on("sabotage", (data) {
       if (data["code"] != 200) {
         showAlert("Hiba - ${data["code"]}", data["message"], Colors.red, true,
@@ -40,6 +38,7 @@ class _SabotagesWidgetState extends State<SabotagesWidget> {
 
   @override
   Widget build(BuildContext context) {
+    sabotage = widget.sabotage;
     return Container(
       width: MediaQuery.of(context).size.width * .97,
       height: MediaQuery.of(context).size.height * .3,

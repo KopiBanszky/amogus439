@@ -143,6 +143,9 @@ class _GameMainPageState extends State<GameMainPage> {
       if (getPlatform() == Platform_name.android) {
         Vibration.vibrate(duration: 1000);
       }
+      print(data["type"]);
+      print(data["sabotage"]);
+      print("asd");
       switch (data["type"]) {
         case "Navigation":
           showAlert(
@@ -175,9 +178,10 @@ class _GameMainPageState extends State<GameMainPage> {
           timer();
           showAlert("Sabotage", "A reaktor leolvad! Menj, segíts megjavítani!",
               Colors.red, true, () {}, "Ok", false, () {}, "", context);
+          break;
       }
-
       setState(() {
+        print(data);
         sabotage = true;
         currentSabotage = data["sabotage"];
       });
