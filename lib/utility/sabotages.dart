@@ -1,3 +1,4 @@
+import 'package:amogusvez2/utility/alert.dart';
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
@@ -20,10 +21,25 @@ class SabotagesWidget extends StatefulWidget {
 
 class _SabotagesWidgetState extends State<SabotagesWidget> {
   dynamic sabotage;
+  late Socket socket;
+
+  @override
+  void initState() {
+    super.initState();
+
+    sabotage = widget.sabotage;
+    socket = widget.socket;
+
+    socket.on("sabotage", (data) {
+      if (data["code"] != 200) {
+        showAlert("Hiba - ${data["code"]}", data["message"], Colors.red, true,
+            () {}, "Ok", false, () {}, "", context);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    sabotage = widget.sabotage;
     return Container(
       width: MediaQuery.of(context).size.width * .97,
       height: MediaQuery.of(context).size.height * .3,
@@ -78,9 +94,11 @@ class _SabotagesWidgetState extends State<SabotagesWidget> {
                                     : Colors.grey[300],
                             fontSize: 20),
                       ),
-                      const ImageIcon(
-                        AssetImage("assets/reactor.png"),
-                        // color: Colors.white,
+                      const Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Image(
+                          image: AssetImage("assets/reactor.png"),
+                        ),
                       ),
                     ],
                   ),
@@ -131,9 +149,11 @@ class _SabotagesWidgetState extends State<SabotagesWidget> {
                                     : Colors.grey[300],
                             fontSize: 20),
                       ),
-                      const ImageIcon(
-                        AssetImage("assets/lights.png"),
-                        // color: Colors.white,
+                      const Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Image(
+                          image: AssetImage("assets/lights.png"),
+                        ),
                       ),
                     ],
                   ),
@@ -184,9 +204,11 @@ class _SabotagesWidgetState extends State<SabotagesWidget> {
                                     : Colors.grey[300],
                             fontSize: 20),
                       ),
-                      const ImageIcon(
-                        AssetImage("assets/navigation.png"),
-                        // color: Colors.white,
+                      const Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Image(
+                          image: AssetImage("assets/navigation.png"),
+                        ),
                       ),
                     ],
                   ),
