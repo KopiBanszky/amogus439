@@ -1,6 +1,8 @@
 import 'package:amogusvez2/admin/AddPoint.dart';
 import 'package:amogusvez2/admin/MainAdmin.dart';
+import 'package:amogusvez2/pages/GameEnd.dart';
 import 'package:amogusvez2/pages/GameMain.dart';
+import 'package:amogusvez2/pages/Navigation_minigame.dart';
 import 'package:amogusvez2/pages/VotedOut.dart';
 import 'package:amogusvez2/pages/Voting.dart';
 import 'package:amogusvez2/pages/Waiting.dart';
@@ -30,6 +32,8 @@ void main() {
       '/addPoint': (context) => const AddPointPage(),
       '/map': (context) => const MapPage(),
       '/test': (context) => const Test(),
+      '/navigation': (context) => const NavigationMinigame(),
+      '/gameEnd': (context) => const GameEndPage(),
     },
   ));
 }

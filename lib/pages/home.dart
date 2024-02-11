@@ -326,11 +326,11 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                       ),
-                      ElevatedButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/test');
-                          },
-                          child: const Text("test"))
+                      // ElevatedButton(
+                      //     onPressed: () {
+                      //       Navigator.pushNamed(context, '/navigation');
+                      //     },
+                      //     child: const Text("test"))
                     ],
                   ),
                 )

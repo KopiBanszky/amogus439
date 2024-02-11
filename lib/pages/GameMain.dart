@@ -205,6 +205,60 @@ class _GameMainPageState extends State<GameMainPage> {
         currentSabotage = null;
       });
     });
+
+    socket.on("game_end", (data) {
+      // socket.off("create_game");
+      // socket.off("join_game");
+      // socket.off("start_game");
+      // socket.off("start_vote");
+      // socket.off("vote");
+      // socket.off("kill");
+      // socket.off("task_done");
+      // socket.off("report");
+      // socket.off("emergency");
+      // socket.off("player_disconnected");
+      // socket.off("update_players");
+      // socket.off("role_update");
+      // socket.off("game_started");
+      // socket.off("vote_placed");
+      // socket.off("vote_result");
+      // socket.off("got_killed");
+      // socket.off("game_end");
+      // socket.off("task_done_by_crew");
+      // socket.off("reported_player");
+      // socket.off("emergency_called");
+      // socket.off("sabotage");
+      // socket.off("sabotage_fixed");
+      // socket.off("sabotage_trigg");
+      // socket.off("fix_simple");
+      // socket.off("reaktorfix");
+
+      socket.disconnect();
+
+      Navigator.popUntil(context, (route) => route.isFirst);
+
+      List<Player> impostors = [];
+
+      for (var imp in data["impostors"]) {
+        impostors.add(Player.fromMap(imp));
+      }
+
+      List<Player> players = [];
+
+      for (var ply in data["players"]) {
+        players.add(Player.fromMap(ply));
+      }
+
+      bool winner =
+          data["code"] == 200 ? true : false; // 200 = crew, 201 = impostor
+
+      Navigator.popAndPushNamed(context, "/gameEnd", arguments: {
+        'player': plyr,
+        'impostors': impostors,
+        'players': players,
+        'winner': winner,
+      });
+    });
   }
 
   void enableKill() {

@@ -304,6 +304,24 @@ class _SrReaderPageState extends State<SrReaderPage> {
         });
         break;
 
+      case "Navigation":
+        if (currentSabotage != null) {
+          showAlert("Megállj!", "Nincs aktív sabotage", Colors.blue, true, () {
+            // andController!.resumeCamera();
+            controller.start();
+          }, "Ok", false, () {}, "", context);
+          return;
+        }
+
+        Navigator.pushNamed(context, "/navigation", arguments: {
+          "player": plyr,
+          "socket": socket,
+          "gameId": gameId,
+          "sabotage": currentSabotage,
+        });
+
+        break;
+
       case "reactor":
         if (currentSabotage != null) {
           showAlert("Megállj!", "Nincs aktív sabotage", Colors.blue, true, () {
