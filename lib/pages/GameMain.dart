@@ -60,6 +60,7 @@ class _GameMainPageState extends State<GameMainPage> {
     });
 
     socket.on("reported_player", (data) {
+      Navigator.popUntil(context, (route) => route.isFirst);
       if (!alive) {
         setState(() {
           qr_action = "439amogus-${plyr.id}-dead";
@@ -94,6 +95,7 @@ class _GameMainPageState extends State<GameMainPage> {
     });
 
     socket.on("emergency_called", (data) {
+      Navigator.popUntil(context, (route) => route.isFirst);
       if (!alive) {
         setState(() {
           qr_action = "439amogus-${plyr.id}-dead";

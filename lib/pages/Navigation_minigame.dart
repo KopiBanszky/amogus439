@@ -87,7 +87,7 @@ class _NavigationMinigameState extends State<NavigationMinigame> {
   }
 
   void tryFix() {
-    if (light()) {
+    if (!light()) {
       showAlert("Hiba", "A kapcsolók még mindig rosszul vannak állítva!",
           Colors.red, true, () {}, "Ok", false, () {}, "", context);
     } else {
@@ -96,12 +96,6 @@ class _NavigationMinigameState extends State<NavigationMinigame> {
         "user_id": plyr.id,
         "sabotage_id": sabotage["game_sb_id"],
         "name": "Navigation"
-      });
-
-      time = 3;
-      timer();
-      Future.delayed(const Duration(seconds: 4), () {
-        Navigator.pop(context);
       });
     }
   }
@@ -128,6 +122,9 @@ class _NavigationMinigameState extends State<NavigationMinigame> {
         timer();
       }
       if (time == 0) on = light();
+      if (on) {
+        tryFix();
+      }
     });
   }
 
