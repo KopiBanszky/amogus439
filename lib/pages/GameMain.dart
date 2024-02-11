@@ -272,9 +272,9 @@ class _GameMainPageState extends State<GameMainPage> {
   void timer() {
     Future.delayed(const Duration(seconds: 1), () {
       setState(() {
-        if (currentSabotage != null) currentSabotage["time"]--;
+        if (currentSabotage != null) currentSabotage[0]["time"]--;
       });
-      if (currentSabotage!["time"] > 0) {
+      if (currentSabotage![0]["time"] > 0) {
         timer();
       }
     });
