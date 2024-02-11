@@ -21,7 +21,7 @@ class _GameEndPageState extends State<GameEndPage> {
     for (var i = 0; i < players.length; i++) {
       list.add(Positioned(
         left: section * .5 * i,
-        width: section,
+        width: MediaQuery.of(context).size.width * .25,
         child: ColorFiltered(
           colorFilter: ColorFilter.mode(players[i].color, BlendMode.modulate),
           child: const Image(
