@@ -20,6 +20,9 @@ class MapPage extends StatefulWidget {
 
 class _MapPageState extends State<MapPage> {
   dynamic arguments;
+  dynamic sabotage;
+  bool sabotageOn = false;
+  bool reactor = false;
   MapboxMapController? mapboxMap;
   bool imgsAdded = false;
   Player? plyr;
@@ -70,9 +73,16 @@ class _MapPageState extends State<MapPage> {
         if (!plyr!.tasks.contains(task.connect_id)) continue;
         if (plyr!.taskDone.contains(task.connect_id)) continue;
         type = "task2";
-      } else if (task.type > 2)
-        continue;
-      else if (task.type == 2) type = "location";
+      } else if (task.type > 2) {
+        if (!sabotageOn) continue;
+        if (!reactor) {
+          if (sabotage["name"] != task.name) continue;
+        } else {
+          if ((sabotage[0]["name"] != task.name) &&
+              (sabotage[1]["name"] != task.name)) continue;
+        }
+        type = "sabotage";
+      } else if (task.type == 2) type = "location";
       mapboxMap.addSymbol(
         SymbolOptions(
           geometry: LatLng(
@@ -158,6 +168,9 @@ class _MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     arguments = ModalRoute.of(context)!.settings.arguments;
     plyr = arguments["player"];
+    sabotage = arguments["sabotage"];
+    sabotageOn = arguments["sabotageOn"];
+    reactor = arguments["reactor"];
 
     return Scaffold(
       appBar: AppBar(

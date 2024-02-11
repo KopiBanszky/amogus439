@@ -69,6 +69,7 @@ class _TasksWidgetState extends State<TasksWidget> {
         taskWidgets = _buildTasks(tasks, gameId, userId);
       });
     });
+    socket.off("sabotage");
   }
 
   List<Widget> _buildTasks(List<Task> tasks, String gameId, int userId) {

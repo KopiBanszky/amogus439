@@ -34,6 +34,8 @@ class _SabotagesWidgetState extends State<SabotagesWidget> {
             () {}, "Ok", false, () {}, "", context);
       }
     });
+
+    socket.off("task_done");
   }
 
   @override

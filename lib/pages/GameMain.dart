@@ -139,13 +139,10 @@ class _GameMainPageState extends State<GameMainPage> {
     });
 
     socket.on("sabotage_trigg", (data) {
-      Navigator.popUntil(context, (route) => route.isCurrent);
+      Navigator.popUntil(context, (route) => route.isFirst);
       if (getPlatform() == Platform_name.android) {
         Vibration.vibrate(duration: 1000);
       }
-      print(data["type"]);
-      print(data["sabotage"]);
-      print("asd");
       switch (data["type"]) {
         case "Navigation":
           showAlert(
@@ -181,7 +178,6 @@ class _GameMainPageState extends State<GameMainPage> {
           break;
       }
       setState(() {
-        print(data);
         sabotage = true;
         currentSabotage = data["sabotage"];
       });
@@ -308,14 +304,25 @@ class _GameMainPageState extends State<GameMainPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   ElevatedButton(
-                      onPressed: sabotage
-                          ? null
-                          : () {
+                      onPressed: !sabotage
+                          ? () {
                               Navigator.pushNamed(context, "/map", arguments: {
                                 'map': game.map,
                                 'player': plyr,
                               });
-                            },
+                            }
+                          : currentSabotage["name"] == "Navigation"
+                              ? null
+                              : () {
+                                  Navigator.pushNamed(context, "/map",
+                                      arguments: {
+                                        'map': game.map,
+                                        'player': plyr,
+                                        'sabotage': currentSabotage,
+                                        'reactor': reactor,
+                                        'sabotageOn': sabotage,
+                                      });
+                                },
                       style: ElevatedButton.styleFrom(
                         disabledBackgroundColor: Colors.grey,
                         backgroundColor: Colors.blue,
