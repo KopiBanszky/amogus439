@@ -358,7 +358,7 @@ class _GameMainPageState extends State<GameMainPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   ElevatedButton(
-                      onPressed: reactor
+                      onPressed: !sabotage
                           ? () {
                               Navigator.pushNamed(context, "/map", arguments: {
                                 'map': game.map,
@@ -368,9 +368,8 @@ class _GameMainPageState extends State<GameMainPage> {
                                 'sabotageOn': sabotage,
                               });
                             }
-                          : currentSabotage["name"] == "Navigation"
-                              ? null
-                              : () {
+                          : sabotage
+                              ? () {
                                   Navigator.pushNamed(context, "/map",
                                       arguments: {
                                         'map': game.map,
@@ -379,7 +378,19 @@ class _GameMainPageState extends State<GameMainPage> {
                                         'reactor': reactor,
                                         'sabotageOn': sabotage,
                                       });
-                                },
+                                }
+                              : currentSabotage["name"] == "Navigation"
+                                  ? null
+                                  : () {
+                                      Navigator.pushNamed(context, "/map",
+                                          arguments: {
+                                            'map': game.map,
+                                            'player': plyr,
+                                            'sabotage': currentSabotage,
+                                            'reactor': reactor,
+                                            'sabotageOn': sabotage,
+                                          });
+                                    },
                       style: ElevatedButton.styleFrom(
                         disabledBackgroundColor: Colors.grey,
                         backgroundColor: Colors.blue,
