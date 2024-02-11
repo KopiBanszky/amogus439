@@ -143,6 +143,7 @@ class _GameMainPageState extends State<GameMainPage> {
       if (getPlatform() == Platform_name.android) {
         Vibration.vibrate(duration: 1000);
       }
+      currentSabotage = data["sabotage"];
       switch (data["type"]) {
         case "Navigation":
           showAlert(
@@ -179,7 +180,6 @@ class _GameMainPageState extends State<GameMainPage> {
       }
       setState(() {
         sabotage = true;
-        currentSabotage = data["sabotage"];
       });
     });
 
@@ -293,9 +293,6 @@ class _GameMainPageState extends State<GameMainPage> {
       socket = arguments['socket'];
       tasks = arguments['tasks'] ?? [];
       qr_action = "439amogus-${plyr.id}-alive";
-      currentSabotage = arguments['sabotage'];
-      reactor = arguments['reactor'] ?? false;
-      sabotage = arguments['sabotageOn'] ?? false;
 
       listenOnSockets();
       enableKill();
