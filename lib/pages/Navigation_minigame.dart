@@ -5,7 +5,6 @@ import 'package:amogusvez2/utility/stLessTimer.dart';
 import 'package:amogusvez2/utility/switch.dart';
 import 'package:amogusvez2/utility/types.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
 class NavigationMinigame extends StatefulWidget {
@@ -109,6 +108,7 @@ class _NavigationMinigameState extends State<NavigationMinigame> {
 
   @override
   void initState() {
+    socket = arguments["socket"];
     generateTask();
     while (light()) {
       generateTask();
@@ -143,7 +143,6 @@ class _NavigationMinigameState extends State<NavigationMinigame> {
   Widget build(BuildContext context) {
     arguments = ModalRoute.of(context)?.settings.arguments;
     plyr = arguments["player"];
-    socket = arguments["socket"];
     gameId = arguments["gameId"];
     sabotage = arguments["sabotage"];
 

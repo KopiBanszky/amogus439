@@ -308,7 +308,7 @@ class _SrReaderPageState extends State<SrReaderPage> {
         });
         break;
 
-      case "Navigation":
+      case "navigation":
         if (currentSabotage == null) {
           showAlert("Megállj!", "Nincs aktív sabotage", Colors.blue, true, () {
             // andController!.resumeCamera();
@@ -317,7 +317,7 @@ class _SrReaderPageState extends State<SrReaderPage> {
           return;
         }
 
-        Navigator.pushNamed(context, "/navigation", arguments: {
+        Navigator.popAndPushNamed(context, "/navigation", arguments: {
           "player": plyr,
           "socket": socket,
           "gameId": gameId,
