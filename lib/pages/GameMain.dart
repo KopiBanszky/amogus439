@@ -289,6 +289,9 @@ class _GameMainPageState extends State<GameMainPage> {
             impostorMenu
                 ? SabotagesWidget(
                     sabotage: currentSabotage,
+                    socket: socket,
+                    gameId: gameId,
+                    userId: plyr.id,
                   )
                 : TasksWidget(
                     socket: socket,

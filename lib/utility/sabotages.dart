@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:socket_io_client/socket_io_client.dart';
 
 class SabotagesWidget extends StatefulWidget {
-  const SabotagesWidget({super.key, required this.sabotage});
+  const SabotagesWidget(
+      {super.key,
+      required this.sabotage,
+      required this.socket,
+      required this.gameId,
+      required this.userId});
 
   final dynamic sabotage;
+  final Socket socket;
+  final String gameId;
+  final int userId;
 
   @override
   State<SabotagesWidget> createState() => _SabotagesWidgetState();
@@ -39,7 +48,15 @@ class _SabotagesWidgetState extends State<SabotagesWidget> {
                   borderRadius: BorderRadius.circular(7),
                 ),
                 child: ElevatedButton(
-                  onPressed: () async {},
+                  onPressed: sabotage == null
+                      ? () {
+                          widget.socket.emit("sabotage", {
+                            "game_id": widget.gameId,
+                            "user_id": widget.userId,
+                            "sabotage": "Reaktor",
+                          });
+                        }
+                      : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.transparent,
                     shadowColor: Colors.transparent,
@@ -63,7 +80,7 @@ class _SabotagesWidgetState extends State<SabotagesWidget> {
                       ),
                       const ImageIcon(
                         AssetImage("assets/reactor.png"),
-                        color: Colors.white,
+                        // color: Colors.white,
                       ),
                     ],
                   ),
@@ -84,7 +101,15 @@ class _SabotagesWidgetState extends State<SabotagesWidget> {
                   borderRadius: BorderRadius.circular(7),
                 ),
                 child: ElevatedButton(
-                  onPressed: () async {},
+                  onPressed: sabotage == null
+                      ? () {
+                          widget.socket.emit("sabotage", {
+                            "game_id": widget.gameId,
+                            "user_id": widget.userId,
+                            "sabotage": "Lights",
+                          });
+                        }
+                      : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.transparent,
                     shadowColor: Colors.transparent,
@@ -108,7 +133,7 @@ class _SabotagesWidgetState extends State<SabotagesWidget> {
                       ),
                       const ImageIcon(
                         AssetImage("assets/lights.png"),
-                        color: Colors.white,
+                        // color: Colors.white,
                       ),
                     ],
                   ),
@@ -129,7 +154,15 @@ class _SabotagesWidgetState extends State<SabotagesWidget> {
                   borderRadius: BorderRadius.circular(7),
                 ),
                 child: ElevatedButton(
-                  onPressed: () async {},
+                  onPressed: sabotage == null
+                      ? () {
+                          widget.socket.emit("sabotage", {
+                            "game_id": widget.gameId,
+                            "user_id": widget.userId,
+                            "sabotage": "Navigation",
+                          });
+                        }
+                      : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.transparent,
                     shadowColor: Colors.transparent,
@@ -153,7 +186,7 @@ class _SabotagesWidgetState extends State<SabotagesWidget> {
                       ),
                       const ImageIcon(
                         AssetImage("assets/navigation.png"),
-                        color: Colors.white,
+                        // color: Colors.white,
                       ),
                     ],
                   ),
