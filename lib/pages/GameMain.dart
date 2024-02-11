@@ -309,6 +309,9 @@ class _GameMainPageState extends State<GameMainPage> {
                               Navigator.pushNamed(context, "/map", arguments: {
                                 'map': game.map,
                                 'player': plyr,
+                                'sabotage': currentSabotage,
+                                'reactor': reactor,
+                                'sabotageOn': sabotage,
                               });
                             }
                           : currentSabotage["name"] == "Navigation"

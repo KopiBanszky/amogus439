@@ -34,6 +34,7 @@ class _MapPageState extends State<MapPage> {
         await http_get("api/manager/get_tasks", {"mapName": arguments["map"]});
     if (res.ok) {
       dynamic data = jsonDecode(jsonDecode(res.data));
+      tasks = [];
       for (int i = 0; i < data["message"].length; i++) {
         tasks.add(
           Task(
