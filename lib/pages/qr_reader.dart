@@ -28,12 +28,13 @@ class _SrReaderPageState extends State<SrReaderPage> {
   late String gameId;
   late Player plyr;
   late bool killEnabled;
+  late dynamic currentSabotage;
   bool found = false;
 
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   MobileScannerController? controller_scanner = MobileScannerController(
     // ...
-    detectionSpeed: DetectionSpeed.noDuplicates,
+    detectionSpeed: DetectionSpeed.normal,
     facing: mobile_scanner.CameraFacing.back,
     torchEnabled: false,
   );
@@ -55,6 +56,7 @@ class _SrReaderPageState extends State<SrReaderPage> {
     socket = arguments['socket'];
     gameId = arguments['gameId'];
     killEnabled = arguments['killEnabled'];
+    currentSabotage = arguments['currentSabotage'];
 
     return Scaffold(
       appBar: AppBar(
@@ -64,11 +66,14 @@ class _SrReaderPageState extends State<SrReaderPage> {
           children: [
             const Text("Qr olvasó",
                 style: TextStyle(color: Colors.white, fontSize: 20)),
-            ColorFiltered(
-              colorFilter: ColorFilter.mode(plyr.color, BlendMode.modulate),
-              child: Image.asset(
-                "assets/${plyr.team ? "impostor.png" : "player.png"}",
-                width: MediaQuery.of(context).size.width * .1,
+            Hero(
+              tag: "appbar-img",
+              child: ColorFiltered(
+                colorFilter: ColorFilter.mode(plyr.color, BlendMode.modulate),
+                child: Image.asset(
+                  "assets/${plyr.dead ? "dead.png" : (plyr.team ? "impostor.png" : "player.png")}",
+                  width: MediaQuery.of(context).size.width * .1,
+                ),
               ),
             )
           ],
@@ -237,6 +242,7 @@ class _SrReaderPageState extends State<SrReaderPage> {
                     "${target.name}-t sikeresen megölted!",
                     Colors.green,
                     true, () {
+                  controller.start();
                   Navigator.pop(context, {"code": 201});
                 }, "Ok", false, () {}, "", context);
               }
@@ -267,6 +273,62 @@ class _SrReaderPageState extends State<SrReaderPage> {
           }
         });
         break;
+
+      case "lights":
+        if (currentSabotage != null) {
+          showAlert("Megállj!", "Nincs aktív sabotázs", Colors.blue, true, () {
+            // andController!.resumeCamera();
+            controller.start();
+          }, "Ok", false, () {}, "", context);
+          return;
+        }
+        socket.emit("fix_simple", {
+          "game_id": gameId,
+          "user_id": plyr.id,
+          "sabotage_id": currentSabotage["game_sb_id"],
+          "name": currentSabotage["name"],
+        });
+        socket.on("fix_simple", (data) {
+          if (data["code"] != 200) {
+            showAlert(
+                "Hiba - ${data["code"]}", data["message"], Colors.red, true,
+                () {
+              // andController!.resumeCamera();
+              controller.start();
+            }, "Ok", false, () {}, "", context);
+          }
+        });
+        break;
+
+      case "reactor":
+        if (currentSabotage != null) {
+          showAlert("Megállj!", "Nincs aktív sabotage", Colors.blue, true, () {
+            // andController!.resumeCamera();
+            controller.start();
+          }, "Ok", false, () {}, "", context);
+          return;
+        }
+
+        socket.emit("reaktorfix", {
+          "game_id": gameId,
+          "user_id": plyr.id,
+          "game_sb_id": currentSabotage["game_sb_id"],
+        });
+
+        socket.on("reaktorfix", (data) {
+          if (data["code"] != 200) {
+            showAlert(
+                "Hiba - ${data["code"]}", data["message"], Colors.red, true,
+                () {
+              // andController!.resumeCamera();
+              controller.start();
+            }, "Ok", false, () {}, "", context);
+          } else
+            controller.start();
+        });
+
+        break;
+
       default:
         // andController!.resumeCamera();
         controller.start();

@@ -1,12 +1,12 @@
 // ignore_for_file: file_names, non_constant_identifier_names, use_build_context_synchronously
 
 import 'package:amogusvez2/utility/alert.dart';
+import 'package:amogusvez2/utility/stLessTimer.dart';
 import 'package:amogusvez2/utility/tasks.dart';
 import 'package:amogusvez2/utility/utilities.dart';
 import 'package:flutter/material.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 // import 'package:pretty_qr_code/pretty_qr_code.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:vibration/vibration.dart';
 // import 'dart:js' as js;
@@ -35,6 +35,10 @@ class _GameMainPageState extends State<GameMainPage> {
   late String qr_action;
   bool killEnabled = false;
   bool alive = true;
+
+  bool sabotage = false;
+  dynamic currentSabotage;
+  bool reactor = false;
 
   void listenOnSockets() {
     socket.on("got_killed", (data) {
@@ -130,6 +134,74 @@ class _GameMainPageState extends State<GameMainPage> {
         });
       }
     });
+
+    socket.on("sabotage_trigg", (data) {
+      Navigator.popUntil(context, (route) => route.isCurrent);
+      if (getPlatform() == Platform_name.android) {
+        Vibration.vibrate(duration: 1000);
+      }
+      switch (data["type"]) {
+        case "Navigation":
+          showAlert(
+              "Sabotage",
+              "A navigációt szabotálták! Nem férsz hozzá a térképhez, amíg meg nem javítja valaki.",
+              Colors.red,
+              true,
+              () {},
+              "Ok",
+              false,
+              () {},
+              "",
+              context);
+          break;
+        case "Lights":
+          showAlert(
+              "Sabotage",
+              "A fényeket szabotálták! Nem látsz semmit, amíg meg nem javítja valaki. (Cselekedj a megbeszéltek szerint!)",
+              Colors.red,
+              true,
+              () {},
+              "Ok",
+              false,
+              () {},
+              "",
+              context);
+          break;
+        case "Reaktor":
+          reactor = true;
+          timer();
+          showAlert("Sabotage", "A reaktor leolvad! Menj, segíts megjavítani!",
+              Colors.red, true, () {}, "Ok", false, () {}, "", context);
+      }
+
+      setState(() {
+        sabotage = true;
+        currentSabotage = data["sabotage"];
+      });
+    });
+
+    socket.on("sabotage_fixed", (data) {
+      Navigator.popUntil(context, (route) => route.isCurrent);
+      switch (data["type"]) {
+        case "Reaktor":
+          showAlert("Hiba elhárítva", "A reaktor meg lett javítva.",
+              Colors.green, true, () {}, "Ok", false, () {}, "", context);
+          break;
+        case "Navigation":
+          showAlert("Hiba elhárítva", "A navigáció meg lett javítva.",
+              Colors.green, true, () {}, "Ok", false, () {}, "", context);
+          break;
+        case "Lights":
+          showAlert("Hiba elhárítva", "A fények meg lettek javítva.",
+              Colors.green, true, () {}, "Ok", false, () {}, "", context);
+          break;
+      }
+      setState(() {
+        sabotage = false;
+        reactor = false;
+        currentSabotage = null;
+      });
+    });
   }
 
   void enableKill() {
@@ -137,6 +209,17 @@ class _GameMainPageState extends State<GameMainPage> {
       setState(() {
         killEnabled = true;
       });
+    });
+  }
+
+  void timer() {
+    Future.delayed(const Duration(seconds: 1), () {
+      setState(() {
+        if (currentSabotage != null) currentSabotage["time"]--;
+      });
+      if (currentSabotage!["time"] > 0) {
+        timer();
+      }
     });
   }
 
@@ -168,6 +251,11 @@ class _GameMainPageState extends State<GameMainPage> {
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Text(plyr.name,
               style: const TextStyle(color: Colors.white, fontSize: 20)),
+          if (reactor)
+            StLessTimer(
+                duration: currentSabotage["time"],
+                textColor: Colors.red,
+                fontSize: 20.0),
           Hero(
             tag: "appbar-img",
             child: ColorFiltered(
@@ -203,12 +291,14 @@ class _GameMainPageState extends State<GameMainPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, "/map", arguments: {
-                          'map': game.map,
-                          'player': plyr,
-                        });
-                      },
+                      onPressed: sabotage
+                          ? null
+                          : () {
+                              Navigator.pushNamed(context, "/map", arguments: {
+                                'map': game.map,
+                                'player': plyr,
+                              });
+                            },
                       style: ElevatedButton.styleFrom(
                         disabledBackgroundColor: Colors.grey,
                         backgroundColor: Colors.blue,
@@ -239,6 +329,9 @@ class _GameMainPageState extends State<GameMainPage> {
                               'socket': socket,
                               'gameId': gameId,
                               'killEnabled': killEnabled,
+                              'sabotage': currentSabotage,
+                              'reactor': reactor,
+                              'sabotageOn': sabotage,
                             });
 
                         if (res != null) {

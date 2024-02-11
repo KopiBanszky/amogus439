@@ -161,7 +161,8 @@ class _MapPageState extends State<MapPage> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: plyr!.color,
+        iconTheme: const IconThemeData(color: Colors.white),
+        backgroundColor: Colors.grey[900],
         titleTextStyle: const TextStyle(color: Colors.white, fontSize: 20),
         title:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
