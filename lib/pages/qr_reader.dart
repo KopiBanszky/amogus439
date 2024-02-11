@@ -180,7 +180,7 @@ class _SrReaderPageState extends State<SrReaderPage> {
     List<String> data = qrString.split("-");
     int target_id = int.parse(data[1]);
     String action = data[2];
-    if (!(reactor && action == "reactor")) controller!.stop();
+    if (!(reactor && action == "reactor")) controller.stop();
 
     switch (action) {
       case "dead":
@@ -343,14 +343,15 @@ class _SrReaderPageState extends State<SrReaderPage> {
 
         socket.on("reaktorfix", (data) {
           if (data["code"] != 200) {
+            controller.stop();
             showAlert(
                 "Hiba - ${data["code"]}", data["message"], Colors.red, true,
                 () {
               // andController!.resumeCamera();
               controller.start();
             }, "Ok", false, () {}, "", context);
-          } else
-            controller.start();
+          }
+          // controller.start();
         });
 
         break;

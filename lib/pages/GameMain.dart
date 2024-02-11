@@ -184,7 +184,7 @@ class _GameMainPageState extends State<GameMainPage> {
     });
 
     socket.on("sabotage_fixed", (data) {
-      Navigator.popUntil(context, (route) => route.isCurrent);
+      Navigator.popUntil(context, (route) => route.isFirst);
       switch (data["type"]) {
         case "Reaktor":
           showAlert("Hiba elhárítva", "A reaktor meg lett javítva.",
