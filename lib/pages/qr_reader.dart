@@ -305,7 +305,7 @@ class _SrReaderPageState extends State<SrReaderPage> {
         break;
 
       case "Navigation":
-        if (currentSabotage != null) {
+        if (currentSabotage == null) {
           showAlert("Megállj!", "Nincs aktív sabotage", Colors.blue, true, () {
             // andController!.resumeCamera();
             controller.start();
@@ -323,7 +323,7 @@ class _SrReaderPageState extends State<SrReaderPage> {
         break;
 
       case "reactor":
-        if (currentSabotage != null) {
+        if (currentSabotage == null) {
           showAlert("Megállj!", "Nincs aktív sabotage", Colors.blue, true, () {
             // andController!.resumeCamera();
             controller.start();
