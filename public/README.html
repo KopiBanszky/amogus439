@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>README.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+    /* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+    /*---------------------------------------------------------------------------------------------
+        *  Copyright (c) Microsoft Corporation. All rights reserved.
+        *  Licensed under the MIT License. See License.txt in the project root for license information.
+        *--------------------------------------------------------------------------------------------*/
+    
+    body {
+        font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+        font-size: var(--vscode-markdown-font-size, 14px);
+        padding: 0 26px;
+        line-height: var(--vscode-markdown-line-height, 22px);
+        word-wrap: break-word;
+        background-color: #1E1E1E;
+        color: #D4D4D4;
+    }
+    
+    #code-csp-warning {
+        position: fixed;
+        top: 0;
+        right: 0;
+        color: white;
+        margin: 16px;
+        text-align: center;
+        font-size: 12px;
+        font-family: sans-serif;
+        background-color:#444444;
+        cursor: pointer;
+        padding: 6px;
+        box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+    }
+    
+    #code-csp-warning:hover {
+        text-decoration: none;
+        background-color:#007acc;
+        box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+    }
+    
+    body.scrollBeyondLastLine {
+        margin-bottom: calc(100vh - 22px);
+    }
+    
+    body.showEditorSelection .code-line {
+        position: relative;
+    }
+    
+    body.showEditorSelection .code-active-line:before,
+    body.showEditorSelection .code-line:hover:before {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0;
+        left: -12px;
+        height: 100%;
+    }
+    
+    body.showEditorSelection li.code-active-line:before,
+    body.showEditorSelection li.code-line:hover:before {
+        left: -30px;
+    }
+    
+    .vscode-light.showEditorSelection .code-active-line:before {
+        border-left: 3px solid rgba(0, 0, 0, 0.15);
+    }
+    
+    .vscode-light.showEditorSelection .code-line:hover:before {
+        border-left: 3px solid rgba(0, 0, 0, 0.40);
+    }
+    
+    .vscode-light.showEditorSelection .code-line .code-line:hover:before {
+        border-left: none;
+    }
+    
+    .vscode-dark.showEditorSelection .code-active-line:before {
+        border-left: 3px solid #303031;
+    }
+    
+    .vscode-dark.showEditorSelection .code-line:hover:before {
+        border-left: 3px solid #303031;
+    }
+    
+    .vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+        border-left: none;
+    }
+    
+    .vscode-high-contrast.showEditorSelection .code-active-line:before {
+        border-left: 3px solid rgba(255, 160, 0, 0.7);
+    }
+    
+    .vscode-high-contrast.showEditorSelection .code-line:hover:before {
+        border-left: 3px solid rgba(255, 160, 0, 1);
+    }
+    
+    .vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+        border-left: none;
+    }
+    
+    img {
+        max-width: 100%;
+        max-height: 100%;
+    }
+    
+    a {
+        text-decoration: none;
+    }
+    
+    a:hover {
+        text-decoration: underline;
+    }
+    
+    a:focus,
+    input:focus,
+    select:focus,
+    textarea:focus {
+        outline: 1px solid -webkit-focus-ring-color;
+        outline-offset: -1px;
+    }
+    
+    hr {
+        border: 0;
+        height: 2px;
+        border-bottom: 2px solid;
+        border-color: #474747;
+    }
+    
+    h1 {
+        padding-bottom: 0.3em;
+        line-height: 1.2;
+        border-bottom-width: 1px;
+        border-bottom-style: solid;
+    }
+    
+    h1, h2, h3 {
+        font-weight: normal;
+    }
+    
+    table {
+        border-collapse: collapse;
+    }
+    
+    table > thead > tr > th {
+        text-align: left;
+        border-bottom: 1px solid;
+    }
+    
+    table > thead > tr > th,
+    table > thead > tr > td,
+    table > tbody > tr > th,
+    table > tbody > tr > td {
+        padding: 5px 10px;
+    }
+    
+    table > tbody > tr + tr > td {
+        border-top: 1px solid;
+    }
+    
+    blockquote {
+        margin: 0 7px 0 5px;
+        padding: 0 16px 0 10px;
+        border-left-width: 5px;
+        border-left-style: solid;
+    }
+    
+    code {
+        font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+        font-size: 1em;
+        line-height: 1.357em;
+    }
+    
+    body.wordWrap pre {
+        white-space: pre-wrap;
+    }
+    
+    pre:not(.hljs),
+    pre.hljs code > div {
+        padding: 16px;
+        border-radius: 3px;
+        overflow: auto;
+    }
+    
+    pre code {
+        color: var(--vscode-editor-foreground);
+        tab-size: 4;
+    }
+    
+    /** Theming */
+    
+    .vscode-light pre {
+        background-color: rgba(220, 220, 220, 0.4);
+    }
+    
+    .vscode-dark pre {
+        background-color: rgba(10, 10, 10, 0.4);
+    }
+    
+    .vscode-high-contrast pre {
+        background-color: rgb(0, 0, 0);
+    }
+    
+    .vscode-high-contrast h1 {
+        border-color: rgb(0, 0, 0);
+    }
+    
+    .vscode-light table > thead > tr > th {
+        border-color: rgba(0, 0, 0, 0.69);
+    }
+    
+    .vscode-dark table > thead > tr > th {
+        border-color: #303031;
+    }
+    
+    .vscode-light h1,
+    .vscode-light hr,
+    .vscode-light table > tbody > tr + tr > td {
+        border-color: rgba(0, 0, 0, 0.18);
+    }
+    
+    .vscode-dark h1,
+    .vscode-dark hr,
+    .vscode-dark table > tbody > tr + tr > td {
+        border-color: #303031;
+    }
+    
+    </style>
+    
+    <style>
+    /* a11y-dark theme */
+    /* Based on the Tomorrow Night Eighties theme: https://github.com/isagalaev/highlight.js/blob/master/src/styles/tomorrow-night-eighties.css */
+    /* @author: ericwbailey */
+    
+    /* Comment */
+    .hljs-comment,
+    .hljs-quote {
+        color: #d4d0ab;
+    }
+    
+    /* Red */
+    .hljs-variable,
+    .hljs-template-variable,
+    .hljs-tag,
+    .hljs-name,
+    .hljs-selector-id,
+    .hljs-selector-class,
+    .hljs-regexp,
+    .hljs-deletion {
+        color: #ffa07a;
+    }
+    
+    /* Orange */
+    .hljs-number,
+    .hljs-built_in,
+    .hljs-builtin-name,
+    .hljs-literal,
+    .hljs-type,
+    .hljs-params,
+    .hljs-meta,
+    .hljs-link {
+        color: #f5ab35;
+    }
+    
+    /* Yellow */
+    .hljs-attribute {
+        color: #ffd700;
+    }
+    
+    /* Green */
+    .hljs-string,
+    .hljs-symbol,
+    .hljs-bullet,
+    .hljs-addition {
+        color: #abe338;
+    }
+    
+    /* Blue */
+    .hljs-title,
+    .hljs-section {
+        color: #00e0e0;
+    }
+    
+    /* Purple */
+    .hljs-keyword,
+    .hljs-selector-tag {
+        color: #dcc6e0;
+    }
+    
+    .hljs {
+        display: block;
+        overflow-x: auto;
+        background: #2b2b2b;
+        color: #f8f8f2;
+        padding: 0.5em;
+    }
+    
+    .hljs-emphasis {
+        font-style: italic;
+    }
+    
+    .hljs-strong {
+        font-weight: bold;
+    }
+    
+    @media screen and (-ms-high-contrast: active) {
+        .hljs-addition,
+        .hljs-attribute,
+        .hljs-built_in,
+        .hljs-builtin-name,
+        .hljs-bullet,
+        .hljs-comment,
+        .hljs-link,
+        .hljs-literal,
+        .hljs-meta,
+        .hljs-number,
+        .hljs-params,
+        .hljs-string,
+        .hljs-symbol,
+        .hljs-type,
+        .hljs-quote {
+            color: highlight;
+        }
+    
+        .hljs-keyword,
+        .hljs-selector-tag {
+            font-weight: bold;
+        }
+    }
+    
+    </style>
+    <style>
+    /*
+     * Markdown PDF CSS
+     */
+    
+     body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+        padding: 0 12px;
+    }
+    
+    pre {
+        background-color: #f8f8f8;
+        border: 1px solid #303031;
+        border-radius: 3px;
+        overflow-x: auto;
+        white-space: pre-wrap;
+        overflow-wrap: break-word;
+    }
+    
+    pre:not(.hljs) {
+        padding: 23px;
+        line-height: 19px;
+    }
+    
+    blockquote {
+        background: rgba(127, 127, 127, 0.1);
+        border-color: rgba(0, 122, 204, 0.5);
+    }
+    
+    .emoji {
+        height: 1.4em;
+    }
+    
+    code {
+        font-size: 14px;
+        line-height: 19px;
+    }
+    
+    /* for inline code */
+    :not(pre):not(.hljs) > code {
+        color: #C9AE75; /* Change the old color so it seems less like an error */
+        font-size: inherit;
+    }
+    
+    /* Page Break : use <div class="page"/> to insert page break
+    -------------------------------------------------------- */
+    .page {
+        page-break-after: always;
+    }
+    
+    body::-webkit-scrollbar{
+        width: 0.5em;
+        height: 0.5em;
+        background-color: #303031;
+    }
+    body::-webkit-scrollbar-thumb{
+        background-color: #474747;
+        border-radius: 50px;
+    }
+    
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="amogus-api">Amogus API</h1>
+<h3 id="packages">packages:</h3>
+<ol>
+<li>socket.io</li>
+</ol>
+<h3 id="types">types</h3>
+<pre class="hljs"><code><div><span class="hljs-keyword">interface</span> Task {
+    id: <span class="hljs-built_in">number</span>, <span class="hljs-comment">//task id, autoincrement</span>
+    name: <span class="hljs-built_in">string</span>, <span class="hljs-comment">//task name</span>
+    geo_pos: [<span class="hljs-built_in">string</span>, <span class="hljs-built_in">number</span>], <span class="hljs-comment">//task location [latitude, longitude]</span>
+    map: <span class="hljs-built_in">string</span> <span class="hljs-comment">//map name</span>
+}
+
+<span class="hljs-keyword">interface</span> Game {
+    id: <span class="hljs-built_in">number</span>, <span class="hljs-comment">//game id (6 digit number)</span>
+    task_number: <span class="hljs-built_in">number</span>, <span class="hljs-comment">//number of tasks</span>
+    task_visible: <span class="hljs-built_in">boolean</span>, <span class="hljs-comment">//whether the tasks that done are visible to the players or not</span>
+    vote_time: <span class="hljs-built_in">number</span>, <span class="hljs-comment">//seconds</span>
+    anonymus_vote: <span class="hljs-built_in">boolean</span>, <span class="hljs-comment">//whether the votes are anonymus or not</span>
+    kill_cooldown: <span class="hljs-built_in">number</span>, <span class="hljs-comment">//seconds</span>
+    impostor_max: <span class="hljs-built_in">number</span>, <span class="hljs-comment">//max number of impostors</span>
+    emergencies: <span class="hljs-built_in">number</span>, <span class="hljs-comment">//number of emergencies can used by players</span>
+    status: <span class="hljs-built_in">number</span>, <span class="hljs-comment">//game status, 0: waiting for players, 1: game started, 2: voting, 3: game ended, 4: waiting for assamble</span>
+    map: <span class="hljs-built_in">string</span>, <span class="hljs-comment">//map name</span>
+}
+
+<span class="hljs-keyword">interface</span> Player {
+    id: <span class="hljs-built_in">number</span>, <span class="hljs-comment">//player id, autoincrement</span>
+    game_id: <span class="hljs-built_in">number</span>, <span class="hljs-comment">//game id (6 digit number)</span>
+    socket_id: <span class="hljs-built_in">string</span>, <span class="hljs-comment">//socket id</span>
+    name: <span class="hljs-built_in">string</span>, <span class="hljs-comment">//player name</span>
+    color: <span class="hljs-built_in">number</span>, <span class="hljs-comment">//player color (decimal, need to convert to hex)</span>
+    emergency: <span class="hljs-built_in">number</span>, <span class="hljs-comment">//number of emergencies used by player</span>
+    tasks: <span class="hljs-built_in">number</span>[], <span class="hljs-comment">//all tasks that player has (task ids)</span>
+    task_done: <span class="hljs-built_in">number</span>[], <span class="hljs-comment">//all tasks that player has done (task ids)</span>
+    team: <span class="hljs-built_in">boolean</span>, <span class="hljs-comment">//false: crewmate, true: impostor</span>
+    geo_pos: [<span class="hljs-built_in">string</span>, <span class="hljs-built_in">number</span>] <span class="hljs-comment">//player location [latitude, longitude]</span>
+}
+</div></code></pre>
+<hr>
+<blockquote>
+<p><strong>POST</strong>: api/manager/task_upload</p>
+</blockquote>
+<p>expected data:</p>
+<pre class="hljs"><code><div>{
+    task_name: &lt;<span class="hljs-built_in">string</span>:<span class="hljs-number">50</span>&gt;,
+    geo_pos: &lt;lat: &lt;double&gt;, lon: &lt;double&gt;&gt;,
+    map: &lt;<span class="hljs-built_in">string</span>:<span class="hljs-number">50</span>&gt; <span class="hljs-comment">//Map name</span>
+}
+Err <span class="hljs-number">400</span> -&gt; Empty value
+</div></code></pre>
+<hr>
+<blockquote>
+<p><strong>DELETE</strong>: api/manager/delete_task</p>
+</blockquote>
+<p>expected data:</p>
+<pre class="hljs"><code><div>{
+    task_id: &lt;int&gt;
+}
+
+Err <span class="hljs-number">400</span> -&gt; Null value
+</div></code></pre>
+<hr>
+<blockquote>
+<p><strong>GET</strong>: api/manager/get_tasks</p>
+</blockquote>
+<p>response:</p>
+<pre class="hljs"><code><div>{
+    message: &lt;Task[]&gt;
+}
+</div></code></pre>
+<hr>
+<blockquote>
+<p><strong>POST</strong>: /api/game/host/create_game</p>
+</blockquote>
+<p>Expected data:</p>
+<pre class="hljs"><code><div>{
+    username: &lt;<span class="hljs-built_in">string</span>&gt;
+}
+</div></code></pre>
+<p>response:</p>
+<pre class="hljs"><code><div>{
+    message: &lt;<span class="hljs-built_in">string</span>&gt;,
+    game_id: &lt;<span class="hljs-built_in">number</span>&gt;
+}
+</div></code></pre>
+<hr>
+<blockquote>
+<p><strong>POST</strong>: /api/game/join/join_game</p>
+</blockquote>
+<p>Expected data:</p>
+<pre class="hljs"><code><div>{
+    username: &lt;<span class="hljs-built_in">string</span>&gt;,
+    game_id: &lt;<span class="hljs-built_in">number</span>&gt;
+}
+</div></code></pre>
+<p>Res:</p>
+<pre class="hljs"><code><div>{
+    message: &lt;<span class="hljs-built_in">string</span>&gt;,
+    ok: &lt;<span class="hljs-built_in">boolean</span>&gt;
+}
+</div></code></pre>
+<hr>
+<blockquote>
+<p><strong>PUT</strong> api/game/host/settings/update</p>
+</blockquote>
+<p>Expected data:</p>
+<pre class="hljs"><code><div>{
+    game_id: &lt;<span class="hljs-built_in">number</span>&gt;, <span class="hljs-comment">//required</span>
+    user_id: &lt;<span class="hljs-built_in">number</span>&gt;, <span class="hljs-comment">//required</span>
+    task_num: &lt;<span class="hljs-built_in">number</span>&gt;, <span class="hljs-comment">//optional</span>
+    task_visibility: &lt;<span class="hljs-built_in">boolean</span>&gt;, <span class="hljs-comment">//optional</span>
+    vote_time: &lt;<span class="hljs-built_in">number</span>&gt;, <span class="hljs-comment">//optional, sec</span>
+    anonymus_vote: &lt;<span class="hljs-built_in">boolean</span>&gt;, <span class="hljs-comment">//optional</span>
+    kill_cooldown: &lt;<span class="hljs-built_in">number</span>&gt;, <span class="hljs-comment">//optional, sec</span>
+    impostor_max: &lt;<span class="hljs-built_in">number</span>&gt;, <span class="hljs-comment">//optional</span>
+    emergencies: &lt;<span class="hljs-built_in">number</span>&gt;, <span class="hljs-comment">//optional</span>
+    map: &lt;<span class="hljs-built_in">string</span>&gt;, <span class="hljs-comment">//optional, map name</span>
+}
+</div></code></pre>
+<p>res</p>
+<pre class="hljs"><code><div>{
+    message: &lt;<span class="hljs-built_in">string</span>&gt;
+}
+</div></code></pre>
+<hr>
+<blockquote>
+<p><strong>GET</strong>: /api/manager/maps</p>
+</blockquote>
+<p>res</p>
+<pre class="hljs"><code><div>{
+    message: &lt;<span class="hljs-built_in">string</span>&gt;,
+    maps: {map: &lt;<span class="hljs-built_in">string</span>&gt;}[]
+}
+</div></code></pre>
+<hr>
+<blockquote>
+<p><strong>GET</strong> /api/game/ingame/getPlayer?</p>
+</blockquote>
+<p>Expected query:</p>
+<pre class="hljs"><code><div>{
+    socket_id: &lt;<span class="hljs-built_in">string</span>&gt;,
+    user_id: &lt;<span class="hljs-built_in">number</span>&gt;
+    <span class="hljs-comment">// one of them is required</span>
+}
+</div></code></pre>
+<p>res:</p>
+<pre class="hljs"><code><div>{
+    message: &lt;<span class="hljs-built_in">string</span>&gt;,
+    player: &lt;Player|<span class="hljs-literal">undefined</span>&gt; <span class="hljs-comment">//undefined if error</span>
+}
+</div></code></pre>
+<hr>
+<blockquote>
+<p><strong>GET</strong> /api/game/ingame/getPlayers</p>
+</blockquote>
+<p>Expected query:</p>
+<pre class="hljs"><code><div>{
+    game_id: &lt;<span class="hljs-built_in">number</span>&gt; <span class="hljs-comment">//required</span>
+}
+</div></code></pre>
+<p>res:</p>
+<pre class="hljs"><code><div>{
+    message: &lt;<span class="hljs-built_in">string</span>&gt;
+    players: &lt;Player[]|<span class="hljs-literal">undefined</span>&gt; <span class="hljs-comment">//undefined if error</span>
+}
+</div></code></pre>
+<h1 id="websockets">Websockets</h1>
+<h2 id="server-event-listeners">Server event listeners</h2>
+<blockquote>
+<p>create_game</p>
+</blockquote>
+<p>First it needs to be validated with the <code>/api/game/host/create_game</code> POST method.<br>
+If it returns with 200 status, the <code>create_game</code> event can be emited.</p>
+<p>Expected data:</p>
+<pre class="hljs"><code><div>{
+    game_id: &lt;<span class="hljs-built_in">number</span>&gt;,
+    username: &lt;<span class="hljs-built_in">string</span>&gt;
+}
+</div></code></pre>
+<hr>
+<blockquote>
+<p>join_game</p>
+</blockquote>
+<p>First it needs to be validated with the <code>/api/game/join/join_game</code> POST method.<br>
+If it returns with 200 status, the <code>join_game</code> event can be emited.</p>
+<p>Expected data:</p>
+<pre class="hljs"><code><div>{
+    game_id: &lt;<span class="hljs-built_in">number</span>&gt;
+    name: &lt;<span class="hljs-built_in">string</span>&gt;
+}
+</div></code></pre>
+<hr>
+<blockquote>
+<p>start_game</p>
+</blockquote>
+<p>Only game host: <Player> can emit it with valid return value</p>
+<p>Expected data:</p>
+<pre class="hljs"><code><div>{
+    game_id: &lt;<span class="hljs-built_in">number</span>&gt;,
+    user_id: &lt;numbery&gt;,
+}
+</div></code></pre>
+<hr>
+<blockquote>
+<p>start_vote</p>
+</blockquote>
+<p>Only game host: <Player> can emit it with valid return value</p>
+<p>Expected data:</p>
+<pre class="hljs"><code><div>{
+    game_id: &lt;<span class="hljs-built_in">number</span>&gt;,
+    user_id: &lt;<span class="hljs-built_in">number</span>&gt;
+}
+</div></code></pre>
+<hr>
+<blockquote>
+<p>vote</p>
+</blockquote>
+<p>Expected data:</p>
+<pre class="hljs"><code><div>{
+    game_id: &lt;<span class="hljs-built_in">number</span>&gt;,
+    user_id: &lt;<span class="hljs-built_in">number</span>&gt;,
+    vote_id: &lt;<span class="hljs-built_in">number</span>&gt;, <span class="hljs-comment">//player id to vote for, -1 to skip</span>
+}
+</div></code></pre>
+<hr>
+<blockquote>
+<p>kill</p>
+</blockquote>
+<p>Expected data:</p>
+<pre class="hljs"><code><div>{
+    game_id: &lt;<span class="hljs-built_in">number</span>&gt;,
+    user_id: &lt;<span class="hljs-built_in">number</span>&gt;,
+    target_id: &lt;<span class="hljs-built_in">number</span>&gt;
+}
+</div></code></pre>
+<hr>
+<blockquote>
+<p>task_done</p>
+</blockquote>
+<p>Expected data:</p>
+<pre class="hljs"><code><div>{
+    game_id: &lt;<span class="hljs-built_in">number</span>&gt;,
+    user_id: &lt;<span class="hljs-built_in">number</span>&gt;,
+    task_id: &lt;<span class="hljs-built_in">number</span>&gt;
+}
+</div></code></pre>
+<hr>
+<blockquote>
+<p>report</p>
+</blockquote>
+<p>Expected data:</p>
+<pre class="hljs"><code><div>{
+    game_id: &lt;<span class="hljs-built_in">number</span>&gt;,
+    player_id: &lt;<span class="hljs-built_in">number</span>&gt;, <span class="hljs-comment">//player who reported</span>
+    dead_id: &lt;<span class="hljs-built_in">number</span>&gt; <span class="hljs-comment">//dead player</span>
+}
+</div></code></pre>
+<hr>
+<blockquote>
+<p>emergency</p>
+</blockquote>
+<p>Expected data:</p>
+<pre class="hljs"><code><div>{
+    game_id: &lt;<span class="hljs-built_in">number</span>&gt;,
+    player_id: &lt;<span class="hljs-built_in">number</span>&gt;, <span class="hljs-comment">//player who called meeting</span>
+}
+</div></code></pre>
+<h2 id="server-emits">Server emits</h2>
+<blockquote>
+<p>player_disconnected</p>
+</blockquote>
+<p>res</p>
+<pre class="hljs"><code><div>{
+    id: &lt;<span class="hljs-built_in">number</span>&gt;, <span class="hljs-comment">//player id</span>
+    socket_id: &lt;<span class="hljs-built_in">string</span>&gt;, <span class="hljs-comment">//disconnected players socket id</span>
+    username: &lt;<span class="hljs-built_in">string</span>&gt;,
+}
+</div></code></pre>
+<hr>
+<blockquote>
+<p>create_game</p>
+</blockquote>
+<p>res:</p>
+<pre class="hljs"><code><div>{
+    code: &lt;<span class="hljs-built_in">number</span>&gt;, <span class="hljs-comment">//status code</span>
+    message: &lt;<span class="hljs-built_in">string</span>&gt;,
+    data: {
+        game: &lt;Game&gt;,
+        player: &lt;Player&gt;
+    }
+}
+</div></code></pre>
+<hr>
+<blockquote>
+<p>join_game</p>
+</blockquote>
+<p>res:</p>
+<pre class="hljs"><code><div>{
+    code: &lt;<span class="hljs-built_in">number</span>&gt;, <span class="hljs-comment">//status code</span>
+    message: &lt;<span class="hljs-built_in">string</span>&gt;,
+    players: &lt;Player[]&gt;
+}
+</div></code></pre>
+<hr>
+<blockquote>
+<p>update_players</p>
+</blockquote>
+<p>res:</p>
+<pre class="hljs"><code><div>{
+    username: &lt;<span class="hljs-built_in">string</span>&gt;,
+    color: &lt;<span class="hljs-built_in">number</span>&gt;,
+    socket_id: &lt;<span class="hljs-built_in">string</span>&gt;,
+    id: &lt;<span class="hljs-built_in">number</span>&gt;
+}
+</div></code></pre>
+<hr>
+<blockquote>
+<p>start_game</p>
+</blockquote>
+<p>res:</p>
+<pre class="hljs"><code><div>{
+    code: &lt;<span class="hljs-built_in">number</span>&gt;,
+    message: &lt;<span class="hljs-built_in">string</span>&gt;
+}
+</div></code></pre>
+<hr>
+<blockquote>
+<p>role_update</p>
+</blockquote>
+<p>res:</p>
+<pre class="hljs"><code><div>{
+    player: &lt;Player&gt;,
+    impostors: &lt;<span class="hljs-built_in">number</span>[]&gt;, <span class="hljs-comment">//the ids of the impostors</span>
+}
+</div></code></pre>
+<hr>
+<blockquote>
+<p>game_started</p>
+</blockquote>
+<pre class="hljs"><code><div>{
+    code: &lt;<span class="hljs-built_in">number</span>&gt;,
+    message: &lt;<span class="hljs-built_in">string</span>&gt;
+}
+</div></code></pre>
+<hr>
+<blockquote>
+<p>start_vote</p>
+</blockquote>
+<p>Emitted after the <code>start_vote</code> listener triggerd.</p>
+<p>res:</p>
+<pre class="hljs"><code><div>{
+    code: &lt;<span class="hljs-built_in">number</span>&gt;,
+    message: &lt;<span class="hljs-built_in">string</span>&gt;,
+    vote_time: &lt;<span class="hljs-built_in">number</span>&gt;, <span class="hljs-comment">//in secounds</span>
+}
+</div></code></pre>
+<hr>
+<blockquote>
+<p>vote</p>
+</blockquote>
+<p>Emitted as a response for listener <code>vote</code>.</p>
+<p>res:</p>
+<pre class="hljs"><code><div>{
+    code: &lt;<span class="hljs-built_in">number</span>&gt;, <span class="hljs-comment">//success on 200</span>
+    message: &lt;<span class="hljs-built_in">string</span>&gt;
+}
+</div></code></pre>
+<hr>
+<blockquote>
+<p>vote_placed</p>
+</blockquote>
+<p>Should listen constant when voting is started.<br>
+Returns with any votes that placed to all player.</p>
+<p>res:</p>
+<pre class="hljs"><code><div>{
+    code: &lt;<span class="hljs-built_in">number</span>&gt;,
+    message: &lt;<span class="hljs-built_in">string</span>&gt;,
+    voter: &lt;Player|<span class="hljs-built_in">number</span>&gt;, <span class="hljs-comment">//if voting is anonim, it returns with -1</span>
+    voted: &lt;Player|<span class="hljs-built_in">number</span>&gt;, <span class="hljs-comment">//vote is skip, returns with -1</span>
+}
+</div></code></pre>
+<hr>
+<blockquote>
+<p>vote_result</p>
+</blockquote>
+<p>Emitted if voting time is over (by the server) or if all alive players have voted.<br>
+Should listen constantly during voting.</p>
+<p>res:</p>
+<pre class="hljs"><code><div>{
+    code: &lt;<span class="hljs-built_in">number</span>&gt;, <span class="hljs-comment">//200 success</span>
+    message: &lt;<span class="hljs-built_in">string</span>&gt;,
+    skip: &lt;<span class="hljs-built_in">boolean</span>&gt;,
+    player: &lt;Player|<span class="hljs-built_in">number</span>&gt; <span class="hljs-comment">//player type if a player got out voted, -1 if skip</span>
+}
+</div></code></pre>
+<hr>
+<blockquote>
+<p>kill</p>
+</blockquote>
+<p>Emitted as a response to listener <code>kill</code>.<br>
+res:</p>
+<pre class="hljs"><code><div>{
+    code: &lt;<span class="hljs-built_in">number</span>&gt;,
+    message: &lt;<span class="hljs-built_in">string</span>&gt;
+}
+</div></code></pre>
+<hr>
+<blockquote>
+<p>got_killed</p>
+</blockquote>
+<p>Emitted to the player who got killed<br>
+Should listen to it constantly.</p>
+<pre class="hljs"><code><div>{
+    player:&lt;Player&gt; <span class="hljs-comment">//the impostor, who killed</span>
+}
+</div></code></pre>
+<hr>
+<blockquote>
+<p>game_end</p>
+</blockquote>
+<p>Emitted when the server calculates that one of the team has won.<br>
+It triggerd by listener <code>kill</code>, <code>disconnect</code>, <code>task_done</code> and <code>vote</code>.</p>
+<pre class="hljs"><code><div>{
+    code: &lt;<span class="hljs-built_in">number</span>&gt;, <span class="hljs-comment">//200 when crewmates won, 201 when impostors won</span>
+    message: &lt;<span class="hljs-built_in">string</span>&gt;, 
+    impostors: &lt;Player[]&gt;, <span class="hljs-comment">//list of the impostors.</span>
+}
+</div></code></pre>
+<hr>
+<blockquote>
+<p>task_done</p>
+</blockquote>
+<p>Emitted as a response for listener <code>task_done</code></p>
+<pre class="hljs"><code><div>{
+    code: &lt;<span class="hljs-built_in">number</span>&gt;, <span class="hljs-comment">//200 when success</span>
+    message: &lt;<span class="hljs-built_in">string</span>&gt;
+}
+</div></code></pre>
+<hr>
+<blockquote>
+<p>task_done_by_crew</p>
+</blockquote>
+<p>Emitted to players in game if the <code>task_visible</code> option is on true.</p>
+<pre class="hljs"><code><div>{
+    player_id: &lt;<span class="hljs-built_in">number</span>&gt;, <span class="hljs-comment">//player who did task</span>
+    task_id: &lt;<span class="hljs-built_in">number</span>&gt; 
+}
+</div></code></pre>
+<hr>
+<blockquote>
+<p>report</p>
+</blockquote>
+<p>Emitted as a response for listener <code>report</code></p>
+<pre class="hljs"><code><div>{
+    code: &lt;<span class="hljs-built_in">number</span>&gt;, <span class="hljs-comment">//success on 200</span>
+    message: &lt;<span class="hljs-built_in">string</span>&gt;
+}
+</div></code></pre>
+<hr>
+<blockquote>
+<p>reported_player</p>
+</blockquote>
+<p>Emitted to all player.<br>
+Game stops, but players can't vote.<br>
+The host player has to trigger the <code>start_vote</code> event.</p>
+<pre class="hljs"><code><div>{
+    message: &lt;<span class="hljs-built_in">string</span>&gt;,
+    reporter: &lt;Player&gt;, <span class="hljs-comment">//player who reported the dead player</span>
+    reported: &lt;Player&gt; <span class="hljs-comment">//dead player</span>
+}
+</div></code></pre>
+<hr>
+<blockquote>
+<p>emergency</p>
+</blockquote>
+<p>Emitted as a response for listener <code>emergency</code></p>
+<pre class="hljs"><code><div>{
+    code: &lt;<span class="hljs-built_in">number</span>&gt;, <span class="hljs-comment">//success on 200</span>
+    message: &lt;<span class="hljs-built_in">string</span>&gt;
+}
+</div></code></pre>
+<hr>
+<blockquote>
+<p>emergency_called</p>
+</blockquote>
+<p>Emitted to all player.<br>
+Game stops, but players can't vote.<br>
+The host player has to trigger the <code>start_vote</code> event.</p>
+<pre class="hljs"><code><div>{
+    message: &lt;<span class="hljs-built_in">string</span>&gt;,
+    reporter: &lt;Player&gt;, <span class="hljs-comment">//player who called the meeting</span>
+}
+</div></code></pre>
+<h3 id="todos">TODOs</h3>
+<ol>
+<li>
+<p>sabotages</p>
+<ul>
+<li>communication [can't see task and map] =&gt; [reconnect to wifi with some stupid task]</li>
+<li>electrics [can't call emergency meeting] =&gt; [idk]</li>
+<li>hacks [impostor can see players on map] =&gt; [players have to solve some basic math task]</li>
+<li>something that kills players</li>
+</ul>
+</li>
+<li>
+<p>cam system</p>
+<ul>
+<li>player can see other players for 5sec and others can see that someone is on cams</li>
+<li>cooldown: 2min</li>
+</ul>
+</li>
+<li>
+<p>visual task?</p>
+<ul>
+<li>idk how to create them</li>
+</ul>
+</li>
+<li>
+<p>color settings for players</p>
+<ul>
+<li>preloaded colors</li>
+</ul>
+</li>
+</ol>
+<hr>
+<p>API by <strong><code>Bánszky Koppány</code></strong></p>
+
+
+</body>
+</html>
