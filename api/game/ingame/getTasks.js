@@ -3,21 +3,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const export_db_connection_1 = __importDefault(require("../../database/export_db_connection"));
-const utility_1 = require("../../source/utility");
+const export_db_connection_1 = __importDefault(require("../../../database/export_db_connection"));
 exports.default = {
-    path: '/api/manager/task_upload',
-    method: 'POST',
+    path: '/api/game/ingame/getTask',
+    method: 'GET',
     handler: function (req, res) {
-        const { task_name, type, connect_id, geo_pos, map } = req.body;
-        // Check if values are empty
-        if ((0, utility_1.isEmpty)(task_name) || (geo_pos == null) || (0, utility_1.isEmpty)(map)) {
+        const { task_id } = req.query;
+        if ((task_id == undefined || task_id == null)) {
             res.status(400).send({
                 message: 'Values cannot be empty'
             });
             return 400;
         }
-        const sql = `INSERT INTO Tasks (name, type, connect_id, geo_pos, map) VALUES ('${task_name}', ${type}, ${connect_id}, '${JSON.stringify(geo_pos)}', '${map}')`;
+        const numID = task_id;
+        const sql = `SELECT * FROM Tasks WHERE id = ${numID}`;
         export_db_connection_1.default.query(sql, (err, result) => {
             if (err) {
                 console.error(err);
@@ -27,8 +26,17 @@ exports.default = {
                 return 500;
             }
             ;
+            if (result.length == 0) {
+                res.status(404).send({
+                    message: 'Player not found'
+                });
+                return 404;
+            }
+            const task = result[0];
+            task.geo_pos = JSON.parse(task.geo_pos /* || JSON.stringify({latitude: 0, longitude: 0})*/);
             res.status(200).send({
-                message: 'Task uploaded successfully',
+                message: 'Task retrieved successfully',
+                task: task
             });
             return 200;
         });

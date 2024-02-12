@@ -22,25 +22,30 @@ exports.default = (game_id, force_vote) => {
             noSkip += player.votes;
         });
         //check if all players voted or if the time is over, so force_vote is true
-        if (votes + 1 < players.length && !force_vote)
+        if ((votes < players.length) && !force_vote)
             return;
-        let skip = Math.floor(votes / 2) >= noSkip; //check if skip is needed for sure
+        let skip = Math.round(votes / 2) >= noSkip; //check if skip is needed for sure
         let max = -1;
         let outVoted = undefined;
         let i = 0;
         //find the player with the most votes
-        while (!skip && i < players.length) {
-            if (players[i].votes == max)
-                skip = true; //if there are more than one player with the most votes, skip
+        while (i < players.length) {
+            console.log("Player votes:", players[i].votes);
+            if (players[i].votes == max) {
+                skip = true;
+                console.log("0: skip");
+            } //if there are more than one player with the most votes, skip
             if (players[i].votes > max) {
                 max = players[i].votes;
                 outVoted = players[i];
+                skip = false;
             }
             i++;
         }
         //check if skip is needed
         //if there are more people who voted to skip than the max votes, skip
         if ((votes - noSkip) >= max) {
+            console.log("1: skip");
             skip = true;
         }
         //send the result to the players
@@ -55,11 +60,17 @@ exports.default = (game_id, force_vote) => {
                     console.error(err);
                     return;
                 }
-                (0, game_end_1.default)(game_id);
+                (0, game_end_1.default)(game_id, false);
             });
         }
         //reset the votes
         export_db_connection_1.default.query(`UPDATE Players SET voted = 0, votes = 0 WHERE game_id = ${game_id}`, (err, result) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+        });
+        export_db_connection_1.default.query(`UPDATE Games SET status = 1 WHERE id = ${game_id}`, (err, result) => {
             if (err) {
                 console.error(err);
                 return;

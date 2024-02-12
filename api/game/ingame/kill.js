@@ -56,6 +56,9 @@ const kill = {
         }));
         if (player_promise == null)
             return;
+        player_promise.tasks = JSON.parse(player_promise.tasks);
+        player_promise.tasks_done = JSON.parse(player_promise.tasks_done || "[]");
+        player_promise.geo_pos = JSON.parse(player_promise.geo_pos || JSON.stringify({ latitude: 0, longitude: 0 }));
         const player = player_promise;
         //check if target is in the game and alive
         const target_promise = yield new Promise((resolve, reject) => export_db_connection_1.default.query(`SELECT * FROM Players WHERE id = ${target_id} AND game_id = ${game_id} AND dead = 0`, (err, result) => {
@@ -72,6 +75,9 @@ const kill = {
         }));
         if (target_promise == null)
             return;
+        target_promise.tasks = JSON.parse(target_promise.tasks);
+        target_promise.tasks_done = JSON.parse(target_promise.tasks_done || "[]");
+        target_promise.geo_pos = JSON.parse(target_promise.geo_pos || JSON.stringify({ latitude: 0, longitude: 0 }));
         const target = target_promise;
         //check if player is impostor
         if (!player.team) {
@@ -90,8 +96,9 @@ const kill = {
                 return;
             }
             socket.emit('kill', { code: 200, message: 'Killed successfully' });
-            websocket_1.io.in(target.socket_id).emit('got_killed', { player });
-            (0, game_end_1.default)(game_id);
+            console.log(target.socket_id, target.name);
+            websocket_1.io.to(target.socket_id).emit('got_killed', { player });
+            (0, game_end_1.default)(game_id, false);
         });
     })
 };

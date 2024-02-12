@@ -24,27 +24,28 @@ const create_new_game = {
                 return;
             }
             if (game.length == 0) {
-                socket.emit('create_game', { code: 400, message: 'Game does not exist' });
+                socket.emit('create_game', { code: 404, message: 'Game does not exist' });
                 return;
             }
-            const insertplayer_sql = `INSERT INTO Players (game_id, socket_id, name, color, host) VALUES (${game_id}, '${socket.id}', '${username}', 0, 1)`;
+            const insertplayer_sql = `INSERT INTO Players (game_id, socket_id, name, color, host, tasks, tasks_done) VALUES (${game_id}, '${socket.id}', '${username}', 10027008, 1, '[]', '[]')`;
             export_db_connection_1.default.query(insertplayer_sql, (err, player_res) => {
                 if (err) {
                     console.error(err);
                     socket.emit('create_game', { code: 500, message: 'Internal server error' });
                     return;
                 }
+                const gameType = game[0];
                 socket.emit('create_game', {
                     code: 200,
                     message: 'Game created successfully',
                     data: {
-                        game: game[0],
+                        game: gameType,
                         player: {
                             id: player_res.insertId,
                             game_id: game_id,
                             socket_id: socket.id,
                             name: username,
-                            color: 0,
+                            color: 10027008,
                             emergency: 0,
                             tasks: [],
                             task_done: [],

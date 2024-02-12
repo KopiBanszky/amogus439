@@ -31,7 +31,6 @@ const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
 const API = __importStar(require("./api/exports"));
-const websocket_1 = require("./api/game/websocket");
 const app = (0, express_1.default)();
 exports.app = app;
 app.use(express_1.default.json());
@@ -42,12 +41,17 @@ const port = 8080;
 exports.port = port;
 app.listen(port, () => console.info(`Az app fut ezen a porton: ${port}\nhttp://13.53.185.194:${port}/`));
 app.use(express_1.default.static(__dirname + '/public'));
-websocket_1.io_server.server.listen(websocket_1.io_server.websocket_port, () => console.info(`A websocket szerver ezen a porton fut: ${websocket_1.io_server.websocket_port}\nhttp://13.53.185.194:${websocket_1.io_server.websocket_port}/`));
+// io_server.server.listen(io_server.websocket_port, () => console.info(`A websocket szerver ezen a porton fut: ${ io_server.websocket_port }\nhttp://13.53.185.194:${ io_server.websocket_port }/`));
 // open express connection
 // app.get(API.default.get_tasks.path, (req:any, res:any) => API.default.get_tasks.handler(req, res));
+app.get("/check", (req, res) => res.json({
+    code: 200,
+    status: true,
+    message: "Server is running"
+}));
 for (let route of Object.values(API.default)) {
     // const route:apiMethod = API.default[i];
-    // console.log(route.path, route.method);
+    console.log(route.path, route.method);
     if (route.method && route.method == 'POST') {
         app.post(route.path, urlencodedParser, route.handler);
     }
@@ -61,3 +65,5 @@ for (let route of Object.values(API.default)) {
         app.put(route.path, route.handler);
     }
 }
+const websocket_1 = require("./api/game/websocket");
+websocket_1.server.listen(80, () => console.info(`Az http server fut ezen a porton: ${80}\nhttp://localhost/`));

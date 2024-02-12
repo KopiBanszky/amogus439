@@ -21,6 +21,7 @@ const task_done = {
         const game_id = args.game_id;
         const user_id = args.user_id;
         const task_id = args.task_id;
+        const task_code = args.task_code;
         //check if game exists
         const game_promise = yield new Promise((resolve, reject) => export_db_connection_1.default.query(`SELECT * FROM Games WHERE id = ${game_id}`, (err, result) => {
             if (err) {
@@ -57,6 +58,10 @@ const task_done = {
         if (player_promise == null)
             return;
         const player = player_promise;
+        if (player.team) {
+            socket.emit('task_done', { code: 205, message: 'You are an impostor, the task does not count', id: task_id });
+            return;
+        }
         //check if task exists
         const task_promise = yield new Promise((resolve, reject) => export_db_connection_1.default.query(`SELECT * FROM Tasks WHERE id = ${task_id}`, (err, result) => {
             if (err) {
@@ -73,23 +78,36 @@ const task_done = {
         if (task_promise == null)
             return;
         const task = task_promise;
+        if (task.code != task_code) {
+            socket.emit('task_done', { code: 402, message: 'Helytelen kód' });
+            return;
+        }
+        if (task.type == 1) {
+            export_db_connection_1.default.query(`SELECT * FROM Tasks WHERE connect_id = ${task.id}`, (err, result) => {
+                result[0].geo_pos = JSON.parse(result[0].geo_pos);
+                socket.emit('task_done', { code: 203, message: 'Ez egy kettős task, meg kell csinálnod a másikat is', id: task.id, new_task: result[0] });
+            });
+            return;
+        }
+        player.tasks_done = JSON.parse(player.tasks_done.toString() || JSON.stringify([]));
         //check if task is already done
-        if (player.task_done.includes(task_id)) {
+        if (player.tasks_done.includes(task_id)) {
             socket.emit('task_done', { code: 403, message: 'Task already done' });
             return;
         }
         //set task as done
-        player.task_done.push(task_id);
-        export_db_connection_1.default.query(`UPDATE Players SET task_done = '${JSON.stringify(player.task_done)}' WHERE id = ${player.id}`, (err, result) => {
+        player.tasks_done.push(task_id);
+        export_db_connection_1.default.query(`UPDATE Players SET tasks_done = '${JSON.stringify(player.tasks_done)}' WHERE id = ${player.id}`, (err, result) => {
             if (err) {
                 console.error(err);
                 socket.emit('task_done', { code: 500, message: 'Internal server error' });
                 return;
             }
-            socket.emit('task_done', { code: 200, message: 'Task done' });
-            if (game.task_visible)
+            socket.emit('task_done', { code: 200, message: 'Task done', id: task_id });
+            console.log(game.task_visibility, game_id);
+            if (game.task_visibility)
                 websocket_1.io.in(`Game_${game_id}`).emit('task_done_by_crew', { player_id: player.id, task_id: task_id });
-            (0, game_end_1.default)(game_id);
+            (0, game_end_1.default)(game_id, false);
         });
     })
 };

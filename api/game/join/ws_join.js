@@ -28,7 +28,7 @@ const create_new_player = {
     event: 'join_game',
     callback: (args, socket) => __awaiter(void 0, void 0, void 0, function* () {
         const game_id = args.game_id;
-        const name = args.name;
+        const name = args.username;
         const gameStarted = new Promise((resolve, reject) => export_db_connection_1.default.query(`SELECT status FROM Games WHERE id = ${game_id}`, (err, result) => {
             if (err) {
                 console.error(err);
@@ -52,21 +52,28 @@ const create_new_player = {
                 console.error(err);
                 return;
             }
-            let color = utility_1.COLORS[(0, utility_1.randomNum)(0, utility_1.COLORS.length - 1)];
-            players_res.map((player) => {
-                if (player.color == color) {
-                    color = utility_1.COLORS[(0, utility_1.randomNum)(0, utility_1.COLORS.length - 1)];
+            for (let player of players_res) {
+                if (player.name == name) {
+                    socket.emit('join_game', { code: 401, message: 'Username already taken' });
+                    return;
                 }
-            });
-            export_db_connection_1.default.query(`INSERT INTO Players (game_id, socket_id, name, color) VALUES (${game_id}, '${socket.id}', '${name}', ${color})`, (err, result) => {
+            }
+            ;
+            let color = utility_1.COLORS[(0, utility_1.randomNum)(0, utility_1.COLORS.length - 1)];
+            // players_res.map((player:Player) => {
+            //     if(player.color == color){
+            //         color = COLORS[randomNum(0, COLORS.length - 1)];
+            //     }
+            // });
+            while (players_res.find((player) => player.color == color) || color == 0) {
+                color = utility_1.COLORS[(0, utility_1.randomNum)(0, utility_1.COLORS.length - 1)];
+            }
+            export_db_connection_1.default.query(`INSERT INTO Players (game_id, socket_id, name, color, tasks, tasks_done) VALUES (${game_id}, '${socket.id}', '${name}', ${color}, '[]', '[]')`, (err, result) => {
                 if (err) {
                     console.error(err);
                     socket.emit('join_game', { code: 500, message: 'Internal server error' });
                     return;
                 }
-                socket.emit('join_game', { code: 200, message: 'Joined successfully',
-                    players: players_res,
-                });
                 const player = {
                     id: result.insertId,
                     game_id: game_id,
@@ -75,7 +82,7 @@ const create_new_player = {
                     color: color,
                     emergency: 0,
                     tasks: [],
-                    task_done: [],
+                    tasks_done: [],
                     team: false,
                     geo_pos: { latitude: 0, longitude: 0 },
                     dead: false,
@@ -83,6 +90,10 @@ const create_new_player = {
                     votes: 0,
                     voted: false,
                 };
+                players_res.push(player);
+                socket.emit('join_game', { code: 200, message: 'Joined successfully',
+                    players: players_res,
+                });
                 join_room(`Game_${game_id}`, socket);
                 update_players(game_id, player, socket.id, result.insertId);
             });

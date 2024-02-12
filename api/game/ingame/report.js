@@ -16,7 +16,7 @@ const websocket_1 = require("../websocket");
 const export_db_connection_1 = __importDefault(require("../../../database/export_db_connection"));
 const report = {
     event: 'report',
-    callback: (socket, data) => __awaiter(void 0, void 0, void 0, function* () {
+    callback: (data, socket) => __awaiter(void 0, void 0, void 0, function* () {
         const { game_id, player_id, dead_id } = data;
         const game_prom = yield new Promise((resolve, reject) => export_db_connection_1.default.query(`SELECT * FROM Games WHERE id = ${game_id}`, (err, result) => {
             if (err) {
@@ -39,7 +39,7 @@ const report = {
             socket.emit('report', { code: 403, message: 'Game is not running' });
             return;
         }
-        const player_prom = yield new Promise((resolve, reject) => export_db_connection_1.default.query(`SELECT * FROM Players WHERE player_id = ${player_id}`, (err, result) => {
+        const player_prom = yield new Promise((resolve, reject) => export_db_connection_1.default.query(`SELECT * FROM Players WHERE id = ${player_id}`, (err, result) => {
             if (err) {
                 resolve(null);
                 socket.emit('report', { code: 500, message: 'Error in database' });
@@ -55,12 +55,15 @@ const report = {
         }));
         if (player_prom == null)
             return;
+        player_prom.tasks = JSON.parse(player_prom.tasks);
+        player_prom.tasks_done = JSON.parse(player_prom.tasks_done || "[]");
+        player_prom.geo_pos = JSON.parse(player_prom.geo_pos || JSON.stringify({ latitude: 0, longitude: 0 }));
         const player = player_prom;
         if (player.dead) {
             socket.emit('report', { code: 403, message: 'You are already dead' });
             return;
         }
-        const deadPlayer_prom = yield new Promise((resolve, reject) => export_db_connection_1.default.query(`SELECT * FROM Players WHERE player_id = ${dead_id}`, (err, result) => {
+        const deadPlayer_prom = yield new Promise((resolve, reject) => export_db_connection_1.default.query(`SELECT * FROM Players WHERE id = ${dead_id}`, (err, result) => {
             if (err) {
                 resolve(null);
                 socket.emit('report', { code: 500, message: 'Error in database' });
@@ -76,18 +79,21 @@ const report = {
         }));
         if (deadPlayer_prom == null)
             return;
+        deadPlayer_prom.tasks = JSON.parse(deadPlayer_prom.tasks);
+        deadPlayer_prom.tasks_done = JSON.parse(deadPlayer_prom.tasks_done || "[]");
+        deadPlayer_prom.geo_pos = JSON.parse(deadPlayer_prom.geo_pos || JSON.stringify({ latitude: 0, longitude: 0 }));
         const deadPlayer = deadPlayer_prom;
         if (!deadPlayer.dead) {
             socket.emit('report', { code: 403, message: 'Player is not dead' });
             return;
         }
-        export_db_connection_1.default.query(`UPDATE Games SET status = 4 WHERE game_id = ${game_id}`, (err, result) => {
+        export_db_connection_1.default.query(`UPDATE Games SET status = 4 WHERE id = ${game_id}`, (err, result) => {
             if (err) {
                 socket.emit('report', { code: 500, message: 'Error in database' });
                 return;
             }
             socket.emit('report', { code: 200, message: 'Reported' });
-            websocket_1.io.to(`Game_${game_id}`).emit('reported_player', { message: "Player reported", reporter: player, reported: deadPlayer });
+            websocket_1.io.in(`Game_${game_id}`).emit('reported_player', { message: "Player reported", reporter: player, reported: deadPlayer });
         });
     })
 };

@@ -22,7 +22,7 @@ const vote = {
         const user_id = args.user_id;
         const vote_id = args.vote_id; //player id to vote for, -1 to skip
         //check if voting is enabled
-        const isVoting = yield new Promise((resolve, reject) => export_db_connection_1.default.query(`SELECT status FROM Games WHERE id = ${game_id}`, (err, result) => {
+        const isVoting = yield new Promise((resolve, reject) => export_db_connection_1.default.query(`SELECT status, anonymus_vote FROM Games WHERE id = ${game_id}`, (err, result) => {
             if (err) {
                 console.error(err);
                 resolve(false);
@@ -35,7 +35,7 @@ const vote = {
                 socket.emit('vote', { code: 403, message: 'Game not in voting phase' });
                 resolve(false);
             }
-            resolve(true);
+            resolve(result[0]);
         }));
         if (isVoting == false)
             return;
@@ -73,17 +73,22 @@ const vote = {
                 playerToVote.votes++;
             }
             //check if anonymous vote is enabled
-            yield new Promise((resolve, reject) => export_db_connection_1.default.query(`SELECT anonymous_vote FROM Games WHERE id = ${game_id}`, (err, result) => {
+            const anonymous_vote = (isVoting.anonymus_vote == 1);
+            export_db_connection_1.default.query(`UPDATE Players SET voted = 1 WHERE id = ${user_id}`, (err, result) => {
                 if (err) {
                     console.error(err);
-                    resolve(false);
+                    return;
                 }
-                const anonymous_vote = result[0].anonymous_vote;
-                //send the vote to the players
-                socket.emit('vote', { code: 200, message: 'Voted successfully' });
-                websocket_1.io.in(`Game_${game_id}`).emit('vote_placed', { code: 200, message: 'Voted successfully', voter: (anonymous_vote ? -1 : playerWhoVote), voted: playerToVote || -1 });
-                resolve(true);
-            }));
+            });
+            export_db_connection_1.default.query(`UPDATE Players SET votes = ${(playerToVote === null || playerToVote === void 0 ? void 0 : playerToVote.votes) || 1} WHERE id = ${vote_id}`, (err, result) => {
+                if (err) {
+                    console.error(err);
+                    return;
+                }
+            });
+            //send the vote to the players
+            socket.emit('vote', { code: 200, message: 'Voted successfully' });
+            websocket_1.io.in(`Game_${game_id}`).emit('vote_placed', { code: 200, message: 'Voted successfully', voter: (anonymous_vote ? playerWhoVote : -1), voted: playerToVote || -1 });
             //check if all players voted
             (0, end_vote_1.default)(game_id, false);
         }));

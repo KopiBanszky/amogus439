@@ -10,6 +10,10 @@ const join_game_1 = __importDefault(require("./game/join/join_game"));
 const create_game_1 = __importDefault(require("./game/host/create_game"));
 const update_1 = __importDefault(require("./game/host/settings/update"));
 const maps_1 = __importDefault(require("./manager/maps"));
+const getPlayer_1 = __importDefault(require("./game/ingame/getPlayer"));
+const getPlayers_1 = __importDefault(require("./game/ingame/getPlayers"));
+const getTasks_1 = __importDefault(require("./game/ingame/getTasks"));
+const login_1 = __importDefault(require("./manager/login"));
 exports.default = {
     task_upload: task_upload_1.default,
     get_tasks: get_tasks_1.default,
@@ -17,5 +21,9 @@ exports.default = {
     join_game: join_game_1.default,
     create_game: create_game_1.default,
     update: update_1.default,
-    maps: maps_1.default
+    maps: maps_1.default,
+    getPlayer: getPlayer_1.default,
+    getPlayers: getPlayers_1.default,
+    getTasks: getTasks_1.default,
+    login: login_1.default,
 };

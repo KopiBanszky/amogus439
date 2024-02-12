@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const utility_1 = require("../../../../source/utility");
 const export_db_connection_1 = __importDefault(require("../../../../database/export_db_connection"));
 const isHost_1 = __importDefault(require("../isHost"));
 exports.default = {
@@ -30,12 +31,16 @@ exports.default = {
             let sqlVariables = "";
             let x = 0;
             const bodyKeys = Object.keys(req.body);
+            const updatedKeys = [];
             for (let i of bodyKeys) {
                 if (!options.includes(i))
                     continue;
+                if ((0, utility_1.isEmpty)(i))
+                    continue;
                 if (i == "map")
                     req.body[i] = `'${req.body[i]}'`;
-                sqlVariables += `${i} = ${req.body[i]}${x == bodyKeys.length - 2 ? "" : ","} `;
+                sqlVariables += `${i} = ${req.body[i]}${x == bodyKeys.length - 3 ? "" : ","} `;
+                updatedKeys.push(i);
                 ++x;
             }
             const sql = `UPDATE Games SET ${sqlVariables} WHERE id = ${game_id}`;
@@ -49,7 +54,8 @@ exports.default = {
                 }
                 ;
                 res.status(200).send({
-                    message: 'Game settings updated successfully'
+                    message: 'Game settings updated successfully',
+                    updatedKeys
                 });
                 return 200;
             });

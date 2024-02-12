@@ -22,27 +22,48 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.io_server = exports.io = void 0;
+exports.server = exports.io = void 0;
 const socket_io_1 = require("socket.io");
-const http_1 = require("http");
+const http_1 = __importDefault(require("http"));
 const index_1 = require("../../index");
 const admin_ui_1 = require("@socket.io/admin-ui");
 const EVNETS = __importStar(require("./ws_exports"));
-const websocket_port = 8081;
-const server = (0, http_1.createServer)(index_1.app);
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
+//-----PRODUCTION-----
+/*const https = require("https");
+const fs = require("fs");
+const key = fs.readFileSync("./private.key");
+const cert = fs.readFileSync("./certificate.crt");
+
+const cred = {
+        key,
+        cert
+};
+
+const server = https.createServer(cred, index_1.app);*/
+//-----PRODUCTION-----
+//----DEVELOPMENT-----
+const server = http_1.default.createServer(index_1.app);
+exports.server = server;
+//----DEVELOPMENT-----
 const io = new socket_io_1.Server(server, {
     cors: {
-        origin: ["https://admin.socket.io", "http://13.53.185.194:8080", "http://13.53.185.194:8081", 'null'],
+        origin: ["https://admin.socket.io", "http://192.168.1.69:8081", "http://192.168.1.69:8081", "http://192.168.1.69", 'null', '*'],
         credentials: true,
     },
+    transports: ['websocket', 'polling'],
 });
 exports.io = io;
 (0, admin_ui_1.instrument)(io, {
     auth: {
         type: "basic",
-        username: "lopany",
-        password: "$2b$10$heqvAkYMez.Va6Et2uXInOnkCT6/uQj1brkrbyG3LpopDklcq7ZOS" // "changeit" encrypted with bcrypt
+        username: process.env.ADMIN_NAME || "admin",
+        password: process.env.ADMIN_PASS || "admin",
     },
     mode: "development"
 });
@@ -55,5 +76,11 @@ io.on('connection', (socket) => {
     }
     return socket;
 });
-const io_server = { server, websocket_port };
-exports.io_server = io_server;
+io.engine.on("connection_error", (err) => {
+    console.log(err);
+});
+// const io_server = {server, websocket_port};
+// export {
+//   io,
+//   io_server,
+// };
