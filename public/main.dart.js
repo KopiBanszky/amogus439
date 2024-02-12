@@ -7827,7 +7827,7 @@ akV(a,b,c,d){return new A.lE(a,b,c.i("@<0>").aA(d).i("lE<1,2>"))},
 b0C(){$.ln()
 return new A.kW()},
 b3X(a,b){return 65536+((a&1023)<<10)+(b&1023)},
-aoe(a,b,c){return A.b3x("http",a,b,c)},
+aoe(a,b,c){return A.b3x("https",a,b,c)},
 hp(a5){var s,r,q,p,o,n,m,l,k,j,i,h,g,f,e,d,c,b,a,a0,a1,a2,a3=null,a4=a5.length
 if(a4>=5){s=((a5.charCodeAt(4)^58)*3|a5.charCodeAt(0)^100|a5.charCodeAt(1)^97|a5.charCodeAt(2)^116|a5.charCodeAt(3)^97)>>>0
 if(s===0)return A.aNX(a4<a4?B.e.a1(a5,0,a4):a5,5,a3).gmM()
@@ -9326,7 +9326,7 @@ apE:function apE(a){this.a=a},
 j7(a,b){var s=0,r=A.C(t.aU),q,p
 var $async$j7=A.D(function(c,d){if(c===1)return A.z(d,r)
 while(true)switch(s){case 0:s=3
-return A.E(A.b6K(A.aoe("192.168.1.69",a,b)),$async$j7)
+return A.E(A.b6K(A.aoe("amogus.439boldogasszony.hu",a,b)),$async$j7)
 case 3:p=d
 q=new A.ow(!0,B.E.hu(A.aHO(A.aHl(p.e).c.a.h(0,"charset")).dN(0,p.w),null))
 s=1
@@ -9337,7 +9337,7 @@ yq(a,b){var s=0,r=A.C(t.aU),q,p,o
 var $async$yq=A.D(function(c,d){if(c===1)return A.z(d,r)
 while(true)switch(s){case 0:p=t.N
 s=3
-return A.E(A.b7o(A.aQo().$2("192.168.1.69",a),B.E.hu(b,null),A.L(["Content-type","application/json"],p,p)),$async$yq)
+return A.E(A.b7o(A.aQo().$2("amogus.439boldogasszony.hu",a),B.E.hu(b,null),A.L(["Content-type","application/json"],p,p)),$async$yq)
 case 3:o=d
 q=new A.ow(!0,A.aHO(A.aHl(o.e).c.a.h(0,"charset")).dN(0,o.w))
 s=1
@@ -9348,7 +9348,7 @@ aD8(a,b){var s=0,r=A.C(t.aU),q,p,o
 var $async$aD8=A.D(function(c,d){if(c===1)return A.z(d,r)
 while(true)switch(s){case 0:p=t.N
 s=3
-return A.E(A.b7r(A.aQo().$2("192.168.1.69",a),B.E.hu(b,null),A.L(["Content-type","application/json"],p,p)),$async$aD8)
+return A.E(A.b7r(A.aQo().$2("amogus.439boldogasszony.hu",a),B.E.hu(b,null),A.L(["Content-type","application/json"],p,p)),$async$aD8)
 case 3:o=d
 q=new A.ow(!0,A.aHO(A.aHl(o.e).c.a.h(0,"charset")).dN(0,o.w))
 s=1
@@ -9357,7 +9357,7 @@ case 1:return A.A(q,r)}})
 return A.B($async$aD8,r)},
 ow:function ow(a,b){this.a=a
 this.b=b},
-aQl(){var s,r,q,p,o,n,m,l,k,j,i,h="http://192.168.1.69",g=null,f="query",e=t.N,d=t.z,c=A.t(e,d)
+aQl(){var s,r,q,p,o,n,m,l,k,j,i,h="https://amogus.439boldogasszony.hu",g=null,f="query",e=t.N,d=t.z,c=A.t(e,d)
 c.l(0,"transports",A.a(["websocket"],t.s))
 s=A.hp(h)
 r=s.geT()+"://"+s.giK(s)+":"+s.go_(s)
@@ -9365,7 +9365,7 @@ q=s.gdj(s)
 p=$.aCB.a4(0,r)&&$.aCB.h(0,r).d.a4(0,q)
 o=c.h(0,"forceNew")===!0||c.h(0,"force new connection")===!0||!1===c.h(0,"multiplex")||p
 n=A.aQ("io")
-if(o){$.aTt().aY(B.t,"ignoring socket cache for http://192.168.1.69",g,g)
+if(o){$.aTt().aY(B.t,"ignoring socket cache for https://amogus.439boldogasszony.hu",g,g)
 n.b=A.aLW(c,h)}else{m=$.aCB.h(0,r)
 if(m==null){m=A.aLW(c,h)
 $.aCB.l(0,r,m)}n.b=m}if(s.gkz(s).length!==0&&c.h(0,f)==null)c.l(0,f,s.gkz(s))
