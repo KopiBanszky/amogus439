@@ -6,7 +6,8 @@
     </base-config> -->
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">
-           192.168.1.69
+        amogus.439boldogasszony.hu
+           <!-- 192.168.1.69 -->
           <!-- 192.168.1.106 -->
         </domain>
     </domain-config>

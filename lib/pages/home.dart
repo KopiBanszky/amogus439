@@ -31,6 +31,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     checkConnection().then((available) => {
+      print(available),
           if (available)
             {
               setState(() {
@@ -343,11 +344,15 @@ class _HomePageState extends State<HomePage> {
   Future<bool> checkConnection() async {
     try {
       RquestResult res = await http_get("/check");
+        print(res.ok);
+
       if (res.ok) {
         return true;
       } else
         return false;
     } catch (e) {
+      print("Err:");
+      print(e);
       return false;
     }
   }
