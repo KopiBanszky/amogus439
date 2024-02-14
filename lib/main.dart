@@ -35,5 +35,8 @@ void main() {
       '/navigation': (context) => const NavigationMinigame(),
       '/gameEnd': (context) => const GameEndPage(),
     },
+    theme: ThemeData(
+      fontFamily: 'DeliciousHandrawn',
+    ),
   ));
 }

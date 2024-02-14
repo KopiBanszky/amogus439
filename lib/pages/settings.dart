@@ -146,10 +146,10 @@ class _SettingsPageState extends State<SettingsPage> {
                             Size(MediaQuery.of(context).size.width * .2, 55),
                         backgroundColor:
                             game.taskVisible ? Colors.green : Colors.red,
-                        side: const BorderSide(
-                          color: Colors.white,
-                          width: 1.2,
-                        ),
+                        // side: const BorderSide(
+                        //   color: Colors.white,
+                        //   width: 1.2,
+                        // ),
                       ),
                       child: SizedBox(
                         width: MediaQuery.of(context).size.width * .2,
