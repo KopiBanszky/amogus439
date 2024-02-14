@@ -3,7 +3,6 @@
 import 'dart:convert';
 
 import 'package:amogusvez2/connections/http.dart';
-import 'package:amogusvez2/utility/switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -133,38 +132,31 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                     ),
                     ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          game.taskVisible = !game.taskVisible;
-                        });
-                      },
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(7),
+                        onPressed: () {
+                          setState(() {
+                            game.taskVisible = !game.taskVisible;
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(7),
+                          ),
+                          fixedSize:
+                              Size(MediaQuery.of(context).size.width * .2, 55),
+                          backgroundColor:
+                              game.taskVisible ? Colors.green : Colors.red,
+                          side: const BorderSide(
+                            color: Colors.white,
+                            width: 1.2,
+                          ),
                         ),
-                        fixedSize:
-                            Size(MediaQuery.of(context).size.width * .2, 55),
-                        backgroundColor:
-                            game.taskVisible ? Colors.green : Colors.red,
-                        side: const BorderSide(
+                        child: Icon(
+                          game.taskVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          size: 30,
                           color: Colors.white,
-                          width: 1.2,
-                        ),
-                      ),
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width * .2,
-                        child: SwitchWidget(
-                            trunOn: game.taskVisible, column: false),
-                      ),
-
-                      // Icon(
-                      //   game.taskVisible
-                      //       ? Icons.visibility
-                      //       : Icons.visibility_off,
-                      //   size: 30,
-                      //   color: Colors.white,
-                      // ),
-                    ),
+                        ))
                   ],
                 ),
 
