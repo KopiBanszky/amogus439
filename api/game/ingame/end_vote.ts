@@ -28,7 +28,7 @@ export default (game_id:number, force_vote:boolean) => {
 
         let skip:boolean = Math.round(votes/2) >= noSkip; //check if skip is needed for sure
         let max:number = -1;
-        let outVoted:Player|undefined = undefined;
+        let outVoted:Player = players[0];
         let i:number = 0;
 
         //find the player with the most votes
@@ -46,12 +46,7 @@ export default (game_id:number, force_vote:boolean) => {
             i++;
         }
 
-        //check if skip is needed
-        //if there are more people who voted to skip than the max votes, skip
-        if((votes-noSkip) >= max){
-            console.log("1: skip");
-            skip = true;
-        }
+        // outVoted.geo_pos = JSON.parse(JSON.stringify(outVoted.geo_pos || {lat: 0, lon: 0}));
 
         //send the result to the players
         if(skip){
@@ -60,7 +55,7 @@ export default (game_id:number, force_vote:boolean) => {
         else{
             io.in(`Game_${game_id}`).emit('vote_result', {code: 200, message: 'Vote ended', skip: false, player: outVoted});
             //set the player dead
-            db.query(`UPDATE Players SET dead = 1 WHERE id = ${outVoted?.id}`, (err, result) => {
+            db.query(`UPDATE Players SET dead = 1 WHERE id = ${outVoted.id}`, (err, result) => {
                 if(err){
                     console.error(err);
                     return;
