@@ -130,7 +130,7 @@ class _GameMainPageState extends State<GameMainPage> {
 
     socket.on("vote_result", (data) {
       if (data["skip"]) return;
-      Player voted = Player.fromMap(data["votedOut"]);
+      Player voted = Player.fromMap(data["player"]);
       if (voted.id == plyr.id) {
         setState(() {
           alive = false;

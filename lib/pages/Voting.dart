@@ -197,7 +197,7 @@ class _VotingPageState extends State<VotingPage> {
   }
 
   void timer() {
-    Future.delayed(const Duration(seconds: 1), () {
+    if(mounted) Future.delayed(const Duration(seconds: 1), () {
       setState(() {
         time--;
       });

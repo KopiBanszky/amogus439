@@ -344,7 +344,7 @@ class _SrReaderPageState extends State<SrReaderPage> {
         socket.on("reaktorfix", (data) {
           if (data["code"] != 200) {
             controller.stop();
-            showAlert(
+            if(data["code"] != 403) showAlert(
                 "Hiba - ${data["code"]}", data["message"], Colors.red, true,
                 () {
               // andController!.resumeCamera();
