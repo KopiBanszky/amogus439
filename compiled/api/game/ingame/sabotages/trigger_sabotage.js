@@ -1,34 +1,34 @@
-import { Game, Player, apiMethod, isEmpty } from "../../../../source/utility";
-import db from "../../../../database/export_db_connection";
-import {simple_sabotage} from "./simple_sabotage";
-import {reaktor} from "./reaktor";
-import { settings } from "../../../manager/constant_settings";
-
-
-export default {
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const export_db_connection_1 = __importDefault(require("../../../../database/export_db_connection"));
+const simple_sabotage_1 = require("./simple_sabotage");
+const reaktor_1 = require("./reaktor");
+const constant_settings_1 = require("../../../manager/constant_settings");
+exports.default = {
     event: 'sabotage',
-    callback: async (args:any, socket:any) => {
-
-
-        const {
-            game_id,
-            user_id,
-            sabotage
-        } = args;
-
-        
+    callback: (args, socket) => __awaiter(void 0, void 0, void 0, function* () {
+        const { game_id, user_id, sabotage } = args;
         if (game_id == undefined || game_id == null || user_id == undefined || user_id == null || sabotage == undefined || sabotage == null) {
-            
             socket.emit("sabotage", {
                 code: 400,
                 message: 'Values cannot be empty'
             });
             return 400;
         }
-        
-
-        const player_promise: any = await new Promise((resolve, reject) => {
-            db.query(`SELECT * FROM Players WHERE game_id = ${game_id} AND id = ${user_id}`, (err, result) => {
+        const player_promise = yield new Promise((resolve, reject) => {
+            export_db_connection_1.default.query(`SELECT * FROM Players WHERE game_id = ${game_id} AND id = ${user_id}`, (err, result) => {
                 if (err) {
                     console.error(err);
                     socket.emit("sabotage", {
@@ -49,9 +49,9 @@ export default {
                 resolve(result[0]);
             });
         });
-        if (player_promise == false) return;
-
-        const player: Player = player_promise;
+        if (player_promise == false)
+            return;
+        const player = player_promise;
         if (!player.team) {
             socket.emit("sabotage", {
                 code: 403,
@@ -59,9 +59,8 @@ export default {
             });
             return 403;
         }
-
-        const game_promise: any = await new Promise((resolve, reject) => {
-            db.query(`SELECT * FROM Games WHERE id = ${game_id}`, (err, result) => {
+        const game_promise = yield new Promise((resolve, reject) => {
+            export_db_connection_1.default.query(`SELECT * FROM Games WHERE id = ${game_id}`, (err, result) => {
                 if (err) {
                     console.error(err);
                     socket.emit("sabotage", {
@@ -82,8 +81,8 @@ export default {
                 resolve(result[0]);
             });
         });
-
-        if (game_promise == false) return;
+        if (game_promise == false)
+            return;
         if (game_promise.status != 1) {
             socket.emit("sabotage", {
                 code: 403,
@@ -91,11 +90,9 @@ export default {
             });
             return 403;
         }
-
-        const game:Game = game_promise;
-
-        const sabotage_promise: any = await new Promise((resolve, reject) => {
-            db.query(`SELECT *, Sabotages.id AS SID FROM Sabotages INNER JOIN Tasks ON (Sabotages.task_id = Tasks.id) WHERE name = '${sabotage}' AND map = '${game.map}'`, (err, result) => {
+        const game = game_promise;
+        const sabotage_promise = yield new Promise((resolve, reject) => {
+            export_db_connection_1.default.query(`SELECT *, Sabotages.id AS SID FROM Sabotages INNER JOIN Tasks ON (Sabotages.task_id = Tasks.id) WHERE name = '${sabotage}' AND map = '${game.map}'`, (err, result) => {
                 if (err) {
                     console.error(err);
                     socket.emit("sabotage", {
@@ -116,11 +113,10 @@ export default {
                 resolve(result);
             });
         });
-
-        if (sabotage_promise == false) return;
-
-        const allowed = await new Promise((resolve, result) => {
-            db.query(`SELECT * FROM Game_sabotage WHERE game_id = ${game_id} ORDER BY id DESC`, (err, result) => {
+        if (sabotage_promise == false)
+            return;
+        const allowed = yield new Promise((resolve, result) => {
+            export_db_connection_1.default.query(`SELECT * FROM Game_sabotage WHERE game_id = ${game_id} ORDER BY id DESC`, (err, result) => {
                 if (err) {
                     console.error(err);
                     socket.emit("sabotage", {
@@ -132,7 +128,6 @@ export default {
                 }
                 for (let index = 0; index < result.length; index++) {
                     const element = result[index];
-
                     if (element.tag > 0) {
                         socket.emit("sabotage", {
                             code: 403,
@@ -142,12 +137,9 @@ export default {
                         return 403;
                     }
                     if (element.tag == -1) {
-
                         const time = new Date(element.triggerd);
                         const current_time = new Date();
-
-                        const COOLDOWN = settings.sabotage_coolwown * 1000;
-                        console.log(current_time.getTime() - time.getTime());
+                        const COOLDOWN = constant_settings_1.settings.sabotage_coolwown * 1000;
                         if (current_time.getTime() - time.getTime() < COOLDOWN) {
                             socket.emit("sabotage", {
                                 code: 403,
@@ -157,23 +149,24 @@ export default {
                             return 403;
                         }
                     }
-
                 }
-
                 resolve(true);
                 return 200;
             });
         });
-
-        if (allowed == false) return;
-
+        if (allowed == false)
+            return;
         if (sabotage === 'Reaktor') {
-            reaktor(sabotage_promise, game_id, user_id);
-        } else if (sabotage === 'Lights') {
-            simple_sabotage(sabotage_promise[0], game_id, user_id);
-        } else if (sabotage === 'Navigation') {;
-            simple_sabotage(sabotage_promise[0], game_id, user_id);
-        } else {
+            (0, reaktor_1.reaktor)(sabotage_promise, game_id, user_id);
+        }
+        else if (sabotage === 'Lights') {
+            (0, simple_sabotage_1.simple_sabotage)(sabotage_promise[0], game_id, user_id);
+        }
+        else if (sabotage === 'Navigation') {
+            ;
+            (0, simple_sabotage_1.simple_sabotage)(sabotage_promise[0], game_id, user_id);
+        }
+        else {
             socket.emit("sabotage", {
                 code: 404,
                 message: 'Sabotage not found'
@@ -184,6 +177,5 @@ export default {
             code: 200,
             message: 'Sabotage triggered'
         });
-
-    }
+    })
 };

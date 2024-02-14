@@ -27,9 +27,13 @@ async function check_cooldown(ids: number[], game_id:number, time:number){
 
     const now = new Date().getTime();
 
+    const trigger1 = new Date(results[0].triggerd).getTime();
+    const trigger2 = new Date(results[1].triggerd).getTime();
+
     if(
-        ((now - results[0].triggerd) > (time * 1000)) ||
-        ((now - results[1].triggerd) > (time * 1000))){
+        //fix: added new Date() to results
+        ((trigger1 - now) > (time * 1000)) ||
+        ((now - trigger2) > (time * 1000))){
         return 203; //dead
     }
 
