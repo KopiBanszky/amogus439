@@ -309,8 +309,16 @@ class _GameMainPageState extends State<GameMainPage> {
         titleTextStyle: const TextStyle(color: Colors.white, fontSize: 20),
         title:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Text(plyr.name,
-              style: const TextStyle(color: Colors.white, fontSize: 20)),
+          Flexible(
+            child: Text(
+              plyr.name,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ),
           if (reactor)
             StLessTimer(
                 duration: currentSabotage[0]["time"],

@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:amogusvez2/connections/http.dart';
+import 'package:amogusvez2/utility/alert.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -145,14 +146,20 @@ class _MapPageState extends State<MapPage> {
           _displayPoints(mapboxMap);
         }
       });
-      mapboxMap.animateCamera(
-        CameraUpdate.newCameraPosition(
-          CameraPosition(
-            target: value,
-            zoom: 16.5,
+      if (value != null)
+        mapboxMap.animateCamera(
+          CameraUpdate.newCameraPosition(
+            CameraPosition(
+              target: value,
+              zoom: 16.5,
+            ),
           ),
-        ),
-      );
+        );
+
+      if (value == null)
+        // ignore: use_build_context_synchronously
+        showAlert("Hely", "Kapcsold be a telefonodon a helymeghatározást!",
+            Colors.red, true, () {}, "Ok", false, () {}, "", context);
       // mapboxMap.flyTo(
       //   CameraOptions(
       //     center: Point(

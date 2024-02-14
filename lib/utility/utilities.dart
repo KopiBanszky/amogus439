@@ -4,7 +4,24 @@ import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
-Future<LatLng> getGeoPos() async {
+Future<bool> checkEnalbedLocation() async {
+  bool serviceEnabled;
+
+  serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  if (!serviceEnabled) {
+    return false;
+  }
+
+  return true;
+}
+
+Future<LatLng?> getGeoPos() async {
+
+  bool trunedOn = await checkEnalbedLocation();
+  if (!trunedOn) {
+    return null;
+  }
+
   Position position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high);
 

@@ -209,7 +209,7 @@ class _AddPointPageState extends State<AddPointPage> {
     // ));
     getGeoPos().then((value) {
       if (!imgsAdded) _addCustomeImgs();
-      mapboxMap.animateCamera(
+      if(value != null) mapboxMap.animateCamera(
         CameraUpdate.newCameraPosition(
           CameraPosition(
             target: value,
@@ -217,6 +217,10 @@ class _AddPointPageState extends State<AddPointPage> {
           ),
         ),
       );
+
+      else {
+        showAlert("Hely", "Kapcsold be a helymeghatározást", Colors.red, true, () {}, "Ok", false, () {}, "", context);
+      }
       // mapboxMap.flyTo(
       //   CameraOptions(
       //     center: Point(
@@ -374,7 +378,8 @@ class _AddPointPageState extends State<AddPointPage> {
                     "",
                     context);
                 getGeoPos().then((value) {
-                  http_post("api/manager/task_upload", {
+
+                  if (value != null) http_post("api/manager/task_upload", {
                     "task_name": _nameController.text,
                     "type": selectedType,
                     "connect_id": selectedTask.id.toString(),
@@ -389,6 +394,9 @@ class _AddPointPageState extends State<AddPointPage> {
                       Navigator.pop(context);
                     }
                   });
+                  else {
+                    showAlert("Hely", "Kapcsold be a helymeghatározást", Colors.red, true, () {}, "Ok", false, () {}, "", context);
+                  }
                 });
               },
               style: ButtonStyle(
