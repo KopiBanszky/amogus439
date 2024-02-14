@@ -65,26 +65,26 @@ class _HomePageState extends State<HomePage> {
           context);
     }
   }
-  
 
 //TODO: ne egyszerre kerjen engedelyt a kamera es a helymeghatározás
   void _requestCameraPermission() async {
-      PermissionStatus status = await Permission.camera.request();
-      if (status.isGranted) {
-        // Permission granted
-      } else {
-        showAlert(
-            "Kamera",
-            "Kérlek engedélyezd a kamera használatát, nélküle sajnos nem tudsz játszani.",
-            Colors.blue,
-            true,
-            _requestCameraPermission,
-            "Ok",
-            false,
-            () {},
-            "",
-            context);
-      }}
+    PermissionStatus status = await Permission.camera.request();
+    if (status.isGranted) {
+      // Permission granted
+    } else {
+      showAlert(
+          "Kamera",
+          "Kérlek engedélyezd a kamera használatát, nélküle sajnos nem tudsz játszani.",
+          Colors.blue,
+          true,
+          _requestCameraPermission,
+          "Ok",
+          false,
+          () {},
+          "",
+          context);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -332,11 +332,168 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                       ),
-                      // ElevatedButton(
-                      //     onPressed: () {
-                      //       Navigator.pushNamed(context, '/navigation');
-                      //     },
-                      //     child: const Text("test"))
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/gameEnd',
+                                arguments: {
+                                  "player": Player(
+                                      id: 0,
+                                      name: "asd",
+                                      color: Colors.red,
+                                      dead: false,
+                                      team: false,
+                                      tasks: [],
+                                      gameId: 0,
+                                      host: false,
+                                      socketId: "asd",
+                                      emergency: 1,
+                                      taskDone: [],
+                                      geoPos: {},
+                                      voted: false,
+                                      votes: 0),
+                                  "players": [
+                                    Player(
+                                        id: 0,
+                                        name: "asd",
+                                        color: Colors.orange,
+                                        dead: false,
+                                        team: false,
+                                        tasks: [],
+                                        gameId: 0,
+                                        host: false,
+                                        socketId: "asd",
+                                        emergency: 1,
+                                        taskDone: [],
+                                        geoPos: {},
+                                        voted: false,
+                                        votes: 0),
+                                    Player(
+                                        id: 0,
+                                        name: "asd",
+                                        color: Colors.green,
+                                        dead: false,
+                                        team: false,
+                                        tasks: [],
+                                        gameId: 0,
+                                        host: false,
+                                        socketId: "asd",
+                                        emergency: 1,
+                                        taskDone: [],
+                                        geoPos: {},
+                                        voted: false,
+                                        votes: 0),
+                                    Player(
+                                        id: 0,
+                                        name: "asd",
+                                        color: Colors.blue,
+                                        dead: false,
+                                        team: false,
+                                        tasks: [],
+                                        gameId: 0,
+                                        host: false,
+                                        socketId: "asd",
+                                        emergency: 1,
+                                        taskDone: [],
+                                        geoPos: {},
+                                        voted: false,
+                                        votes: 0),
+                                    Player(
+                                        id: 0,
+                                        name: "asd",
+                                        color: Colors.brown,
+                                        dead: false,
+                                        team: false,
+                                        tasks: [],
+                                        gameId: 0,
+                                        host: false,
+                                        socketId: "asd",
+                                        emergency: 1,
+                                        taskDone: [],
+                                        geoPos: {},
+                                        voted: false,
+                                        votes: 0),
+                                    Player(
+                                        id: 0,
+                                        name: "asd",
+                                        color: Colors.lime,
+                                        dead: false,
+                                        team: false,
+                                        tasks: [],
+                                        gameId: 0,
+                                        host: false,
+                                        socketId: "asd",
+                                        emergency: 1,
+                                        taskDone: [],
+                                        geoPos: {},
+                                        voted: false,
+                                        votes: 0),
+                                    Player(
+                                        id: 0,
+                                        name: "asd",
+                                        color: Colors.yellow,
+                                        dead: false,
+                                        team: false,
+                                        tasks: [],
+                                        gameId: 0,
+                                        host: false,
+                                        socketId: "asd",
+                                        emergency: 1,
+                                        taskDone: [],
+                                        geoPos: {},
+                                        voted: false,
+                                        votes: 0),
+                                    Player(
+                                        id: 0,
+                                        name: "asd",
+                                        color: Colors.white,
+                                        dead: false,
+                                        team: false,
+                                        tasks: [],
+                                        gameId: 0,
+                                        host: false,
+                                        socketId: "asd",
+                                        emergency: 1,
+                                        taskDone: [],
+                                        geoPos: {},
+                                        voted: false,
+                                        votes: 0),
+                                    Player(
+                                        id: 0,
+                                        name: "asd",
+                                        color: Colors.purple,
+                                        dead: false,
+                                        team: false,
+                                        tasks: [],
+                                        gameId: 0,
+                                        host: false,
+                                        socketId: "asd",
+                                        emergency: 1,
+                                        taskDone: [],
+                                        geoPos: {},
+                                        voted: false,
+                                        votes: 0),
+                                    Player(
+                                        id: 0,
+                                        name: "asd",
+                                        color: Colors.pink,
+                                        dead: false,
+                                        team: false,
+                                        tasks: [],
+                                        gameId: 0,
+                                        host: false,
+                                        socketId: "asd",
+                                        emergency: 1,
+                                        taskDone: [],
+                                        geoPos: {},
+                                        voted: false,
+                                        votes: 0),
+                                  ],
+                                  "impostors":
+                                      List<Player>.empty(growable: true),
+                                  "winner": true
+                                });
+                          },
+                          child: const Text("test"))
                     ],
                   ),
                 )

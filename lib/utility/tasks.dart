@@ -120,12 +120,18 @@ class _TasksWidgetState extends State<TasksWidget> {
                 task.name,
                 style: const TextStyle(color: Colors.white, fontSize: 20),
               ),
-              Icon(
-                tasksDone.contains(task.id)
-                    ? Icons.check_circle
-                    : Icons.check_circle_outline,
-                color: Colors.white,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image(
+                  image: AssetImage("assets/taskicon${task.type}.png"),
+                ),
               ),
+              // Icon(
+              //   tasksDone.contains(task.id)
+              //       ? Icons.check_circle
+              //       : Icons.check_circle_outline,
+              //   color: Colors.white,
+              // ),
             ],
           ),
         ),

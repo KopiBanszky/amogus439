@@ -36,7 +36,8 @@ void main() {
       '/gameEnd': (context) => const GameEndPage(),
     },
     theme: ThemeData(
-      fontFamily: 'DeliciousHandrawn',
-    ),
+      
+      // fontFamily: 'DeliciousHandrawn'
+    )
   ));
 }
