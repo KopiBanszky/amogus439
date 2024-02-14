@@ -17,16 +17,54 @@ class _GameEndPageState extends State<GameEndPage> {
 
   List<Widget> _buildPlayers(List<Player> players) {
     List<Widget> list = [];
-    double section = MediaQuery.of(context).size.width / players.length;
-    for (var i = 0; i < players.length; i++) {
+    double plyrWidth =
+        MediaQuery.of(context).size.width / (players.length ~/ 2);
+
+    for (var i = 0; i < players.length; i += 2) {
       list.add(Positioned(
-        left: section * .5 * i,
-        width: MediaQuery.of(context).size.width * .25,
-        child: ColorFiltered(
-          colorFilter: ColorFilter.mode(players[i].color, BlendMode.modulate),
-          child: const Image(
-            image: AssetImage("assets/player.png"),
-          ),
+        top: (i / 2) * 50.0,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ColorFiltered(
+              colorFilter:
+                  ColorFilter.mode(players[i].color, BlendMode.modulate),
+              child: Image(
+                image: const AssetImage("assets/player.png"),
+                width: plyrWidth,
+              ),
+            ),
+            SizedBox(
+              width: plyrWidth * (i / 2),
+            ),
+            ColorFiltered(
+              colorFilter:
+                  ColorFilter.mode(players[i + 1].color, BlendMode.modulate),
+              child: Image(
+                image: const AssetImage("assets/player.png"),
+                width: plyrWidth,
+              ),
+            ),
+          ],
+        ),
+      ));
+    }
+    list = list.reversed.toList();
+    if (players.length % 2 == 1) {
+      list.add(Positioned(
+        top: -50,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ColorFiltered(
+              colorFilter: ColorFilter.mode(
+                  players[players.length - 1].color, BlendMode.modulate),
+              child: Image(
+                image: const AssetImage("assets/player.png"),
+                width: plyrWidth,
+              ),
+            ),
+          ],
         ),
       ));
     }

@@ -31,29 +31,33 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     checkConnection().then((available) => {
-      print(available),
+          print(available),
           if (available)
             {
               setState(() {
                 connectionAvailable = true;
-                _requestLocationPermission();
-                _requestCameraPermission();
+                _requestLocationPermissions();
+                // _requestCameraPermission();
               })
             }
         });
   }
 
-  Future<void> _requestLocationPermission() async {
+  Future<void> _requestLocationPermissions() async {
+    PermissionStatus alreadzGranted = await Permission.location.status;
+    if (alreadzGranted.isGranted) {
+      _requestCameraPermission();
+      return;
+    }
     PermissionStatus status = await Permission.location.request();
     if (status.isGranted) {
-      // Permission granted
     } else {
       showAlert(
           "GPS",
           "Kérlek engedélyezd a pontos helymeghatározást, nélküle sajnos nem tudsz játszani.",
           Colors.blue,
           true,
-          _requestLocationPermission,
+          _requestLocationPermissions,
           "Ok",
           false,
           () {},
@@ -61,25 +65,26 @@ class _HomePageState extends State<HomePage> {
           context);
     }
   }
+  
 
+//TODO: ne egyszerre kerjen engedelyt a kamera es a helymeghatározás
   void _requestCameraPermission() async {
-    PermissionStatus status = await Permission.camera.request();
-    if (status.isGranted) {
-      // Permission granted
-    } else {
-      showAlert(
-          "Kamera",
-          "Kérlek engedélyezd a kamera használatát, nélküle sajnos nem tudsz játszani.",
-          Colors.blue,
-          true,
-          _requestCameraPermission,
-          "Ok",
-          false,
-          () {},
-          "",
-          context);
-    }
-  }
+      PermissionStatus status = await Permission.camera.request();
+      if (status.isGranted) {
+        // Permission granted
+      } else {
+        showAlert(
+            "Kamera",
+            "Kérlek engedélyezd a kamera használatát, nélküle sajnos nem tudsz játszani.",
+            Colors.blue,
+            true,
+            _requestCameraPermission,
+            "Ok",
+            false,
+            () {},
+            "",
+            context);
+      }}
 
   @override
   Widget build(BuildContext context) {
@@ -344,7 +349,7 @@ class _HomePageState extends State<HomePage> {
   Future<bool> checkConnection() async {
     try {
       RquestResult res = await http_get("/check");
-        print(res.ok);
+      print(res.ok);
 
       if (res.ok) {
         return true;
@@ -359,6 +364,8 @@ class _HomePageState extends State<HomePage> {
 
   //checks witch btn is pressed, and if the needed values are valid
   void validateBtn(BtnTap btn) {
+    _requestCameraPermission();
+
     if (btn == BtnTap.join) {
       if (nameController.text.trim() == "" ||
           roomController.text.trim() == "" ||
