@@ -8,12 +8,14 @@ class SabotagesWidget extends StatefulWidget {
       required this.sabotage,
       required this.socket,
       required this.gameId,
-      required this.userId});
+      required this.userId,
+      required this.killEnabled});
 
   final dynamic sabotage;
   final Socket socket;
   final String gameId;
   final int userId;
+  final bool killEnabled;
 
   @override
   State<SabotagesWidget> createState() => _SabotagesWidgetState();
@@ -209,6 +211,47 @@ class _SabotagesWidgetState extends State<SabotagesWidget> {
                         padding: const EdgeInsets.all(8.0),
                         child: Image(
                           image: AssetImage("assets/navigation.png"),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width * .97,
+                height: MediaQuery.of(context).size.height * .07,
+                decoration: BoxDecoration(
+                  color: widget.killEnabled ? Colors.red : Colors.grey[900],
+                  borderRadius: BorderRadius.circular(7),
+                ),
+                child: ElevatedButton(
+                  onPressed: widget.killEnabled ? () {} : null,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    surfaceTintColor: Colors.transparent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(7),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        widget.killEnabled ? "Ölhetsz" : "Nem ölhetsz még",
+                        style: TextStyle(
+                            color: widget.killEnabled
+                                ? Colors.white
+                                : Colors.grey[300],
+                            fontSize: 20),
+                      ),
+                      const Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Image(
+                          image: AssetImage("assets/impostor.png"),
                         ),
                       ),
                     ],

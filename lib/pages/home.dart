@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:socket_io_client/socket_io_client.dart';
+import 'package:amogusvez2/utility/globals.dart' as globals;
 
 import '../connections/socketio.dart';
 import '../utility/alert.dart';
@@ -332,168 +333,33 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                       ),
-                      ElevatedButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/gameEnd',
-                                arguments: {
-                                  "player": Player(
-                                      id: 0,
-                                      name: "asd",
-                                      color: Colors.red,
-                                      dead: false,
-                                      team: false,
-                                      tasks: [],
-                                      gameId: 0,
-                                      host: false,
-                                      socketId: "asd",
-                                      emergency: 1,
-                                      taskDone: [],
-                                      geoPos: {},
-                                      voted: false,
-                                      votes: 0),
-                                  "players": [
-                                    Player(
-                                        id: 0,
-                                        name: "asd",
-                                        color: Colors.orange,
-                                        dead: false,
-                                        team: false,
-                                        tasks: [],
-                                        gameId: 0,
-                                        host: false,
-                                        socketId: "asd",
-                                        emergency: 1,
-                                        taskDone: [],
-                                        geoPos: {},
-                                        voted: false,
-                                        votes: 0),
-                                    Player(
-                                        id: 0,
-                                        name: "asd",
-                                        color: Colors.green,
-                                        dead: false,
-                                        team: false,
-                                        tasks: [],
-                                        gameId: 0,
-                                        host: false,
-                                        socketId: "asd",
-                                        emergency: 1,
-                                        taskDone: [],
-                                        geoPos: {},
-                                        voted: false,
-                                        votes: 0),
-                                    Player(
-                                        id: 0,
-                                        name: "asd",
-                                        color: Colors.blue,
-                                        dead: false,
-                                        team: false,
-                                        tasks: [],
-                                        gameId: 0,
-                                        host: false,
-                                        socketId: "asd",
-                                        emergency: 1,
-                                        taskDone: [],
-                                        geoPos: {},
-                                        voted: false,
-                                        votes: 0),
-                                    Player(
-                                        id: 0,
-                                        name: "asd",
-                                        color: Colors.brown,
-                                        dead: false,
-                                        team: false,
-                                        tasks: [],
-                                        gameId: 0,
-                                        host: false,
-                                        socketId: "asd",
-                                        emergency: 1,
-                                        taskDone: [],
-                                        geoPos: {},
-                                        voted: false,
-                                        votes: 0),
-                                    Player(
-                                        id: 0,
-                                        name: "asd",
-                                        color: Colors.lime,
-                                        dead: false,
-                                        team: false,
-                                        tasks: [],
-                                        gameId: 0,
-                                        host: false,
-                                        socketId: "asd",
-                                        emergency: 1,
-                                        taskDone: [],
-                                        geoPos: {},
-                                        voted: false,
-                                        votes: 0),
-                                    Player(
-                                        id: 0,
-                                        name: "asd",
-                                        color: Colors.yellow,
-                                        dead: false,
-                                        team: false,
-                                        tasks: [],
-                                        gameId: 0,
-                                        host: false,
-                                        socketId: "asd",
-                                        emergency: 1,
-                                        taskDone: [],
-                                        geoPos: {},
-                                        voted: false,
-                                        votes: 0),
-                                    Player(
-                                        id: 0,
-                                        name: "asd",
-                                        color: Colors.white,
-                                        dead: false,
-                                        team: false,
-                                        tasks: [],
-                                        gameId: 0,
-                                        host: false,
-                                        socketId: "asd",
-                                        emergency: 1,
-                                        taskDone: [],
-                                        geoPos: {},
-                                        voted: false,
-                                        votes: 0),
-                                    Player(
-                                        id: 0,
-                                        name: "asd",
-                                        color: Colors.purple,
-                                        dead: false,
-                                        team: false,
-                                        tasks: [],
-                                        gameId: 0,
-                                        host: false,
-                                        socketId: "asd",
-                                        emergency: 1,
-                                        taskDone: [],
-                                        geoPos: {},
-                                        voted: false,
-                                        votes: 0),
-                                    Player(
-                                        id: 0,
-                                        name: "asd",
-                                        color: Colors.pink,
-                                        dead: false,
-                                        team: false,
-                                        tasks: [],
-                                        gameId: 0,
-                                        host: false,
-                                        socketId: "asd",
-                                        emergency: 1,
-                                        taskDone: [],
-                                        geoPos: {},
-                                        voted: false,
-                                        votes: 0),
-                                  ],
-                                  "impostors":
-                                      List<Player>.empty(growable: true),
-                                  "winner": true
-                                });
-                          },
-                          child: const Text("test"))
+                      // ElevatedButton(
+                      //     onPressed: () {
+                      //       Navigator.pushNamed(context, '/gameEnd',
+                      //           arguments: {
+                      //             "player": Player(
+                      //                 id: 0,
+                      //                 name: "asd",
+                      //                 color: Colors.red,
+                      //                 dead: false,
+                      //                 team: false,
+                      //                 tasks: [],
+                      //                 gameId: 0,
+                      //                 host: false,
+                      //                 socketId: "asd",
+                      //                 emergency: 1,
+                      //                 taskDone: [],
+                      //                 geoPos: {},
+                      //                 voted: false,
+                      //                 votes: 0),
+                      //             "players": [
+                      //             ],
+                      //             "impostors":
+                      //                 List<Player>.empty(growable: true),
+                      //             "winner": true
+                      //           });
+                      //     },
+                      //     child: const Text("test"))
                     ],
                   ),
                 )
@@ -574,31 +440,30 @@ class _HomePageState extends State<HomePage> {
     }
 
     if (data["ok"]) {
-      Socket socket = await connectToWebsocket();
-      socket.emit("join_game",
+      globals.socket = await connectToWebsocket();
+      globals.socket!.emit("join_game",
           {"username": nameController.text, "game_id": roomController.text});
-      socket.on("join_game", (msg) {
+      globals.socket!.on("join_game", (msg) {
         if (msg["code"] != 200) {
           showAlert("Hiba", msg["message"], Colors.red, false, () {}, "", true,
               () {}, "Ok", context);
           return;
         }
 
-        List<Player> players = [];
+        List<Map<String, dynamic>> players = [];
         for (Map<String, dynamic> player in msg["players"]) {
           player["tasks"] = [];
-          players.add(Player.fromMap(player));
+          players.add(player);
         }
 
         Map<String, dynamic> usableData = {
           "host": false,
-          "socket": socket,
           "gameId": roomController.text,
           "players": players,
           "game": {},
         };
 
-        Navigator.pushReplacementNamed(context, "/lobby",
+        Navigator.restorablePushReplacementNamed(context, "/lobby",
             arguments: usableData);
       });
     } else {
@@ -635,10 +500,10 @@ class _HomePageState extends State<HomePage> {
       return;
     }
 
-    Socket socket = await connectToWebsocket();
-    socket.emit("create_game",
+    globals.socket = await connectToWebsocket();
+    globals.socket!.emit("create_game",
         {"username": nameController.text, "game_id": data["game_id"]});
-    socket.on("create_game", (msg) {
+    globals.socket!.on("create_game", (msg) {
       if (msg["code"] != 200) {
         showAlert("Hiba", msg["message"], Colors.red, false, () {}, "", true,
             () {}, "Ok", context);
@@ -647,13 +512,13 @@ class _HomePageState extends State<HomePage> {
 
       Map<String, dynamic> usableData = {
         "host": true,
-        "socket": socket,
+        // "socket": socket,
         "gameId": data["game_id"],
-        "player": Player.fromMap(msg["data"]["player"]),
-        "game": Game.fromMap(msg["data"]["game"]),
+        "player": msg["data"]["player"],
+        "game": msg["data"]["game"],
       };
 
-      Navigator.pushReplacementNamed(context, "/lobby", arguments: usableData);
+      Navigator.restorablePushReplacementNamed(context, "/lobby", arguments: usableData);
     });
   }
 }

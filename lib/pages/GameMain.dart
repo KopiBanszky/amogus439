@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, non_constant_identifier_names, use_build_context_synchronously
+// ignore_for_file: file_names, non_constant_identifier_names, use_build_context_synchronously, curly_braces_in_flow_control_structures
 
 import 'package:amogusvez2/utility/alert.dart';
 import 'package:amogusvez2/utility/sabotages.dart';
@@ -10,6 +10,7 @@ import 'package:pretty_qr_code/pretty_qr_code.dart';
 // import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:vibration/vibration.dart';
+import 'package:amogusvez2/utility/globals.dart' as globals;
 // import 'dart:js' as js;
 
 import '../utility/taskbar.dart';
@@ -273,7 +274,7 @@ class _GameMainPageState extends State<GameMainPage> {
 
   void timer() {
     Future.delayed(const Duration(seconds: 1), () {
-      setState(() {
+      if(mounted) setState(() {
         if (currentSabotage != null) currentSabotage[0]["time"]--;
       });
       if (currentSabotage == null) return;
@@ -287,14 +288,16 @@ class _GameMainPageState extends State<GameMainPage> {
   Widget build(BuildContext context) {
     arguments = ModalRoute.of(context)!.settings.arguments;
     if (!loaded) {
-      plyr = arguments['player'];
+      plyr = Player.fromMap(arguments['player']);
       gameId = arguments['gameId'];
       host = arguments['host'];
       impostors = arguments['impostors'] ?? [];
       players = arguments['players'];
-      game = arguments['game'];
-      socket = arguments['socket'];
-      tasks = arguments['tasks'] ?? [];
+      game = Game.fromMap(arguments['game']);
+      socket = globals.socket!;
+      for (var task in arguments['tasks']) {
+        tasks.add(Task.fromMap(task));
+      }
       qr_action = "439amogus-${plyr.id}-alive";
 
       listenOnSockets();
@@ -357,6 +360,7 @@ class _GameMainPageState extends State<GameMainPage> {
                     socket: socket,
                     gameId: gameId,
                     userId: plyr.id,
+                    killEnabled: killEnabled,
                   )
                 : TasksWidget(
                     socket: socket,

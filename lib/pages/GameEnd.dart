@@ -113,7 +113,7 @@ class _GameEndPageState extends State<GameEndPage> {
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/');
+                Navigator.restorablePushNamed(context, '/');
               },
               child: const Text("Back to Home"),
             ),

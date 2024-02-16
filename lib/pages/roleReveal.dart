@@ -23,7 +23,7 @@ class _RoleRevealPageState extends State<RoleRevealPage> {
   late bool host;
   late String name_role;
   late List<Player> impostors = [];
-  late List<Task> tasks = [];
+  late List<Map<String, dynamic>> tasks = [];
   bool isTasksOk = false;
   bool tapped = false;
 
@@ -81,28 +81,28 @@ class _RoleRevealPageState extends State<RoleRevealPage> {
   }
 
   //gets the tasks from the server
-  Future<List<Task>> _getTasks(List<int> ids) async {
-    List<Task> tasksInFunc = [];
+  Future<List<Map<String, dynamic>>> _getTasks(List<int> ids) async {
+    List<Map<String, dynamic>> tasksInFunc = [];
     for (int i = 0; i < ids.length; i++) {
       RquestResult result = await http_get("api/game/ingame/getTask", {
         "task_id": ids[i].toString(),
       });
       if (result.ok) {
         dynamic data = jsonDecode(jsonDecode(result.data));
-        Task task = Task.fromMap(data["task"]);
+        Map<String, dynamic> task = data["task"];
         tasksInFunc.add(task);
       }
     }
     tasks = tasksInFunc;
     if (isTasksOk) {
       // ignore: use_build_context_synchronously
-      Navigator.pushReplacementNamed(context, "/gameMain", arguments: {
-        "player": plyr,
+      Navigator.restorablePushReplacementNamed(context, "/gameMain", arguments: {
+        "player": plyr.toMap(),
         "gameId": gameId,
         "host": host,
-        "socket": arguments['socket'],
+        // "socket": arguments['socket'],
         "game": arguments['game'],
-        "players": plyr,
+        "players": plyr.toMap(),
         "tasks": tasks,
       });
     }
@@ -113,7 +113,7 @@ class _RoleRevealPageState extends State<RoleRevealPage> {
   Widget build(BuildContext context) {
     arguments = ModalRoute.of(context)!.settings.arguments;
     if (!loaded) {
-      plyr = arguments['player'];
+      plyr = Player.fromMap(arguments['player']);
       gameId = arguments['gameId'];
       host = arguments['host'];
       name_role = plyr.name;
@@ -138,11 +138,11 @@ class _RoleRevealPageState extends State<RoleRevealPage> {
             });
           } else {
             if (isTasksOk) {
-              Navigator.pushReplacementNamed(context, "/gameMain", arguments: {
-                "player": plyr,
+              Navigator.restorablePushReplacementNamed(context, "/gameMain", arguments: {
+                "player": plyr.toMap(),
                 "gameId": gameId,
                 "host": host,
-                "socket": arguments['socket'],
+                // "socket": arguments['socket'],
                 "game": arguments['game'],
                 "players": arguments['players'],
                 "tasks": tasks,

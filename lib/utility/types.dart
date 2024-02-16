@@ -85,6 +85,21 @@ class Game {
       map: map['map'] ?? "Not Selected",
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'task_num': taskNumber,
+      'task_visibility': taskVisible ? 1 : 0,
+      'vote_time': voteTime,
+      'anonymous_vote': anonymousVote ? 1 : 0,
+      'kill_cooldown': killCooldown,
+      'impostor_max': impostorMax,
+      'emergencies': emergencies,
+      'status': status,
+      'map': map,
+    };
+  }  
 }
 
 // Dart equivalent for TypeScript interface Player
@@ -142,6 +157,26 @@ class Player {
       voted: map['voted'] == 1 ? true : false,
     );
   }
+
+  // Method to convert a Player object to a Map
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'game_id': gameId,
+      'socket_id': socketId,
+      'name': name,
+      'color': color.value,
+      'emergency': emergency,
+      'tasks': jsonEncode(tasks),
+      'tasks_done': jsonEncode(taskDone),
+      'team': team ? 1 : 0,
+      'geo_pos': geoPos,
+      'dead': dead ? 1 : 0,
+      'host': host ? 1 : 0,
+      'votes': votes,
+      'voted': voted ? 1 : 0,
+    };
+  }
 }
 
 extension HexColor on Color {
@@ -159,4 +194,6 @@ extension HexColor on Color {
       '${red.toRadixString(16).padLeft(2, '0')}'
       '${green.toRadixString(16).padLeft(2, '0')}'
       '${blue.toRadixString(16).padLeft(2, '0')}';
+
+  /// Returns the value of the color as a 32 bit value.
 }

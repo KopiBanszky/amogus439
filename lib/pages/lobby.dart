@@ -3,8 +3,10 @@
 import 'package:amogusvez2/utility/alert.dart';
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart';
+import 'package:amogusvez2/utility/globals.dart' as globals;
 import '../utility/player.dart';
 import '../utility/types.dart';
+
 
 class LobbyPage extends StatefulWidget {
   const LobbyPage({super.key});
@@ -108,18 +110,17 @@ class _LobbyPageState extends State<LobbyPage> {
             () {}, "Ok", false, () {}, "", context);
         return;
       }
-      Game resGame = Game.fromMap(data["game"]);
+      // Game resGame = Game.fromMap(data["game"]);
       socket.off("player_disconnected");
       socket.off("role_update");
       socket.off("start_game");
       socket.off("update_players");
-      Navigator.pushReplacementNamed(context, "/roleReveal", arguments: {
+      Navigator.restorablePushReplacementNamed(context, "/roleReveal", arguments: {
         "host": host,
         "gameId": gameId,
-        "player": me,
+        "player": me.toMap(),
         "impostors": impostors,
-        "socket": socket,
-        "game": resGame,
+        "game": data["game"],
         "players": players.length,
       });
     });
@@ -129,7 +130,7 @@ class _LobbyPageState extends State<LobbyPage> {
     Navigator.pushNamed(context, "/roleReveal", arguments: {
       "host": host,
       "gameId": gameId,
-      "player": me,
+      "player": me.toMap(),
       "impostors": impostors,
     });
   }
@@ -140,13 +141,16 @@ class _LobbyPageState extends State<LobbyPage> {
     if (!loaded) {
       arguments = ModalRoute.of(context)!.settings.arguments;
       host = arguments["host"];
-      socket = arguments["socket"];
+      socket = globals.socket!;
       gameId = arguments["gameId"].toString();
       if (host) {
-        players.add(arguments["player"]);
-        game = arguments["game"];
+        players.add(Player.fromMap(arguments["player"]));
+        game = Game.fromMap(arguments["game"]);
       } else {
-        players = arguments["players"];
+        for (var i in arguments["players"]) {
+          players.add(Player.fromMap(i));
+        }
+        // players = arguments["players"];
       }
 
       me = players.firstWhere((element) => element.socketId == socket.id);
