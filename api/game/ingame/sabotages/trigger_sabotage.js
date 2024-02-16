@@ -140,6 +140,7 @@ exports.default = {
                         const time = new Date(element.triggerd);
                         const current_time = new Date();
                         const COOLDOWN = constant_settings_1.settings.sabotage_coolwown * 1000;
+                        console.log(current_time.getTime() - time.getTime());
                         if (current_time.getTime() - time.getTime() < COOLDOWN) {
                             socket.emit("sabotage", {
                                 code: 403,

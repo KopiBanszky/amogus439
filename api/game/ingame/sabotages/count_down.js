@@ -21,11 +21,11 @@ function check_cooldown(ids, game_id, time) {
             export_db_connection_1.default.query(`SELECT * FROM Game_sabotage WHERE id = ${ids[0]} OR id = ${ids[1]}`, (err, result) => {
                 if (err) {
                     console.error(err);
-                    result(false);
+                    resolve(false);
                     return;
                 }
                 resolve(result);
-                export_db_connection_1.default.query(`UPDATE Game_sabotage SET tag = 1, triggerd = CURRENT_TIMESTAMP() WHERE id = ${ids[0]} OR id = ${ids[1]}`, (err, result) => {
+                export_db_connection_1.default.query(`UPDATE Game_sabotage SET tag = 1 WHERE id = ${ids[0]} OR id = ${ids[1]}`, (err, result) => {
                     if (err) {
                         console.error(err);
                         return;
@@ -37,8 +37,14 @@ function check_cooldown(ids, game_id, time) {
             return 400; //sabotage not found
         }
         const now = new Date().getTime();
-        if (((now - results[0].triggerd) > (time * 1000)) ||
-            ((now - results[1].triggerd) > (time * 1000))) {
+        const trigger1 = new Date(results[0].triggerd).getTime();
+        const trigger2 = new Date(results[1].triggerd).getTime();
+        // console.log(trigger1, trigger2, now, time * 1000);
+        // console.log(trigger1 - now, now - trigger2, time * 1000);
+        if (
+        //fix: added new Date() to results
+        ((now - trigger1) > ((time + 4) * 1000)) ||
+            ((now - trigger2) > ((time + 4) * 1000))) {
             return 203; //dead
         }
         if (results[0].tag == 2 && results[1].tag == 2) {
@@ -51,7 +57,6 @@ function default_1(sabotages, game_id, insertedIDS) {
     let time = sabotages[0].time;
     const interval = setInterval(() => __awaiter(this, void 0, void 0, function* () {
         const result = yield check_cooldown(insertedIDS, game_id, sabotages[0].time);
-        console.log(result);
         if (result == 201) {
             return;
         }

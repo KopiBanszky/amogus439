@@ -26,7 +26,7 @@ exports.default = (game_id, force_vote) => {
             return;
         let skip = Math.round(votes / 2) >= noSkip; //check if skip is needed for sure
         let max = -1;
-        let outVoted = undefined;
+        let outVoted = players[0];
         let i = 0;
         //find the player with the most votes
         while (i < players.length) {
@@ -42,12 +42,7 @@ exports.default = (game_id, force_vote) => {
             }
             i++;
         }
-        //check if skip is needed
-        //if there are more people who voted to skip than the max votes, skip
-        if ((votes - noSkip) >= max) {
-            console.log("1: skip");
-            skip = true;
-        }
+        // outVoted.geo_pos = JSON.parse(JSON.stringify(outVoted.geo_pos || {lat: 0, lon: 0}));
         //send the result to the players
         if (skip) {
             websocket_1.io.in(`Game_${game_id}`).emit('vote_result', { code: 200, message: 'Vote ended', skip: true, player: -1 });
@@ -55,7 +50,7 @@ exports.default = (game_id, force_vote) => {
         else {
             websocket_1.io.in(`Game_${game_id}`).emit('vote_result', { code: 200, message: 'Vote ended', skip: false, player: outVoted });
             //set the player dead
-            export_db_connection_1.default.query(`UPDATE Players SET dead = 1 WHERE id = ${outVoted === null || outVoted === void 0 ? void 0 : outVoted.id}`, (err, result) => {
+            export_db_connection_1.default.query(`UPDATE Players SET dead = 1 WHERE id = ${outVoted.id}`, (err, result) => {
                 if (err) {
                     console.error(err);
                     return;

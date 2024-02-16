@@ -42,7 +42,8 @@ db.connect((err) => {
 });
 db.on('error', (err) => {
     console.log(err);
-    db.destroy();
+    if (!err.fatal)
+        db.destroy();
     if (err.code === 'PROTOCOL_CONNECTION_LOST') {
         db.connect((err) => {
             if (err)
