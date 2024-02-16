@@ -30,13 +30,13 @@ async function check_cooldown(ids: number[], game_id:number, time:number){
     const trigger1 = new Date(results[0].triggerd).getTime();
     const trigger2 = new Date(results[1].triggerd).getTime();
 
-    console.log(trigger1, trigger2, now, time * 1000);
-    console.log(trigger1 - now, now - trigger2, time * 1000);
+    // console.log(trigger1, trigger2, now, time * 1000);
+    // console.log(trigger1 - now, now - trigger2, time * 1000);
 
     if(
         //fix: added new Date() to results
-        ((trigger1 - now) > (time * 1000)) ||
-        ((trigger2 - now) > (time * 1000))){
+        ((now - trigger1) > ((time + 4) * 1000)) ||
+        ((now - trigger2) > ((time + 4) * 1000))){
         return 203; //dead
     }
 
@@ -58,7 +58,6 @@ export default function (sabotages: any[], game_id:number, insertedIDS:number[])
             return;
         }
 
-        console.log(result);
 
         db.query(`UPDATE Game_sabotage SET tag = -1, triggerd = CURRENT_TIMESTAMP() WHERE id = ${insertedIDS[0]} OR id = ${insertedIDS[1]}`, (err, result) => {
             if(err){
