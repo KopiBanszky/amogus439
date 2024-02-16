@@ -35,7 +35,7 @@ const EVNETS = __importStar(require("./ws_exports"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 //-----PRODUCTION-----
-/*const https = require("https");
+const https = require("https");
 const fs = require("fs");
 const key = fs.readFileSync("./private.key");
 const cert = fs.readFileSync("./certificate.crt");
@@ -45,10 +45,10 @@ const cred = {
         cert
 };
 
-const server = https.createServer(cred, index_1.app);*/
+const server = https.createServer(cred, index_1.app);
 //-----PRODUCTION-----
 //----DEVELOPMENT-----
-const server = http_1.default.createServer(index_1.app);
+// const server = http_1.default.createServer(index_1.app);
 exports.server = server;
 //----DEVELOPMENT-----
 const io = new socket_io_1.Server(server, {

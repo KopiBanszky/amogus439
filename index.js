@@ -71,4 +71,4 @@ for (let route of Object.values(API.default)) {
     }
 }
 const websocket_1 = require("./api/game/websocket");
-websocket_1.server.listen(80, () => console.info(`Az http server fut ezen a porton: ${80}\nhttp://localhost/`));
+websocket_1.server.listen(443, () => console.info(`Az http server fut ezen a porton: ${80}\nhttp://localhost/`));
