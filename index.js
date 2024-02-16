@@ -49,6 +49,11 @@ app.get("/check", (req, res) => res.json({
     status: true,
     message: "Server is running"
 }));
+
+app.get("/download", (req, res) => {
+    res.redirect('https://drive.google.com/file/d/1x1uVf1FZesLTtmHFJdu6_9Q2h9raOBIN/view?usp=sharing');
+});
+
 for (let route of Object.values(API.default)) {
     // const route:apiMethod = API.default[i];
     console.log(route.path, route.method);
