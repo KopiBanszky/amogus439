@@ -7820,7 +7820,7 @@ al1(a,b,c,d){return new A.lF(a,b,c.i("@<0>").aA(d).i("lF<1,2>"))},
 b0M(){$.ln()
 return new A.kW()},
 b46(a,b){return 65536+((a&1023)<<10)+(b&1023)},
-aon(a,b,c){return A.b3H("http",a,b,c)},
+aon(a,b,c){return A.b3H("https",a,b,c)},
 hq(a5){var s,r,q,p,o,n,m,l,k,j,i,h,g,f,e,d,c,b,a,a0,a1,a2,a3=null,a4=a5.length
 if(a4>=5){s=((a5.charCodeAt(4)^58)*3|a5.charCodeAt(0)^100|a5.charCodeAt(1)^97|a5.charCodeAt(2)^116|a5.charCodeAt(3)^97)>>>0
 if(s===0)return A.aOa(a4<a4?B.e.a1(a5,0,a4):a5,5,a3).gmM()
@@ -9355,7 +9355,7 @@ case 1:return A.y(q,r)}})
 return A.z($async$aDo,r)},
 ox:function ox(a,b){this.a=a
 this.b=b},
-aQz(){var s,r,q,p,o,n,m,l,k,j,i,h="http://amogus.439boldogasszony.hu",g=null,f="query",e=t.N,d=t.z,c=A.t(e,d)
+aQz(){var s,r,q,p,o,n,m,l,k,j,i,h="https://amogus.439boldogasszony.hu",g=null,f="query",e=t.N,d=t.z,c=A.t(e,d)
 c.l(0,"transports",A.a(["websocket"],t.s))
 s=A.hq(h)
 r=s.geT()+"://"+s.giK(s)+":"+s.gnZ(s)
@@ -9363,7 +9363,7 @@ q=s.gdi(s)
 p=$.aCR.a4(0,r)&&$.aCR.h(0,r).d.a4(0,q)
 o=c.h(0,"forceNew")===!0||c.h(0,"force new connection")===!0||!1===c.h(0,"multiplex")||p
 n=A.aQ("io")
-if(o){$.aTG().aY(B.t,"ignoring socket cache for http://amogus.439boldogasszony.hu",g,g)
+if(o){$.aTG().aY(B.t,"ignoring socket cache for https://amogus.439boldogasszony.hu",g,g)
 n.b=A.aM8(c,h)}else{m=$.aCR.h(0,r)
 if(m==null){m=A.aM8(c,h)
 $.aCR.l(0,r,m)}n.b=m}if(s.gkA(s).length!==0&&c.h(0,f)==null)c.l(0,f,s.gkA(s))
