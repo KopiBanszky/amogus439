@@ -4,7 +4,6 @@ const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 
 const RESOURCES = {"amogus.png": "0139c9eee385d2b4cc789b5d47e54279",
-<<<<<<< HEAD
 "assets/AssetManifest.bin": "e5eed341dcb55bbc959b60a3016aea66",
 "assets/AssetManifest.bin.json": "cb8a815b5120c5f88bbf1c24f690f81e",
 "assets/AssetManifest.json": "bb26473dd073415c98b87a4ed10bf647",
@@ -12,14 +11,6 @@ const RESOURCES = {"amogus.png": "0139c9eee385d2b4cc789b5d47e54279",
 "assets/assets/background.jpg": "c558c7b95f213d35d16b28e6c48fb00f",
 "assets/assets/bg.png": "93d65e53e4f224057237a30ec19dfb00",
 "assets/assets/btn.png": "9878111ecaf45bb98ed2004d683d98da",
-=======
-"assets/AssetManifest.bin": "3b550cdaa754ba7880ea5cf960726aca",
-"assets/AssetManifest.bin.json": "2d88ffb5b2acaaea876ceb6ae40c639b",
-"assets/AssetManifest.json": "0994ec93e08c1259d442eeb42fc1a436",
-"assets/assets/AND.png": "efeb64937f441356f8971d77aecd3abb",
-"assets/assets/background.jpg": "c558c7b95f213d35d16b28e6c48fb00f",
-"assets/assets/bg.png": "93d65e53e4f224057237a30ec19dfb00",
->>>>>>> 5c926032f94b5f2c30b14c1bac5e0700073d05de
 "assets/assets/caller.png": "8df90b5214c6afe0b29f20fdf8293aec",
 "assets/assets/dead.png": "b0465c69b86524e7b609124f34dae63b",
 "assets/assets/fonts/DeliciousHandrawn-Regular.ttf": "89d6244aa25566cf8c695f9926b5cb1d",
@@ -38,7 +29,6 @@ const RESOURCES = {"amogus.png": "0139c9eee385d2b4cc789b5d47e54279",
 "assets/assets/switch.png": "2ed83097554bc878b26e9e10b1676603",
 "assets/assets/task.png": "3b0b5f9e51949e4ab38a87b4f5ef29a2",
 "assets/assets/task2.png": "65638bfb46b2403da60952463f874abe",
-<<<<<<< HEAD
 "assets/assets/taskicon0.png": "865633c50ff52b4bebee4fb70faf5dc7",
 "assets/assets/taskicon1.png": "89a4e3c598628174a954ae199a8a1a6f",
 "assets/assets/taskicon12.png": "7eea4373a18aec83e32d57b40efb5d99",
@@ -47,13 +37,6 @@ const RESOURCES = {"amogus.png": "0139c9eee385d2b4cc789b5d47e54279",
 "assets/FontManifest.json": "f8700ac7091b3e1d43415af52df9f644",
 "assets/fonts/MaterialIcons-Regular.otf": "9e37756ac910a60191a6e4c92fcc7b67",
 "assets/NOTICES": "b0773c88a3ed0ef9556cf072a3f5a4c3",
-=======
-"assets/assets/XNOR.png": "c7f9cc81efeafabab45da9c537b72d36",
-"assets/assets/XOR.png": "1bb5d7d8491ac820ece3780996fcecde",
-"assets/FontManifest.json": "dc3d03800ccca4601324923c0b1d6d57",
-"assets/fonts/MaterialIcons-Regular.otf": "d891ac89d7f5c7aa2bebe6890b272e49",
-"assets/NOTICES": "a06be20cfdfdd3c124f51eef4a72de90",
->>>>>>> 5c926032f94b5f2c30b14c1bac5e0700073d05de
 "assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "89ed8f4e49bcdfc0b5bfc9b24591e347",
 "assets/shaders/ink_sparkle.frag": "4096b5150bac93c41cbc9b45276bd90f",
 "canvaskit/canvaskit.js": "eb8797020acdbdf96a12fb0405582c1b",
@@ -69,15 +52,9 @@ const RESOURCES = {"amogus.png": "0139c9eee385d2b4cc789b5d47e54279",
 "icons/Icon-512.png": "fe30b783ac7d1a423fd2b2049d330c22",
 "icons/Icon-maskable-192.png": "973ce16bcc5af4b79d64962c21f209e7",
 "icons/Icon-maskable-512.png": "fe30b783ac7d1a423fd2b2049d330c22",
-<<<<<<< HEAD
-"index.html": "0b5da7020070bddc2ed53f69b4cea746",
-"/": "0b5da7020070bddc2ed53f69b4cea746",
-"main.dart.js": "43bdc1c7a80fdaae6df720a454f63325",
-=======
-"index.html": "74bb82e6fc5b429a86e75aeb4b4049bb",
-"/": "74bb82e6fc5b429a86e75aeb4b4049bb",
-"main.dart.js": "3b339b028182c71304a35437f0e587bd",
->>>>>>> 5c926032f94b5f2c30b14c1bac5e0700073d05de
+"index.html": "8846746da039064bcc1edaa5d57faba8",
+"/": "8846746da039064bcc1edaa5d57faba8",
+"main.dart.js": "a073577b39ba7dabe8191b68a7574b9b",
 "manifest.json": "3a0ce58cda5fbdbdc189be03f05620a3",
 "version.json": "7617c21c2f6206206d0ee473e36a814a"};
 // The application shell files that are downloaded before a service worker can
