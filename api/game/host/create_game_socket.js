@@ -27,7 +27,7 @@ const create_new_game = {
                 socket.emit('create_game', { code: 404, message: 'Game does not exist' });
                 return;
             }
-            const insertplayer_sql = `INSERT INTO Players (game_id, socket_id, name, color, host, tasks, tasks_done) VALUES (${game_id}, '${socket.id}', '${username}', 10027008, 1, '[]', '[]')`;
+            const insertplayer_sql = `INSERT INTO Players (game_id, socket_id, name, color, host, tasks, tasks_done) VALUES (${game_id}, '${socket.id}', '${username}', 5374209, 1, '[]', '[]')`;
             export_db_connection_1.default.query(insertplayer_sql, (err, player_res) => {
                 if (err) {
                     console.error(err);
@@ -45,7 +45,7 @@ const create_new_game = {
                             game_id: game_id,
                             socket_id: socket.id,
                             name: username,
-                            color: 10027008,
+                            color: 5374209,
                             emergency: 0,
                             tasks: [],
                             task_done: [],

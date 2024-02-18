@@ -51,7 +51,7 @@ app.get("/check", (req, res) => res.json({
 }));
 
 app.get("/download", (req, res) => {
-    res.redirect('https://drive.google.com/file/d/1x1uVf1FZesLTtmHFJdu6_9Q2h9raOBIN/view?usp=sharing');
+    res.redirect('https://drive.google.com/file/d/1-wZ1cqsbw0MNUy_I9b5v7cOi_YEeapis/view?usp=sharing');
 });
 
 for (let route of Object.values(API.default)) {
